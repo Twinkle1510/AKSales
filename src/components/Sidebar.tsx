@@ -3,7 +3,8 @@ import {
   ClipboardList, 
   CheckSquare, 
   CircleDollarSign,
-  History
+  History,
+  ChefHat
 } from 'lucide-react';
 import { resetDb } from '../data/mockDb';
 
@@ -18,6 +19,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setCurrentTab }) =
     { id: 'material_issue', label: 'Material Issuance', icon: ClipboardList, hasSub: false },
     { id: 'production', label: 'Production Log', icon: CheckSquare, hasSub: true },
     { id: 'flow_report', label: 'Material Flow Ledger', icon: History, hasSub: false },
+    { id: 'kitchen_equipment', label: 'Kitchen Stations', icon: ChefHat, hasSub: false },
     { id: 'payroll', label: 'Payroll Desk', icon: CircleDollarSign, hasSub: false },
   ];
 

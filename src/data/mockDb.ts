@@ -83,6 +83,24 @@ export interface PayrollRecord {
   processedDate: string;
 }
 
+// Kitchen Equipment Interface
+export interface KitchenEquipment {
+  id: string;
+  name: string;
+  type: 'Fryer' | 'Steamer' | 'Wok' | 'Oven' | 'Griddle';
+  status: 'Active Cooking' | 'Idle' | 'Under Maintenance';
+  assignedWorkerId?: string;
+  assignedWorkerName?: string;
+  allocatedMaterialName: string;
+  allocatedQtyKg: number; // Raw sheets/ingredients allocated in KG
+  actualOutputName: string;
+  actualOutputQty: number; // Plates/pcs produced
+  outputUnit: 'pcs' | 'plates' | 'packs';
+  temperatureSettings?: string;
+  lastCleanedDate: string;
+  photo?: string;
+}
+
 // Kitchen Staff setup
 const INITIAL_EMPLOYEES: Employee[] = [
   { 
@@ -244,6 +262,12 @@ const IMG_BIRYANI_COOKED = 'https://images.unsplash.com/photo-1563379091339-03b2
 
 const IMG_PAKODA_RAW = 'https://images.unsplash.com/photo-1508747703725-719ae2cc29d4?w=400&auto=format&fit=crop&q=80';
 const IMG_PAKODA_COOKED = 'https://images.unsplash.com/photo-1601050690597-df056fb49785?w=400&auto=format&fit=crop&q=80';
+
+// Real Equipment Photos
+const IMG_FRYER = 'https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?w=400&auto=format&fit=crop&q=80';
+const IMG_STEAMER = 'https://images.unsplash.com/photo-1594756297462-0214a66807d4?w=400&auto=format&fit=crop&q=80';
+const IMG_WOK = 'https://images.unsplash.com/photo-1543087903-1ac2ec7aa8c5?w=400&auto=format&fit=crop&q=80';
+const IMG_OVEN = 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&auto=format&fit=crop&q=80';
 
 // Chronological Material Issues Feed (14 unique records)
 const INITIAL_ISSUES: MaterialIssue[] = [
@@ -527,6 +551,74 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
   }
 ];
 
+// Initial Kitchen Equipment Data (4 active machinery)
+const INITIAL_EQUIPMENT: KitchenEquipment[] = [
+  {
+    id: 'EQ-001',
+    name: 'Commercial Deep Fryer A',
+    type: 'Fryer',
+    status: 'Active Cooking',
+    assignedWorkerId: 'EMP-004',
+    assignedWorkerName: 'Amit Verma',
+    allocatedMaterialName: 'Raw Potatoes & Flour Dough (Sheets)',
+    allocatedQtyKg: 12,
+    actualOutputName: 'French Fries (1kg Pack)',
+    actualOutputQty: 10,
+    outputUnit: 'packs',
+    temperatureSettings: '180°C',
+    lastCleanedDate: '2026-08-18',
+    photo: IMG_FRYER
+  },
+  {
+    id: 'EQ-002',
+    name: 'Steamer Box Deck 1',
+    type: 'Steamer',
+    status: 'Active Cooking',
+    assignedWorkerId: 'EMP-006',
+    assignedWorkerName: 'Vikram Singh',
+    allocatedMaterialName: 'Raw Momo Wrapper & Veg Stuffing (Sheets)',
+    allocatedQtyKg: 15,
+    actualOutputName: 'Steamed Veg Momos',
+    actualOutputQty: 120,
+    outputUnit: 'pcs',
+    temperatureSettings: '100°C Steam',
+    lastCleanedDate: '2026-08-19',
+    photo: IMG_STEAMER
+  },
+  {
+    id: 'EQ-003',
+    name: 'High-Power noodle Cooker',
+    type: 'Wok',
+    status: 'Idle',
+    assignedWorkerId: 'EMP-006',
+    assignedWorkerName: 'Vikram Singh',
+    allocatedMaterialName: 'Uncooked Noodle Strands (Sheets)',
+    allocatedQtyKg: 20,
+    actualOutputName: 'Hakka Noodles Plate',
+    actualOutputQty: 40,
+    outputUnit: 'plates',
+    temperatureSettings: 'Medium Flame',
+    lastCleanedDate: '2026-08-19',
+    photo: IMG_WOK
+  },
+  {
+    id: 'EQ-004',
+    name: 'Italian Pizza Deck Oven',
+    type: 'Oven',
+    status: 'Active Cooking',
+    assignedWorkerId: 'EMP-003',
+    assignedWorkerName: 'Sunita Patel',
+    allocatedMaterialName: 'Flour Dough & Cheese Sheets',
+    allocatedQtyKg: 6,
+    actualOutputName: 'Cheese Garlic Bread',
+    actualOutputQty: 35,
+    outputUnit: 'pcs',
+    temperatureSettings: '220°C',
+    lastCleanedDate: '2026-08-19',
+    photo: IMG_OVEN
+  }
+];
+
 // Helper to initialize and retrieve from localStorage
 const getFromStorage = <T>(key: string, initial: T): T => {
   const data = localStorage.getItem(`aksales_${key}`);
@@ -553,10 +645,14 @@ export const saveMaterialIssues = (issues: MaterialIssue[]) => setToStorage('iss
 export const getProductionLogs = (): ProductionLog[] => getFromStorage('production', INITIAL_PRODUCTION);
 export const saveProductionLogs = (production: ProductionLog[]) => setToStorage('production', production);
 
+export const getEquipment = (): KitchenEquipment[] => getFromStorage('equipment', INITIAL_EQUIPMENT);
+export const saveEquipment = (equipment: KitchenEquipment[]) => setToStorage('equipment', equipment);
+
 export const resetDb = () => {
   localStorage.removeItem('aksales_employees');
   localStorage.removeItem('aksales_inventory');
   localStorage.removeItem('aksales_issues');
   localStorage.removeItem('aksales_production');
+  localStorage.removeItem('aksales_equipment');
   window.location.reload();
 };

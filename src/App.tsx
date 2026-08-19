@@ -7,6 +7,7 @@ import { MaterialIssueView } from './views/MaterialIssueView';
 import { ProductionView } from './views/ProductionView';
 import { PayrollView } from './views/PayrollView';
 import { FlowReportView } from './views/FlowReportView';
+import { KitchenEquipmentView } from './views/KitchenEquipmentView';
 import { Menu, Search, Bell, Mail, Settings } from 'lucide-react';
 
 import type {
@@ -14,6 +15,7 @@ import type {
   InventoryItem,
   MaterialIssue,
   ProductionLog,
+  KitchenEquipment
 } from './data/mockDb';
 import {
   getEmployees,
@@ -23,7 +25,9 @@ import {
   getMaterialIssues,
   saveMaterialIssues,
   getProductionLogs,
-  saveProductionLogs
+  saveProductionLogs,
+  getEquipment,
+  saveEquipment
 } from './data/mockDb';
 
 function App() {
@@ -34,6 +38,7 @@ function App() {
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [issues, setIssues] = useState<MaterialIssue[]>([]);
   const [production, setProduction] = useState<ProductionLog[]>([]);
+  const [equipment, setEquipment] = useState<KitchenEquipment[]>([]);
 
   // Toast message
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -47,6 +52,7 @@ function App() {
       localStorage.removeItem('aksales_inventory');
       localStorage.removeItem('aksales_issues');
       localStorage.removeItem('aksales_production');
+      localStorage.removeItem('aksales_equipment');
       window.location.reload();
       return;
     }
@@ -54,6 +60,7 @@ function App() {
     setInventory(getInventory());
     setIssues(getMaterialIssues());
     setProduction(getProductionLogs());
+    setEquipment(getEquipment());
   }, []);
 
   const showToast = (msg: string) => {
@@ -72,6 +79,12 @@ function App() {
     setInventory(newInventory);
     saveInventory(newInventory);
     showToast('Inventory stock list updated.');
+  };
+
+  const handleSetEquipment = (newEquipment: KitchenEquipment[]) => {
+    setEquipment(newEquipment);
+    saveEquipment(newEquipment);
+    showToast('Kitchen equipment data successfully updated.');
   };
 
   // Add Material Issue
@@ -284,6 +297,14 @@ function App() {
             employees={employees}
             issues={issues}
             production={production}
+          />
+        );
+      case 'kitchen_equipment':
+        return (
+          <KitchenEquipmentView 
+            equipment={equipment}
+            setEquipment={handleSetEquipment}
+            employees={employees}
           />
         );
       default:
