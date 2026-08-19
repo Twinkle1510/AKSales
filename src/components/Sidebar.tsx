@@ -1,6 +1,5 @@
 import { 
   LayoutDashboard, 
-  Users, 
   Package, 
   ClipboardList, 
   CheckSquare, 
@@ -17,7 +16,6 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setCurrentTab }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, hasSub: false },
-    { id: 'employees', label: 'Employees Catalog', icon: Users, hasSub: true },
     { id: 'inventory', label: 'Inventory Hub', icon: Package, hasSub: false },
     { id: 'material_issue', label: 'Material Issuance', icon: ClipboardList, hasSub: false },
     { id: 'production', label: 'Production Log', icon: CheckSquare, hasSub: true },
