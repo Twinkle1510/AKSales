@@ -1,6 +1,5 @@
 import { 
   LayoutDashboard, 
-  Package, 
   ClipboardList, 
   CheckSquare, 
   CircleDollarSign,
@@ -16,7 +15,6 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setCurrentTab }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, hasSub: false },
-    { id: 'inventory', label: 'Inventory Hub', icon: Package, hasSub: false },
     { id: 'material_issue', label: 'Material Issuance', icon: ClipboardList, hasSub: false },
     { id: 'production', label: 'Production Log', icon: CheckSquare, hasSub: true },
     { id: 'flow_report', label: 'Material Flow Ledger', icon: History, hasSub: false },
