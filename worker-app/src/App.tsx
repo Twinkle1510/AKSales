@@ -61,6 +61,16 @@ function App() {
 
   // Load from shared storage
   useEffect(() => {
+    // Clear old sparse localStorage if found to seed rich client demo dataset
+    const cachedProd = localStorage.getItem('aksales_production');
+    if (cachedProd && JSON.parse(cachedProd).length < 5) {
+      localStorage.removeItem('aksales_employees');
+      localStorage.removeItem('aksales_inventory');
+      localStorage.removeItem('aksales_issues');
+      localStorage.removeItem('aksales_production');
+      window.location.reload();
+      return;
+    }
     setEmployees(getEmployees());
     setInventory(getInventory());
     setIssues(getMaterialIssues());
