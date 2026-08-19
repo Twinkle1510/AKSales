@@ -121,7 +121,7 @@ const INITIAL_EMPLOYEES: Employee[] = [
     role: 'Worker', 
     department: 'Food Prep Section A', 
     status: 'Active', 
-    baseRate: 2, // ₹2 per piece
+    baseRate: 2, 
     phone: '+91 87654 32109', 
     email: 'sunita@aksales.com', 
     joinedDate: '2025-04-01',
@@ -136,7 +136,7 @@ const INITIAL_EMPLOYEES: Employee[] = [
     role: 'Worker', 
     department: 'Frying & Packing Section', 
     status: 'Active', 
-    baseRate: 30, // ₹30 per pack
+    baseRate: 30, 
     phone: '+91 76543 21098', 
     email: 'amit@aksales.com', 
     joinedDate: '2025-05-12',
@@ -167,7 +167,7 @@ const INITIAL_EMPLOYEES: Employee[] = [
     role: 'Worker', 
     department: 'Noodles & Momo Section', 
     status: 'Active', 
-    baseRate: 20, // ₹20 per plate/pack
+    baseRate: 20, 
     phone: '+91 90123 45678', 
     email: 'vikram@aksales.com', 
     joinedDate: '2025-06-01',
@@ -184,7 +184,7 @@ const INITIAL_INVENTORY: InventoryItem[] = [
   { id: 'INV-RAW-003', name: 'Uncooked Noodle Strands', type: 'Raw Material', quantity: 180, unit: 'kg', minThreshold: 40, lastUpdated: '2026-08-19', materialCode: 'RAW-NDL-STR', batchNumber: 'ND-303', storageLocation: 'Dry Storage' },
   { id: 'INV-RAW-004', name: 'Refined Oil & Spice Seasonings', type: 'Raw Material', quantity: 120, unit: 'liters', minThreshold: 30, lastUpdated: '2026-08-15', materialCode: 'RAW-OIL-SPC', batchNumber: 'OL-404', storageLocation: 'Dry Storage' },
   
-  // 10 Unique Finished Goods
+  // 14 Unique Finished Goods
   { id: 'INV-FIN-001', name: 'Classic Samosa (Standard)', type: 'Finished Good', quantity: 800, unit: 'pcs', minThreshold: 200, lastUpdated: '2026-08-19', materialCode: 'FIN-SAMOSA', storageLocation: 'Hot Case Bay A' },
   { id: 'INV-FIN-002', name: 'Steamed Veg Momos', type: 'Finished Good', quantity: 400, unit: 'pcs', minThreshold: 100, lastUpdated: '2026-08-19', materialCode: 'FIN-MOMOS', storageLocation: 'Steamer Box B' },
   { id: 'INV-FIN-003', name: 'Hakka Noodles Plate', type: 'Finished Good', quantity: 150, unit: 'plates', minThreshold: 30, lastUpdated: '2026-08-19', materialCode: 'FIN-NOODLES', storageLocation: 'Wok Assembly Station' },
@@ -194,7 +194,11 @@ const INITIAL_INVENTORY: InventoryItem[] = [
   { id: 'INV-FIN-007', name: 'Paneer Tikka Roll', type: 'Finished Good', quantity: 180, unit: 'pcs', minThreshold: 30, lastUpdated: '2026-08-19', materialCode: 'FIN-TIKKA', storageLocation: 'Assembly Line 3' },
   { id: 'INV-FIN-008', name: 'Chilli Garlic Potatoes', type: 'Finished Good', quantity: 90, unit: 'plates', minThreshold: 20, lastUpdated: '2026-08-19', materialCode: 'FIN-CHILLI', storageLocation: 'Prep Kitchen C' },
   { id: 'INV-FIN-009', name: 'Cheese Garlic Bread', type: 'Finished Good', quantity: 110, unit: 'pcs', minThreshold: 25, lastUpdated: '2026-08-19', materialCode: 'FIN-BREAD', storageLocation: 'Bakery Deck 1' },
-  { id: 'INV-FIN-010', name: 'Aloo Tikki Chaat', type: 'Finished Good', quantity: 95, unit: 'plates', minThreshold: 15, lastUpdated: '2026-08-19', materialCode: 'FIN-CHAAT', storageLocation: 'Chaat Station 4' }
+  { id: 'INV-FIN-010', name: 'Aloo Tikki Chaat', type: 'Finished Good', quantity: 95, unit: 'plates', minThreshold: 15, lastUpdated: '2026-08-19', materialCode: 'FIN-CHAAT', storageLocation: 'Chaat Station 4' },
+  { id: 'INV-FIN-011', name: 'Masala Dosa', type: 'Finished Good', quantity: 70, unit: 'pcs', minThreshold: 10, lastUpdated: '2026-08-19', materialCode: 'FIN-DOSA', storageLocation: 'Griddle Station 1' },
+  { id: 'INV-FIN-012', name: 'Paneer Butter Masala', type: 'Finished Good', quantity: 85, unit: 'packs', minThreshold: 15, lastUpdated: '2026-08-19', materialCode: 'FIN-PANEER-CURRY', storageLocation: 'Cold Room C' },
+  { id: 'INV-FIN-013', name: 'Veg Biryani Bowl', type: 'Finished Good', quantity: 60, unit: 'plates', minThreshold: 10, lastUpdated: '2026-08-19', materialCode: 'FIN-BIRYANI', storageLocation: 'Hot Case Bay B' },
+  { id: 'INV-FIN-014', name: 'Crispy Onion Pakoda', type: 'Finished Good', quantity: 110, unit: 'pcs', minThreshold: 20, lastUpdated: '2026-08-19', materialCode: 'FIN-PAKODA', storageLocation: 'Hot Case Bay C' }
 ];
 
 // REAL High-Definition Photography URLs from Unsplash
@@ -210,7 +214,7 @@ const IMG_NOODLES_COOKED = 'https://images.unsplash.com/photo-1585032226651-759b
 const IMG_POTATOES = 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400&auto=format&fit=crop&q=80';
 const IMG_FRIES = 'https://images.unsplash.com/photo-1576107232684-1279f390859f?w=400&auto=format&fit=crop&q=80';
 
-const IMG_OIL = 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&auto=format&fit=crop&q=80'; // Butter/Garlic/Oil setup
+const IMG_OIL = 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&auto=format&fit=crop&q=80';
 const IMG_ROLLS = 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=400&auto=format&fit=crop&q=80';
 
 const IMG_PATTY_RAW = 'https://images.unsplash.com/photo-1595855759920-86582396756a?w=400&auto=format&fit=crop&q=80';
@@ -228,7 +232,20 @@ const IMG_BREAD_COOKED = 'https://images.unsplash.com/photo-1573140247632-f8fd74
 const IMG_CHAAT_RAW = 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=400&auto=format&fit=crop&q=80';
 const IMG_CHAAT_COOKED = 'https://images.unsplash.com/photo-1626132647523-66f5bf380027?w=400&auto=format&fit=crop&q=80';
 
-// Chronological Material Issues Feed (10 unique records)
+// Added 4 new Unsplash raw & cooked food photo pairs
+const IMG_DOSA_RAW = 'https://images.unsplash.com/photo-1601050690597-df056fb49785?w=400&auto=format&fit=crop&q=80';
+const IMG_DOSA_COOKED = 'https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=400&auto=format&fit=crop&q=80';
+
+const IMG_PANEER_RAW = 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&auto=format&fit=crop&q=80';
+const IMG_PANEER_COOKED = 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&auto=format&fit=crop&q=80'; // Paneer Curry
+
+const IMG_BIRYANI_RAW = 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&auto=format&fit=crop&q=80';
+const IMG_BIRYANI_COOKED = 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&auto=format&fit=crop&q=80';
+
+const IMG_PAKODA_RAW = 'https://images.unsplash.com/photo-1508747703725-719ae2cc29d4?w=400&auto=format&fit=crop&q=80';
+const IMG_PAKODA_COOKED = 'https://images.unsplash.com/photo-1601050690597-df056fb49785?w=400&auto=format&fit=crop&q=80';
+
+// Chronological Material Issues Feed (14 unique records)
 const INITIAL_ISSUES: MaterialIssue[] = [
   { id: 'ISS-001', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 10, date: '2026-08-10', remarks: 'Samosa Batch #S01', photo: IMG_SAMOSA_RAW },
   { id: 'ISS-002', materialId: 'INV-RAW-002', materialName: 'Raw Momo Wrapper & Veg Stuffing', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 15, date: '2026-08-11', remarks: 'Steamed Momos #M02', photo: IMG_MOMOS_RAW },
@@ -239,10 +256,14 @@ const INITIAL_ISSUES: MaterialIssue[] = [
   { id: 'ISS-007', materialId: 'INV-RAW-004', materialName: 'Refined Oil & Spice Seasonings', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 8, date: '2026-08-16', remarks: 'Paneer marination', photo: IMG_OIL },
   { id: 'ISS-008', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 8, date: '2026-08-17', remarks: 'Chilli Garlic prep', photo: IMG_CHILLI_RAW },
   { id: 'ISS-009', materialId: 'INV-RAW-004', materialName: 'Refined Oil & Spice Seasonings', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 10, date: '2026-08-18', remarks: 'Garlic bread deck', photo: IMG_OIL },
-  { id: 'ISS-010', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 25, date: '2026-08-19', remarks: 'Mega Chaat prep', photo: IMG_CHAAT_RAW }
+  { id: 'ISS-010', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 25, date: '2026-08-19', remarks: 'Mega Chaat prep', photo: IMG_CHAAT_RAW },
+  { id: 'ISS-011', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 18, date: '2026-08-20', remarks: 'Dosa Griddle Setup', photo: IMG_DOSA_RAW },
+  { id: 'ISS-012', materialId: 'INV-RAW-004', materialName: 'Refined Oil & Spice Seasonings', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 14, date: '2026-08-21', remarks: 'Paneer butter curry preparation', photo: IMG_PANEER_RAW },
+  { id: 'ISS-013', materialId: 'INV-RAW-003', materialName: 'Uncooked Noodle Strands', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 22, date: '2026-08-22', remarks: 'Biryani Basmati rice allotment', photo: IMG_BIRYANI_RAW },
+  { id: 'ISS-014', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-004', issuedToName: 'Amit Verma', quantity: 15, date: '2026-08-23', remarks: 'Onion Pakoda prep', photo: IMG_PAKODA_RAW }
 ];
 
-// Chronological Production Output Logs (10 completely unique food finished goods!)
+// Chronological Production Output Logs (14 completely unique food finished goods!)
 const INITIAL_PRODUCTION: ProductionLog[] = [
   { 
     id: 'PROD-001', 
@@ -429,6 +450,80 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
     efficiency: 90,
     materialPhoto: IMG_CHAAT_RAW,
     productPhoto: IMG_CHAAT_COOKED
+  },
+  { 
+    id: 'PROD-011', 
+    batchNumber: 'B-511', 
+    productId: 'INV-FIN-011', 
+    productName: 'Masala Dosa', 
+    quantityProduced: 60, 
+    workerId: 'EMP-003', 
+    workerName: 'Sunita Patel', 
+    date: '2026-08-20', 
+    status: 'Approved', 
+    approvedDate: '2026-08-20',
+    materialConsumedId: 'INV-RAW-001',
+    materialConsumedName: 'Raw Potatoes & Flour Dough',
+    materialConsumedQty: 18,
+    wastageQty: 1.5,
+    efficiency: 91,
+    materialPhoto: IMG_DOSA_RAW,
+    productPhoto: IMG_DOSA_COOKED
+  },
+  { 
+    id: 'PROD-012', 
+    batchNumber: 'B-512', 
+    productId: 'INV-FIN-012', 
+    productName: 'Paneer Butter Masala', 
+    quantityProduced: 30, 
+    workerId: 'EMP-006', 
+    workerName: 'Vikram Singh', 
+    date: '2026-08-21', 
+    status: 'Approved', 
+    approvedDate: '2026-08-21',
+    materialConsumedId: 'INV-RAW-004',
+    materialConsumedName: 'Refined Oil & Spice Seasonings',
+    materialConsumedQty: 14,
+    wastageQty: 0.8,
+    efficiency: 94,
+    materialPhoto: IMG_PANEER_RAW,
+    productPhoto: IMG_PANEER_COOKED
+  },
+  { 
+    id: 'PROD-013', 
+    batchNumber: 'B-513', 
+    productId: 'INV-FIN-013', 
+    productName: 'Veg Biryani Bowl', 
+    quantityProduced: 50, 
+    workerId: 'EMP-006', 
+    workerName: 'Vikram Singh', 
+    date: '2026-08-22', 
+    status: 'Pending Approval', 
+    materialConsumedId: 'INV-RAW-003',
+    materialConsumedName: 'Uncooked Noodle Strands',
+    materialConsumedQty: 22,
+    wastageQty: 1.8,
+    efficiency: 91,
+    materialPhoto: IMG_BIRYANI_RAW,
+    productPhoto: IMG_BIRYANI_COOKED
+  },
+  { 
+    id: 'PROD-014', 
+    batchNumber: 'B-514', 
+    productId: 'INV-FIN-014', 
+    productName: 'Crispy Onion Pakoda', 
+    quantityProduced: 80, 
+    workerId: 'EMP-004', 
+    workerName: 'Amit Verma', 
+    date: '2026-08-23', 
+    status: 'Pending Approval', 
+    materialConsumedId: 'INV-RAW-001',
+    materialConsumedName: 'Raw Potatoes & Flour Dough',
+    materialConsumedQty: 15,
+    wastageQty: 1,
+    efficiency: 93,
+    materialPhoto: IMG_PAKODA_RAW,
+    productPhoto: IMG_PAKODA_COOKED
   }
 ];
 
