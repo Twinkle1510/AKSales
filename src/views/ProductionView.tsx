@@ -16,6 +16,8 @@ interface ProductionProps {
     materialConsumedQty?: number;
     materialPhoto?: string;
     productPhoto?: string;
+    wastageQty?: number;
+    efficiency?: number;
   }) => void;
   onApproveProduction: (id: string) => void;
 }
@@ -38,6 +40,7 @@ export const ProductionView: React.FC<ProductionProps> = ({
   const [workerId, setWorkerId] = useState('');
   const [materialConsumedId, setMaterialConsumedId] = useState('');
   const [materialConsumedQty, setMaterialConsumedQty] = useState(0);
+  const [wastageQty, setWastageQty] = useState(0);
 
   const finishedGoods = inventory.filter(item => item.type === 'Finished Good');
   const rawMaterials = inventory.filter(item => item.type === 'Raw Material');
@@ -50,6 +53,7 @@ export const ProductionView: React.FC<ProductionProps> = ({
     setWorkerId(activeWorkers[0]?.id || '');
     setMaterialConsumedId(rawMaterials[0]?.id || '');
     setMaterialConsumedQty(0);
+    setWastageQty(0);
     setIsModalOpen(true);
   };
 
@@ -58,6 +62,12 @@ export const ProductionView: React.FC<ProductionProps> = ({
     if (!productId || !workerId || quantityProduced <= 0) return;
 
     const rawMat = rawMaterials.find(r => r.id === materialConsumedId);
+    
+    // Calculate efficiency % = ((materialConsumedQty - wastageQty) / materialConsumedQty) * 100
+    let calculatedEfficiency = 100;
+    if (materialConsumedQty > 0) {
+      calculatedEfficiency = Math.round(((materialConsumedQty - wastageQty) / materialConsumedQty) * 100);
+    }
 
     // Mock generic SVGs for manual logs
     const mockMatSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23475569"/><line x1="10" y1="10" x2="90" y2="10" stroke="%2394a3b8" stroke-width="4"/><text x="25" y="85" fill="%23cbd5e1" font-size="10" font-family="sans-serif">RAW MATERIAL</text></svg>`;
@@ -72,7 +82,9 @@ export const ProductionView: React.FC<ProductionProps> = ({
       materialConsumedName: rawMat?.name || undefined,
       materialConsumedQty: materialConsumedQty > 0 ? Number(materialConsumedQty) : undefined,
       materialPhoto: mockMatSvg,
-      productPhoto: mockProdSvg
+      productPhoto: mockProdSvg,
+      wastageQty: wastageQty > 0 ? Number(wastageQty) : undefined,
+      efficiency: calculatedEfficiency
     });
 
     setIsModalOpen(false);
@@ -122,19 +134,21 @@ export const ProductionView: React.FC<ProductionProps> = ({
           <thead>
             <tr>
               <th>Batch ID</th>
-              <th>Material Consumption (Input)</th>
+              <th>Material Input</th>
               <th>Finished Output</th>
+              <th>Wastage / Scrap</th>
+              <th>Yield Efficiency %</th>
               <th>Worker</th>
               <th>Date Logged</th>
               <th>Photos & Details</th>
               <th>Status</th>
-              <th>Manager Action</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={8} style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)' }}>
+                <td colSpan={10} style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)' }}>
                   No production records found.
                 </td>
               </tr>
@@ -151,7 +165,6 @@ export const ProductionView: React.FC<ProductionProps> = ({
                         <span style={{ fontSize: '12px', marginLeft: '4px', fontWeight: 600 }}>
                           {p.materialConsumedName}
                         </span>
-                        <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Consumed from assignment</div>
                       </div>
                     ) : (
                       <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontStyle: 'italic' }}>Not specified</span>
@@ -168,6 +181,27 @@ export const ProductionView: React.FC<ProductionProps> = ({
                     </div>
                   </td>
                   <td>
+                    {p.wastageQty !== undefined ? (
+                      <span style={{ fontWeight: 600, color: 'var(--color-danger)' }}>{p.wastageQty} units</span>
+                    ) : (
+                      <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>0</span>
+                    )}
+                  </td>
+                  <td>
+                    {p.efficiency !== undefined ? (
+                      <span 
+                        style={{ 
+                          fontWeight: 700, 
+                          color: p.efficiency >= 90 ? 'var(--color-green)' : p.efficiency >= 80 ? 'var(--color-orange)' : 'var(--color-danger)'
+                        }}
+                      >
+                        {p.efficiency}%
+                      </span>
+                    ) : (
+                      <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>100%</span>
+                    )}
+                  </td>
+                  <td>
                     <div style={{ fontWeight: 600 }}>{p.workerName}</div>
                     <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>ID: {p.workerId}</div>
                   </td>
@@ -178,7 +212,7 @@ export const ProductionView: React.FC<ProductionProps> = ({
                       style={{ padding: '4px 8px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px' }}
                       onClick={() => setSelectedAuditLog(p)}
                     >
-                      <Eye size={12} /> View Photos
+                      <Eye size={12} /> View Details
                     </button>
                   </td>
                   <td>
@@ -266,7 +300,23 @@ export const ProductionView: React.FC<ProductionProps> = ({
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px', padding: '12px', backgroundColor: '#f1f5f9', borderRadius: '6px', fontSize: '12px' }}>
+            {/* Wastage and Efficiency Details */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px', padding: '12px', backgroundColor: '#fdf2f8', border: '1px solid #fbcfe8', borderRadius: '8px' }}>
+              <div>
+                <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600 }}>MATERIAL WASTAGE / SCRAP</span>
+                <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--color-danger)' }}>
+                  {selectedAuditLog.wastageQty !== undefined ? `${selectedAuditLog.wastageQty} units` : '0 units (No waste logged)'}
+                </span>
+              </div>
+              <div>
+                <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600 }}>YIELD EFFICIENCY PERCENTAGE</span>
+                <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--color-green)' }}>
+                  {selectedAuditLog.efficiency !== undefined ? `${selectedAuditLog.efficiency}%` : '100%'}
+                </span>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', padding: '12px', backgroundColor: '#f1f5f9', borderRadius: '6px', fontSize: '12px' }}>
               <div>
                 <strong>Worker Responsible:</strong> {selectedAuditLog.workerName} (ID: {selectedAuditLog.workerId})
               </div>
@@ -287,7 +337,7 @@ export const ProductionView: React.FC<ProductionProps> = ({
       {/* Add Production Modal */}
       {isModalOpen && (
         <div className="modal-overlay">
-          <form className="modal-content" onSubmit={handleSubmit}>
+          <form className="modal-content" onSubmit={handleSubmit} style={{ maxWidth: '580px', width: '90%' }}>
             <div className="modal-header">
               <h2 className="modal-title">Log Production Batch</h2>
               <button type="button" className="modal-close" onClick={() => setIsModalOpen(false)}>×</button>
@@ -358,17 +408,30 @@ export const ProductionView: React.FC<ProductionProps> = ({
               </div>
             </div>
 
-            <div className="form-group">
-              <label>Worker Accountable</label>
-              <select 
-                className="form-control" 
-                value={workerId} 
-                onChange={(e) => setWorkerId(e.target.value)}
-              >
-                {activeWorkers.map(worker => (
-                  <option key={worker.id} value={worker.id}>{worker.name} ({worker.department})</option>
-                ))}
-              </select>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="form-group">
+                <label>Wastage / Scrap Quantity</label>
+                <input 
+                  type="number" 
+                  className="form-control" 
+                  value={wastageQty || ''} 
+                  onChange={(e) => setWastageQty(Number(e.target.value))}
+                  placeholder="e.g. 2"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Worker Accountable</label>
+                <select 
+                  className="form-control" 
+                  value={workerId} 
+                  onChange={(e) => setWorkerId(e.target.value)}
+                >
+                  {activeWorkers.map(worker => (
+                    <option key={worker.id} value={worker.id}>{worker.name} ({worker.department})</option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '12px' }}>

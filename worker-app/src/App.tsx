@@ -54,6 +54,7 @@ function App() {
   // Raw material consumption states
   const [logMaterialIssueId, setLogMaterialIssueId] = useState('');
   const [logMaterialQty, setLogMaterialQty] = useState<number>(0);
+  const [logWastageQty, setLogWastageQty] = useState<number>(0);
 
   // System time clock simulator
   const [systemTime, setSystemTime] = useState('15:22');
@@ -108,6 +109,7 @@ function App() {
   useEffect(() => {
     setLogMaterialIssueId('');
     setLogMaterialQty(0);
+    setLogWastageQty(0);
   }, [currentWorker]);
 
   // Filter issues and production logs for current worker
@@ -129,7 +131,20 @@ function App() {
   // Calculate worker earnings based on approved production records and pieces produced
   const approvedRuns = workerProduction.filter(p => p.status === 'Approved');
   const totalApprovedQty = approvedRuns.reduce((sum, p) => sum + p.quantityProduced, 0);
-  const totalEarnings = currentWorker ? totalApprovedQty * currentWorker.baseRate : 0;
+  
+  let totalEarnings = 0;
+  if (currentWorker) {
+    const model = currentWorker.payrollModel || 'Per Piece';
+    if (model === 'Fixed Salary') {
+      totalEarnings = currentWorker.fixedSalaryAmount || 15000;
+    } else if (model === 'Fixed + Incentive') {
+      const fixed = currentWorker.fixedSalaryAmount || 12000;
+      const incentive = currentWorker.incentiveRate || 10;
+      totalEarnings = fixed + (totalApprovedQty * incentive);
+    } else { // 'Per Piece' or 'Per KG'
+      totalEarnings = totalApprovedQty * currentWorker.baseRate;
+    }
+  }
 
   // Open simulated camera
   const handleOpenCamera = (target: 'material' | 'product', issueId?: string) => {
@@ -168,6 +183,12 @@ function App() {
     const selectedIssue = issues.find(issue => issue.id === logMaterialIssueId);
     const verifiedPhoto = selectedIssue ? materialPhotos[selectedIssue.id] : undefined;
 
+    // Calculate efficiency % = ((materialConsumedQty - wastageQty) / materialConsumedQty) * 100
+    let calculatedEfficiency = 100;
+    if (logMaterialQty > 0) {
+      calculatedEfficiency = Math.round(((logMaterialQty - logWastageQty) / logMaterialQty) * 100);
+    }
+
     const newRecord: ProductionLog = {
       id: `PROD-${String(production.length + 1).padStart(3, '0')}`,
       batchNumber: logBatchNum,
@@ -182,7 +203,9 @@ function App() {
       materialConsumedName: selectedIssue?.materialName,
       materialConsumedQty: logMaterialQty > 0 ? Number(logMaterialQty) : undefined,
       materialPhoto: verifiedPhoto, // automatically bundle the raw material photo!
-      productPhoto: loggedProductPhoto || undefined
+      productPhoto: loggedProductPhoto || undefined,
+      wastageQty: logWastageQty > 0 ? Number(logWastageQty) : undefined,
+      efficiency: calculatedEfficiency
     };
 
     // Simulate inventory consumption deduction
@@ -208,6 +231,7 @@ function App() {
     // Reset logger states
     setLogQty(0);
     setLogMaterialQty(0);
+    setLogWastageQty(0);
     setLoggedProductPhoto(null);
     setLogBatchNum(`B-${Math.floor(100 + Math.random() * 900)}`);
     alert(`Logged Output for Batch ${newRecord.batchNumber} successfully submitted!`);
@@ -265,7 +289,7 @@ function App() {
                         <div style={{ flexGrow: 1 }}>
                           <div style={{ fontWeight: 700, fontSize: '14px' }}>{w.name}</div>
                           <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-                            {w.department} • Rate: ₹{w.baseRate}/piece
+                            {w.department} • Model: {w.payrollModel || 'Per Piece'}
                           </div>
                         </div>
                       </div>
@@ -409,16 +433,29 @@ function App() {
                     </div>
 
                     {logMaterialIssueId && (
-                      <div className="form-group" style={{ marginBottom: '0' }}>
-                        <label>Material Qty Consumed</label>
-                        <input
-                          type="number"
-                          className="form-input"
-                          min="1"
-                          value={logMaterialQty || ''}
-                          onChange={(e) => setLogMaterialQty(Number(e.target.value))}
-                          placeholder="e.g. 10"
-                        />
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '8px' }}>
+                        <div className="form-group" style={{ marginBottom: '0' }}>
+                          <label>Qty Consumed</label>
+                          <input
+                            type="number"
+                            className="form-input"
+                            min="1"
+                            value={logMaterialQty || ''}
+                            onChange={(e) => setLogMaterialQty(Number(e.target.value))}
+                            placeholder="e.g. 10"
+                          />
+                        </div>
+                        <div className="form-group" style={{ marginBottom: '0' }}>
+                          <label>Scrap / Wastage</label>
+                          <input
+                            type="number"
+                            className="form-input"
+                            min="0"
+                            value={logWastageQty || ''}
+                            onChange={(e) => setLogWastageQty(Number(e.target.value))}
+                            placeholder="e.g. 2"
+                          />
+                        </div>
                       </div>
                     )}
                   </div>
@@ -488,11 +525,24 @@ function App() {
               <>
                 {/* Piece rate earnings card banner */}
                 <div className="earnings-box">
-                  <span className="earnings-label">ACCUMULATED EARNINGS (PIECE RATE)</span>
+                  <span className="earnings-label">ACCUMULATED EARNINGS ({currentWorker.payrollModel || 'Piece Rate'})</span>
                   <div className="earnings-amount">₹{totalEarnings.toLocaleString()}</div>
-                  <span className="earnings-subtext">
-                    Calculated at ₹{currentWorker.baseRate} per unit produced ({totalApprovedQty} total units approved)
-                  </span>
+                  
+                  {currentWorker.payrollModel === 'Fixed Salary' && (
+                    <span className="earnings-subtext">
+                      Fixed monthly payout: ₹{currentWorker.fixedSalaryAmount?.toLocaleString()}
+                    </span>
+                  )}
+                  {currentWorker.payrollModel === 'Fixed + Incentive' && (
+                    <span className="earnings-subtext">
+                      Base: ₹{currentWorker.fixedSalaryAmount?.toLocaleString()} + ₹{currentWorker.incentiveRate}/piece ({totalApprovedQty} units approved)
+                    </span>
+                  )}
+                  {(currentWorker.payrollModel === 'Per Piece' || currentWorker.payrollModel === 'Per KG') && (
+                    <span className="earnings-subtext">
+                      Calculated at ₹{currentWorker.baseRate} per unit ({totalApprovedQty} total units approved)
+                    </span>
+                  )}
                 </div>
 
                 <h3 style={{ fontSize: '15px', fontWeight: 700, margin: '8px 0 2px 0' }}>Production History</h3>
@@ -519,12 +569,28 @@ function App() {
                           <div>{p.productName} ({p.quantityProduced} pcs)</div>
                           {p.materialConsumedName && (
                             <div style={{ fontSize: '10px', color: 'var(--color-orange)', marginTop: '2px' }}>
-                              Used: {p.materialConsumedQty} {p.materialConsumedName}
+                              Used: {p.materialConsumedQty} {p.materialConsumedName} 
+                              {p.wastageQty !== undefined && ` (Wastage: ${p.wastageQty})`}
+                            </div>
+                          )}
+                          {p.efficiency !== undefined && (
+                            <div style={{ fontSize: '10px', color: 'var(--primary)', fontWeight: 700 }}>
+                              Yield Efficiency: {p.efficiency}%
                             </div>
                           )}
                         </div>
                         <span style={{ fontWeight: 700, color: 'var(--color-green)' }}>
-                          {p.status === 'Approved' ? `+₹${(p.quantityProduced * currentWorker.baseRate).toLocaleString()}` : 'Pending wage'}
+                          {p.status === 'Approved' ? (
+                            currentWorker.payrollModel === 'Fixed Salary' ? (
+                              'Salary'
+                            ) : currentWorker.payrollModel === 'Fixed + Incentive' ? (
+                              `+₹${(p.quantityProduced * (currentWorker.incentiveRate || 10)).toLocaleString()} (Incentive)`
+                            ) : (
+                              `+₹${(p.quantityProduced * currentWorker.baseRate).toLocaleString()}`
+                            )
+                          ) : (
+                            'Pending approval'
+                          )}
                         </span>
                       </div>
 
@@ -566,7 +632,8 @@ function App() {
                       <div key={p.id} className="mobile-card notify-card success">
                         <div style={{ fontWeight: 700, fontSize: '13px' }}>Batch Approved!</div>
                         <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                          Batch <strong>{p.batchNumber}</strong> has been approved. Pieces produced: {p.quantityProduced} units. Piece rate payout (₹{p.quantityProduced * currentWorker.baseRate}) credited to your panel.
+                          Batch <strong>{p.batchNumber}</strong> has been approved. Yield: {p.quantityProduced} units (Efficiency: {p.efficiency}%). 
+                          {currentWorker.payrollModel !== 'Fixed Salary' && ` Wage amount credited to your panel.`}
                         </p>
                         <div className="notify-time">{p.approvedDate}</div>
                       </div>

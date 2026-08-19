@@ -2,12 +2,12 @@ import React from 'react';
 import { 
   Users, 
   PackageOpen, 
-  ShieldAlert, 
   Hourglass,
   TrendingUp,
-  Boxes,
   Plus,
-  Globe
+  Globe,
+  Trash2,
+  Percent
 } from 'lucide-react';
 import type { Employee, InventoryItem, ProductionLog } from '../data/mockDb';
 
@@ -30,33 +30,46 @@ export const DashboardView: React.FC<DashboardProps> = ({
   const activeWorkers = employees.filter(e => e.status === 'Active').length;
   const lowStockItems = inventory.filter(item => item.quantity <= item.minThreshold);
   
-  // Total finished goods produced (approved)
-  const totalApprovedProduction = production
-    .filter(p => p.status === 'Approved')
-    .reduce((sum, p) => sum + p.quantityProduced, 0);
 
-  // Group production by worker
+
+  // Group production, wastage and compute efficiency by worker
   const workerStats = employees
     .filter(e => e.role === 'Worker')
     .map(worker => {
-      const workerProd = production
-        .filter(p => p.workerId === worker.id && p.status === 'Approved')
-        .reduce((sum, p) => sum + p.quantityProduced, 0);
+      const workerApprovedLogs = production.filter(p => p.workerId === worker.id && p.status === 'Approved');
+      const workerProd = workerApprovedLogs.reduce((sum, p) => sum + p.quantityProduced, 0);
+      const workerWaste = workerApprovedLogs.reduce((sum, p) => sum + (p.wastageQty || 0), 0);
+      
+      // Calculate average efficiency
+      const logsWithEfficiency = workerApprovedLogs.filter(p => p.efficiency !== undefined);
+      const avgEfficiency = logsWithEfficiency.length > 0
+        ? Math.round(logsWithEfficiency.reduce((sum, p) => sum + (p.efficiency || 0), 0) / logsWithEfficiency.length)
+        : 100;
+
       return {
         id: worker.id,
         name: worker.name,
-        amount: workerProd
+        amount: workerProd,
+        waste: workerWaste,
+        efficiency: avgEfficiency
       };
     });
 
   const maxVal = Math.max(...workerStats.map(w => w.amount), 1);
+  const maxWaste = Math.max(...workerStats.map(w => w.waste), 1);
   const totalQty = workerStats.reduce((sum, w) => sum + w.amount, 0) || 1;
+  const totalWastage = production.reduce((sum, p) => sum + (p.wastageQty || 0), 0);
+
+  // Average factory efficiency percentage
+  const logsWithEff = production.filter(p => p.status === 'Approved' && p.efficiency !== undefined);
+  const factoryAvgEfficiency = logsWithEff.length > 0
+    ? Math.round(logsWithEff.reduce((sum, p) => sum + (p.efficiency || 0), 0) / logsWithEff.length)
+    : 92;
 
   // Workforce percentage
   const workforcePct = employees.length > 0 ? Math.round((activeWorkers / employees.length) * 100) : 0;
   
-  // Inventory healthy stock percentage (items not low stock)
-  const inventoryPct = inventory.length > 0 ? Math.round(((inventory.length - lowStockItems.length) / inventory.length) * 100) : 100;
+
   
   // Approval percentage (approved batches vs total batches)
   const approvedBatches = production.filter(p => p.status === 'Approved').length;
@@ -65,7 +78,7 @@ export const DashboardView: React.FC<DashboardProps> = ({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
       
-      {/* Stats Cards Row with horizontal progress bars and hanging badges */}
+      {/* Dynamic PRD KPI Card metrics widgets */}
       <div className="stats-grid" style={{ gap: '28px' }}>
         <div className="stat-card-wrapper" style={{ cursor: 'pointer' }} onClick={() => setCurrentTab('employees')}>
           <div className="stat-card">
@@ -83,33 +96,29 @@ export const DashboardView: React.FC<DashboardProps> = ({
 
         <div className="stat-card-wrapper" style={{ cursor: 'pointer' }} onClick={() => setCurrentTab('inventory')}>
           <div className="stat-card">
-            <span className="stat-title">Healthy Inventory</span>
-            <span className="stat-value">{inventory.length - lowStockItems.length} / {inventory.length}</span>
+            <span className="stat-title">Factory Wastage (Scrap)</span>
+            <span className="stat-value">{totalWastage} units</span>
             <div className="stat-progress-bar">
-              <div className="stat-progress-fill orange" style={{ width: `${inventoryPct}%` }}></div>
+              <div className="stat-progress-fill orange" style={{ width: `${Math.min(100, (totalWastage / 200) * 100)}%` }}></div>
             </div>
-            <span className="stat-subtitle">{inventoryPct}% stock items normal</span>
+            <span className="stat-subtitle">Total logged material scrap</span>
           </div>
           <div className="stat-icon-floating orange">
-            <Boxes size={20} />
+            <Trash2 size={20} />
           </div>
         </div>
 
-        <div className="stat-card-wrapper" style={{ cursor: 'pointer' }} onClick={() => setCurrentTab('inventory')}>
+        <div className="stat-card-wrapper" style={{ cursor: 'pointer' }} onClick={() => setCurrentTab('production')}>
           <div className="stat-card">
-            <span className="stat-title">Low Stock Alerts</span>
-            <span className="stat-value" style={{ color: lowStockItems.length > 0 ? 'var(--danger)' : 'inherit' }}>
-              {lowStockItems.length} Items
-            </span>
+            <span className="stat-title">Avg Yield Efficiency</span>
+            <span className="stat-value">{factoryAvgEfficiency}%</span>
             <div className="stat-progress-bar">
-              <div className="stat-progress-fill purple" style={{ width: `${lowStockItems.length > 0 ? 30 : 0}%` }}></div>
+              <div className="stat-progress-fill purple" style={{ width: `${factoryAvgEfficiency}%` }}></div>
             </div>
-            <span className="stat-subtitle">
-              {lowStockItems.length > 0 ? 'Action required soon' : 'All items normal'}
-            </span>
+            <span className="stat-subtitle">Average raw-to-finish ratio</span>
           </div>
           <div className="stat-icon-floating purple">
-            <ShieldAlert size={20} />
+            <Percent size={20} />
           </div>
         </div>
 
@@ -149,7 +158,7 @@ export const DashboardView: React.FC<DashboardProps> = ({
                   </div>
                   <div>
                     <div className="contribution-name">{w.name}</div>
-                    <div className="contribution-role">Worker • ID: {w.id}</div>
+                    <div className="contribution-role">Yield Efficiency: <strong>{w.efficiency}%</strong></div>
                   </div>
                 </div>
                 <div className="contribution-right">
@@ -195,76 +204,101 @@ export const DashboardView: React.FC<DashboardProps> = ({
         </div>
       </div>
 
-      {/* Bottom Grid: Output Chart & Quick Tools */}
-      <div className="content-grid">
-        {/* Output Chart */}
-        <div className="card">
-          <div className="card-title">
-            <span>Approved Output per Worker (Items)</span>
+      {/* Bottom Grid: Output Chart, Wastage Chart & Control Panel */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '28px' }}>
+        
+        {/* Output & Wastage Charts */}
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="card-title" style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span>Worker Performance Index</span>
             <TrendingUp size={18} style={{ color: 'var(--primary)' }} />
           </div>
-          
-          <div className="chart-container">
-            {workerStats.map((stat, idx) => {
-              const heightPct = (stat.amount / maxVal) * 80 + 10;
-              return (
-                <div key={idx} className="chart-bar-wrapper">
-                  <div 
-                    className="chart-bar" 
-                    style={{ height: `${heightPct}%` }}
-                  >
-                    <span className="chart-tooltip">{stat.amount} units</span>
-                  </div>
-                  <span className="chart-label">{stat.name.split(' ')[0]}</span>
-                </div>
-              );
-            })}
-          </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-secondary)' }}>
-            <span>Total Factory Approved Output: <strong>{totalApprovedProduction} units</strong></span>
-            <span>Based on approved production logs</span>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            {/* Yield Output bar */}
+            <div>
+              <h4 style={{ fontSize: '12px', color: 'var(--color-green)', marginBottom: '8px', textAlign: 'center' }}>Completed Output (Units)</h4>
+              <div className="chart-container" style={{ height: '140px' }}>
+                {workerStats.map((stat, idx) => {
+                  const heightPct = (stat.amount / maxVal) * 80 + 10;
+                  return (
+                    <div key={idx} className="chart-bar-wrapper">
+                      <div 
+                        className="chart-bar" 
+                        style={{ height: `${heightPct}%`, backgroundColor: 'var(--color-green)' }}
+                      >
+                        <span className="chart-tooltip">{stat.amount} units</span>
+                      </div>
+                      <span className="chart-label">{stat.name.split(' ')[0]}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Wastage bar */}
+            <div>
+              <h4 style={{ fontSize: '12px', color: 'var(--color-danger)', marginBottom: '8px', textAlign: 'center' }}>Scrap / Wastage (Units)</h4>
+              <div className="chart-container" style={{ height: '140px' }}>
+                {workerStats.map((stat, idx) => {
+                  const heightPct = (stat.waste / maxWaste) * 80 + 10;
+                  return (
+                    <div key={idx} className="chart-bar-wrapper">
+                      <div 
+                        className="chart-bar" 
+                        style={{ height: `${heightPct}%`, backgroundColor: 'var(--color-danger)' }}
+                      >
+                        <span className="chart-tooltip">{stat.waste} scrap</span>
+                      </div>
+                      <span className="chart-label">{stat.name.split(' ')[0]}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Quick Tools & Alerts */}
+        {/* Quick Operations Control & Alerts */}
         <div className="card">
-          <div className="card-title">Operations Control</div>
-          <div className="quick-actions">
+          <div className="card-title">Operations Control & Stock Thresholds</div>
+          <div className="quick-actions" style={{ marginBottom: '16px' }}>
             <button className="quick-action-btn" onClick={() => onOpenQuickAction('add_employee')}>
               <Users size={16} />
-              <span style={{ fontSize: '12px', fontWeight: 600 }}>Add Employee</span>
+              <span style={{ fontSize: '11px', fontWeight: 600 }}>Add Employee</span>
             </button>
             <button className="quick-action-btn" onClick={() => onOpenQuickAction('issue_material')}>
               <PackageOpen size={16} />
-              <span style={{ fontSize: '12px', fontWeight: 600 }}>Issue Material</span>
+              <span style={{ fontSize: '11px', fontWeight: 600 }}>Issue Material</span>
             </button>
             <button className="quick-action-btn" onClick={() => onOpenQuickAction('log_production')}>
               <TrendingUp size={16} />
-              <span style={{ fontSize: '12px', fontWeight: 600 }}>Log Batch</span>
+              <span style={{ fontSize: '11px', fontWeight: 600 }}>Log Batch</span>
             </button>
             <button className="quick-action-btn" onClick={() => setCurrentTab('payroll')}>
               <Plus size={16} />
-              <span style={{ fontSize: '12px', fontWeight: 600 }}>Run Payroll</span>
+              <span style={{ fontSize: '11px', fontWeight: 600 }}>Run Payroll</span>
             </button>
           </div>
 
           {/* Warnings list */}
-          <div style={{ marginTop: '8px' }}>
-            <h4 style={{ fontSize: '13px', marginBottom: '8px', color: 'var(--text-secondary)' }}>Stock Alerts</h4>
+          <div>
+            <h4 style={{ fontSize: '13px', marginBottom: '8px', color: 'var(--text-secondary)' }}>Low Stock Threshold Alerts</h4>
             {lowStockItems.length === 0 ? (
               <p style={{ fontSize: '12px', color: 'var(--color-green)', fontWeight: 600 }}>✓ All raw materials above threshold.</p>
             ) : (
               <div className="card-list">
-                {lowStockItems.slice(0, 2).map(item => (
-                  <div key={item.id} className="list-item" style={{ padding: '8px 12px' }}>
+                {lowStockItems.map(item => (
+                  <div key={item.id} className="list-item" style={{ padding: '8px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
-                      <div className="list-item-title" style={{ fontSize: '12px' }}>{item.name}</div>
-                      <div className="list-item-subtitle" style={{ fontSize: '10px' }}>
-                        {item.quantity} {item.unit} left
+                      <div className="list-item-title" style={{ fontSize: '12px', fontWeight: 600 }}>{item.name}</div>
+                      <div className="list-item-subtitle" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                        Code: {item.materialCode} • Location: {item.storageLocation}
                       </div>
                     </div>
-                    <span className="badge badge-danger" style={{ fontSize: '9px' }}>Low</span>
+                    <div style={{ textAlign: 'right' }}>
+                      <span className="badge badge-danger" style={{ fontSize: '9px', padding: '2px 6px' }}>{item.quantity} {item.unit} left</span>
+                    </div>
                   </div>
                 ))}
               </div>

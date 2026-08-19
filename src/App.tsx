@@ -124,6 +124,8 @@ function App() {
     materialConsumedQty?: number;
     materialPhoto?: string;
     productPhoto?: string;
+    wastageQty?: number;
+    efficiency?: number;
   }) => {
     const product = inventory.find(i => i.id === newLog.productId);
     const worker = employees.find(e => e.id === newLog.workerId);
@@ -143,7 +145,9 @@ function App() {
       materialConsumedName: newLog.materialConsumedName,
       materialConsumedQty: newLog.materialConsumedQty,
       materialPhoto: newLog.materialPhoto,
-      productPhoto: newLog.productPhoto
+      productPhoto: newLog.productPhoto,
+      wastageQty: newLog.wastageQty,
+      efficiency: newLog.efficiency
     };
 
     const updatedProd = [newRecord, ...production];
@@ -170,12 +174,19 @@ function App() {
       return p;
     });
 
-    // 2. Increment inventory stock for finished good
+    // 2. Increment inventory stock for finished good & decrement raw material consumed
     const updatedInventory = inventory.map(item => {
       if (item.id === log.productId) {
         return {
           ...item,
           quantity: item.quantity + log.quantityProduced,
+          lastUpdated: new Date().toISOString().split('T')[0]
+        };
+      }
+      if (log.materialConsumedId && item.id === log.materialConsumedId) {
+        return {
+          ...item,
+          quantity: Math.max(0, item.quantity - (log.materialConsumedQty || 0)),
           lastUpdated: new Date().toISOString().split('T')[0]
         };
       }

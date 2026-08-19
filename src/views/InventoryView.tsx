@@ -19,6 +19,11 @@ export const InventoryView: React.FC<InventoryProps> = ({ inventory, setInventor
   const [quantity, setQuantity] = useState(0);
   const [unit, setUnit] = useState('pcs');
   const [minThreshold, setMinThreshold] = useState(100);
+  
+  // PRD States
+  const [materialCode, setMaterialCode] = useState('');
+  const [storageLocation, setStorageLocation] = useState('');
+  const [batchNumber, setBatchNumber] = useState('');
 
   const openAddModal = () => {
     setEditingItem(null);
@@ -27,6 +32,9 @@ export const InventoryView: React.FC<InventoryProps> = ({ inventory, setInventor
     setQuantity(0);
     setUnit('pcs');
     setMinThreshold(100);
+    setMaterialCode(`MAT-${String(inventory.length + 1).padStart(3, '0')}`);
+    setStorageLocation('Warehouse Block A');
+    setBatchNumber('');
     setIsModalOpen(true);
   };
 
@@ -37,6 +45,9 @@ export const InventoryView: React.FC<InventoryProps> = ({ inventory, setInventor
     setQuantity(item.quantity);
     setUnit(item.unit);
     setMinThreshold(item.minThreshold);
+    setMaterialCode(item.materialCode || '');
+    setStorageLocation(item.storageLocation || '');
+    setBatchNumber(item.batchNumber || '');
     setIsModalOpen(true);
   };
 
@@ -54,7 +65,10 @@ export const InventoryView: React.FC<InventoryProps> = ({ inventory, setInventor
             quantity: Number(quantity),
             unit,
             minThreshold: Number(minThreshold),
-            lastUpdated: new Date().toISOString().split('T')[0]
+            lastUpdated: new Date().toISOString().split('T')[0],
+            materialCode,
+            storageLocation,
+            batchNumber: batchNumber || undefined
           };
         }
         return item;
@@ -71,7 +85,10 @@ export const InventoryView: React.FC<InventoryProps> = ({ inventory, setInventor
         quantity: Number(quantity),
         unit,
         minThreshold: Number(minThreshold),
-        lastUpdated: new Date().toISOString().split('T')[0]
+        lastUpdated: new Date().toISOString().split('T')[0],
+        materialCode,
+        storageLocation,
+        batchNumber: batchNumber || undefined
       };
       setInventory([...inventory, newItem]);
     }
@@ -94,7 +111,8 @@ export const InventoryView: React.FC<InventoryProps> = ({ inventory, setInventor
 
   const filtered = inventory.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          item.id.toLowerCase().includes(searchTerm.toLowerCase());
+                          item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          (item.materialCode && item.materialCode.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesType = filterType === 'All' || item.type === filterType;
     return matchesSearch && matchesType;
   });
@@ -104,7 +122,7 @@ export const InventoryView: React.FC<InventoryProps> = ({ inventory, setInventor
       <div className="top-header">
         <div>
           <h1 className="page-title">Inventory Hub</h1>
-          <p className="page-subtitle">Track raw materials and finished catalog items in real-time.</p>
+          <p className="page-subtitle">Track raw materials and finished catalog items in real-time, configure storage bays, and monitor batch alerts.</p>
         </div>
         <button className="btn btn-primary" onClick={openAddModal}>
           <Plus size={18} /> Add Catalog Item
@@ -119,7 +137,7 @@ export const InventoryView: React.FC<InventoryProps> = ({ inventory, setInventor
             <input 
               type="text" 
               className="form-control" 
-              placeholder="Search by inventory name or code..." 
+              placeholder="Search by inventory name, code, or material ref..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -156,22 +174,23 @@ export const InventoryView: React.FC<InventoryProps> = ({ inventory, setInventor
         <table className="table">
           <thead>
             <tr>
-              <th>Item ID</th>
-              <th>Catalog Name</th>
+              <th>Item Code</th>
+              <th>Material Name</th>
               <th>Type</th>
-              <th>Available Stock</th>
-              <th>Status Alert</th>
-              <th>Min Threshold</th>
-              <th>Last Updated</th>
-              <th>Quick Stock Updates</th>
-              <th>Actions</th>
+              <th>Available Qty</th>
+              <th>Batch Ref</th>
+              <th>Storage Location</th>
+              <th>Safety Threshold</th>
+              <th>Status</th>
+              <th>Quick Adjust</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={9} style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)' }}>
-                  No catalog items found matching your filters.
+                <td colSpan={10} style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)' }}>
+                  No catalog items found.
                 </td>
               </tr>
             ) : (
@@ -179,77 +198,47 @@ export const InventoryView: React.FC<InventoryProps> = ({ inventory, setInventor
                 const isLow = item.quantity <= item.minThreshold;
                 return (
                   <tr key={item.id}>
-                    <td><strong>{item.id}</strong></td>
                     <td>
-                      <div style={{ fontWeight: 600 }}>{item.name}</div>
+                      <div style={{ fontWeight: 700, color: 'var(--primary)' }}>{item.materialCode || 'N/A'}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>ID: {item.id}</div>
                     </td>
                     <td>
-                      <span 
-                        className="badge" 
-                        style={{ 
-                          backgroundColor: item.type === 'Raw Material' ? 'rgba(13, 148, 136, 0.15)' : 'rgba(16, 185, 129, 0.15)',
-                          color: item.type === 'Raw Material' ? 'var(--primary)' : 'var(--accent)'
-                        }}
-                      >
+                      <div style={{ fontWeight: 600 }}>{item.name}</div>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Updated: {item.lastUpdated}</span>
+                    </td>
+                    <td>
+                      <span className={`badge ${item.type === 'Raw Material' ? 'badge-pending' : 'badge-success'}`}>
                         {item.type}
                       </span>
                     </td>
                     <td>
-                      <span style={{ fontSize: '16px', fontWeight: 700 }}>
-                        {item.quantity}
-                      </span>{' '}
-                      <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>
-                        {item.unit}
+                      <span style={{ fontSize: '15px', fontWeight: 700 }}>
+                        {item.quantity.toLocaleString()} {item.unit}
                       </span>
                     </td>
+                    <td>
+                      <strong style={{ fontSize: '12px' }}>{item.batchNumber || 'N/A'}</strong>
+                    </td>
+                    <td>
+                      <div style={{ fontSize: '12px', fontWeight: 600 }}>{item.storageLocation || 'N/A'}</div>
+                    </td>
+                    <td>{item.minThreshold} {item.unit}</td>
                     <td>
                       {isLow ? (
                         <span className="badge badge-danger">Low Stock</span>
                       ) : (
-                        <span className="badge badge-success">Sufficient</span>
+                        <span className="badge badge-success">Healthy</span>
                       )}
                     </td>
-                    <td>{item.minThreshold} {item.unit}</td>
-                    <td style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>{item.lastUpdated}</td>
                     <td>
-                      <div style={{ display: 'flex', gap: '6px' }}>
-                        <button 
-                          className="btn btn-secondary" 
-                          style={{ padding: '4px 8px', fontSize: '11px' }}
-                          onClick={() => adjustStock(item.id, -10)}
-                        >
-                          -10
-                        </button>
-                        <button 
-                          className="btn btn-secondary" 
-                          style={{ padding: '4px 8px', fontSize: '11px' }}
-                          onClick={() => adjustStock(item.id, -1)}
-                        >
-                          -1
-                        </button>
-                        <button 
-                          className="btn btn-secondary" 
-                          style={{ padding: '4px 8px', fontSize: '11px' }}
-                          onClick={() => adjustStock(item.id, 1)}
-                        >
-                          +1
-                        </button>
-                        <button 
-                          className="btn btn-secondary" 
-                          style={{ padding: '4px 8px', fontSize: '11px' }}
-                          onClick={() => adjustStock(item.id, 10)}
-                        >
-                          +10
-                        </button>
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        <button className="btn btn-secondary" style={{ padding: '4px 8px', fontSize: '11px' }} onClick={() => adjustStock(item.id, 10)}>+10</button>
+                        <button className="btn btn-secondary" style={{ padding: '4px 8px', fontSize: '11px' }} onClick={() => adjustStock(item.id, -10)}>-10</button>
                       </div>
                     </td>
                     <td>
-                      <button 
-                        className="btn btn-secondary" 
-                        style={{ padding: '6px 12px', fontSize: '12px' }}
-                        onClick={() => openEditModal(item)}
-                      >
-                        <Edit size={12} /> Edit Detail
+                      <button className="btn btn-secondary" style={{ padding: '6px 10px', fontSize: '12px' }} onClick={() => openEditModal(item)}>
+                        <Edit size={12} /> Edit
                       </button>
                     </td>
                   </tr>
@@ -260,34 +249,47 @@ export const InventoryView: React.FC<InventoryProps> = ({ inventory, setInventor
         </table>
       </div>
 
-      {/* Add / Edit Modal */}
+      {/* Add/Edit Modal */}
       {isModalOpen && (
         <div className="modal-overlay">
-          <form className="modal-content" onSubmit={handleSubmit}>
+          <form className="modal-content" onSubmit={handleSubmit} style={{ maxWidth: '560px', width: '90%' }}>
             <div className="modal-header">
-              <h2 className="modal-title">{editingItem ? 'Edit Catalog Item' : 'Create New Stock Item'}</h2>
+              <h2 className="modal-title">{editingItem ? 'Edit Catalog Item' : 'Add Catalog Item'}</h2>
               <button type="button" className="modal-close" onClick={() => setIsModalOpen(false)}>×</button>
-            </div>
-
-            <div className="form-group">
-              <label>Item / Material Name</label>
-              <input 
-                type="text" 
-                className="form-control" 
-                required 
-                value={name} 
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Copper Pipe D-20"
-              />
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
               <div className="form-group">
-                <label>Item Type</label>
+                <label>Material/Product Code</label>
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  required 
+                  value={materialCode} 
+                  onChange={(e) => setMaterialCode(e.target.value)}
+                  placeholder="e.g. MAT-STL-01"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Item Name</label>
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  required 
+                  value={name} 
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Steel Sheets (2mm)"
+                />
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div className="form-group">
+                <label>Type</label>
                 <select 
                   className="form-control" 
                   value={type} 
-                  disabled={!!editingItem} // disable type edits for safety
                   onChange={(e) => setType(e.target.value as any)}
                 >
                   <option value="Raw Material">Raw Material</option>
@@ -310,7 +312,7 @@ export const InventoryView: React.FC<InventoryProps> = ({ inventory, setInventor
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
               <div className="form-group">
-                <label>Initial Quantity</label>
+                <label>Available Quantity</label>
                 <input 
                   type="number" 
                   className="form-control" 
@@ -321,7 +323,7 @@ export const InventoryView: React.FC<InventoryProps> = ({ inventory, setInventor
               </div>
 
               <div className="form-group">
-                <label>Low-Stock Alert Level</label>
+                <label>Alert Threshold Quantity</label>
                 <input 
                   type="number" 
                   className="form-control" 
@@ -332,12 +334,37 @@ export const InventoryView: React.FC<InventoryProps> = ({ inventory, setInventor
               </div>
             </div>
 
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div className="form-group">
+                <label>Batch Ref Number (Optional)</label>
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  value={batchNumber} 
+                  onChange={(e) => setBatchNumber(e.target.value)}
+                  placeholder="e.g. B-901"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Warehouse Storage Location</label>
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  required
+                  value={storageLocation} 
+                  onChange={(e) => setStorageLocation(e.target.value)}
+                  placeholder="e.g. Warehouse Bay 3"
+                />
+              </div>
+            </div>
+
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '12px' }}>
               <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>
                 Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                {editingItem ? 'Save Updates' : 'Add Item'}
+                {editingItem ? 'Save Item' : 'Add Item'}
               </button>
             </div>
           </form>

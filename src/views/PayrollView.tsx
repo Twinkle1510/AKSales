@@ -14,10 +14,6 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
 
   // Generate payroll rows dynamically based on employees and their approved production output
   const payrollRows = employees.map(emp => {
-    // Workers: paid baseRate per finished unit produced.
-    // Managers/Admin/Accountants: Standard monthly salary model = baseRate * 160 hours.
-    
-    let hoursWorked = 0;
     let approvedBatchesCount = 0;
     let totalQtyProduced = 0;
 
@@ -27,14 +23,28 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
       );
       approvedBatchesCount = approvedBatches.length;
       totalQtyProduced = approvedBatches.reduce((sum, p) => sum + p.quantityProduced, 0);
-      hoursWorked = approvedBatchesCount * 8; // kept for logs
-    } else {
-      hoursWorked = 160; // Standard full-time hours
     }
 
-    const grossPay = emp.role === 'Worker' 
-      ? emp.baseRate * totalQtyProduced // Piece-Rate: ₹ per unit completed
-      : emp.baseRate * 160;            // Standard Full-time hourly salary
+    // Dynamic Gross Pay Calculation based on configured PRD Payroll Models
+    let grossPay = 0;
+    const model = emp.payrollModel || 'Per Piece';
+    
+    if (emp.role === 'Worker') {
+      if (model === 'Fixed Salary') {
+        grossPay = emp.fixedSalaryAmount || 15000;
+      } else if (model === 'Fixed + Incentive') {
+        const fixed = emp.fixedSalaryAmount || 12000;
+        const incentive = emp.incentiveRate || 10;
+        grossPay = fixed + (totalQtyProduced * incentive);
+      } else {
+        // 'Per Piece' or 'Per KG'
+        const rate = emp.baseRate || 30;
+        grossPay = rate * totalQtyProduced;
+      }
+    } else {
+      // Non-workers: paid standard fixed salary
+      grossPay = emp.fixedSalaryAmount || (emp.baseRate * 160);
+    }
 
     const deductions = Math.round(grossPay * 0.12); // 12% PF / taxes deduction
     const netPay = grossPay - deductions;
@@ -42,11 +52,14 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
 
     return {
       employeeId: emp.id,
+      employeeCode: emp.employeeCode,
       name: emp.name,
       role: emp.role,
       department: emp.department,
+      payrollModel: model,
       baseRate: emp.baseRate,
-      hoursWorked,
+      fixedSalaryAmount: emp.fixedSalaryAmount,
+      incentiveRate: emp.incentiveRate,
       approvedBatchesCount,
       totalQtyProduced,
       grossPay,
@@ -65,13 +78,12 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
 
   const handleExportExcel = () => {
     const dataToExport = payrollRows.map(row => ({
-      'Employee ID': row.employeeId,
+      'Employee Code': row.employeeCode,
       'Name': row.name,
       'Role': row.role,
       'Department': row.department,
-      'Pay Rate (₹)': row.role === 'Worker' ? `${row.baseRate}/pc` : `${row.baseRate}/hr`,
-      'Total Output Qty': row.role === 'Worker' ? row.totalQtyProduced : 'N/A',
-      'Approved Batches': row.approvedBatchesCount,
+      'Payroll Model': row.payrollModel,
+      'Output (Units)': row.totalQtyProduced,
       'Gross Pay (₹)': row.grossPay,
       'Deductions (₹)': row.deductions,
       'Net Pay (₹)': row.netPay,
@@ -83,16 +95,15 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
 
   const handleExportPDF = () => {
     const headers = [
-      'Emp ID', 'Name', 'Role', 'Rate', 'Output / Hours', 'Batches', 'Gross (₹)', 'Deductions (₹)', 'Net Pay (₹)', 'Status'
+      'Code', 'Name', 'Role', 'Model', 'Output Qty', 'Gross (₹)', 'Deductions (₹)', 'Net Pay (₹)', 'Status'
     ];
 
     const rows = payrollRows.map(row => [
-      row.employeeId,
+      row.employeeCode,
       row.name,
       row.role,
-      row.role === 'Worker' ? `₹${row.baseRate}/pc` : `₹${row.baseRate}/hr`,
-      row.role === 'Worker' ? `${row.totalQtyProduced} units` : `${row.hoursWorked} hrs`,
-      row.role === 'Worker' ? row.approvedBatchesCount : 'N/A (Salary)',
+      row.payrollModel,
+      row.role === 'Worker' ? `${row.totalQtyProduced} units` : 'N/A',
       `₹${row.grossPay}`,
       `₹${row.deductions}`,
       `₹${row.netPay}`,
@@ -107,7 +118,6 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
     );
   };
 
-  // Computations for totals card
   const totalPayrollCost = payrollRows.reduce((sum, r) => sum + r.netPay, 0);
   const totalWagesQty = payrollRows.reduce((sum, r) => sum + r.totalQtyProduced, 0);
   const paidCount = payrollRows.filter(r => r.paymentStatus === 'Paid').length;
@@ -117,7 +127,7 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
       <div className="top-header">
         <div>
           <h1 className="page-title">Payroll Desk</h1>
-          <p className="page-subtitle">Automatically calculate salary sheets, log piece-rate wages, and export reporting tables.</p>
+          <p className="page-subtitle">Automatically calculate salary sheets, compile custom payroll models (piece/KG/fixed/incentive), and export reports.</p>
         </div>
 
         <div style={{ display: 'flex', gap: '12px' }}>
@@ -186,18 +196,18 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
 
       {/* Payroll spreadsheet style table */}
       <div className="card">
-        <div className="card-title">Salary & Wage Ledger Sheet (Piece Rate & Hourly)</div>
+        <div className="card-title">Salary & Wage Ledger Sheet (Production-Linked Models)</div>
         
         <div className="table-container">
           <table className="table">
             <thead>
               <tr>
-                <th>Emp ID</th>
+                <th>Code</th>
                 <th>Employee</th>
                 <th>Role / Department</th>
-                <th>Wage Rate</th>
-                <th>Logged Quantity / Hours</th>
-                <th>Approved Batches</th>
+                <th>Payroll Model</th>
+                <th>Wage Configuration</th>
+                <th>Total Yield (Units)</th>
                 <th>Gross Pay</th>
                 <th>Deductions</th>
                 <th>Net Wage</th>
@@ -208,7 +218,7 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
             <tbody>
               {payrollRows.map(row => (
                 <tr key={row.employeeId}>
-                  <td><strong>{row.employeeId}</strong></td>
+                  <td><strong>{row.employeeCode}</strong></td>
                   <td>
                     <div style={{ fontWeight: 600 }}>{row.name}</div>
                   </td>
@@ -217,26 +227,26 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
                     <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{row.department}</div>
                   </td>
                   <td>
-                    {row.role === 'Worker' ? (
-                      <strong>₹{row.baseRate}/piece</strong>
-                    ) : (
-                      <span>₹{row.baseRate}/hour</span>
+                    <span className="badge badge-success" style={{ borderRadius: '4px' }}>
+                      {row.payrollModel}
+                    </span>
+                  </td>
+                  <td>
+                    {row.payrollModel === 'Per Piece' && <span>₹{row.baseRate}/piece</span>}
+                    {row.payrollModel === 'Per KG' && <span>₹{row.baseRate}/KG</span>}
+                    {row.payrollModel === 'Fixed Salary' && <span>₹{row.fixedSalaryAmount?.toLocaleString()}/mo</span>}
+                    {row.payrollModel === 'Fixed + Incentive' && (
+                      <div style={{ fontSize: '12px' }}>
+                        <span>₹{row.fixedSalaryAmount?.toLocaleString()}/mo</span>
+                        <div style={{ color: 'var(--color-green)', fontSize: '11px' }}>+₹{row.incentiveRate}/unit</div>
+                      </div>
                     )}
                   </td>
                   <td>
                     {row.role === 'Worker' ? (
                       <span style={{ fontWeight: 700, color: 'var(--color-green)' }}>{row.totalQtyProduced} units</span>
                     ) : (
-                      <span>{row.hoursWorked} hrs</span>
-                    )}
-                  </td>
-                  <td>
-                    {row.role === 'Worker' ? (
-                      <span className="badge badge-success" style={{ borderRadius: '4px' }}>
-                        {row.approvedBatchesCount} batches
-                      </span>
-                    ) : (
-                      <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>N/A (Salary)</span>
+                      <span style={{ color: 'var(--text-muted)' }}>N/A (Salary)</span>
                     )}
                   </td>
                   <td>₹{row.grossPay.toLocaleString()}</td>
