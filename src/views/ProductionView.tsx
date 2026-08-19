@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, CheckCircle, Clock, Eye, ClipboardCheck } from 'lucide-react';
+import { Plus, Search, CheckCircle, Clock, Eye, ClipboardCheck, LayoutGrid, Table, AlertCircle } from 'lucide-react';
 import type { Employee, InventoryItem, ProductionLog } from '../data/mockDb';
 
 interface ProductionProps {
@@ -32,6 +32,7 @@ export const ProductionView: React.FC<ProductionProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAuditLog, setSelectedAuditLog] = useState<ProductionLog | null>(null);
+  const [viewMode, setViewMode] = useState<'table' | 'report'>('table'); // Toggle view mode
 
   // Form states
   const [batchNumber, setBatchNumber] = useState('');
@@ -63,13 +64,11 @@ export const ProductionView: React.FC<ProductionProps> = ({
 
     const rawMat = rawMaterials.find(r => r.id === materialConsumedId);
     
-    // Calculate efficiency % = ((materialConsumedQty - wastageQty) / materialConsumedQty) * 100
     let calculatedEfficiency = 100;
     if (materialConsumedQty > 0) {
       calculatedEfficiency = Math.round(((materialConsumedQty - wastageQty) / materialConsumedQty) * 100);
     }
 
-    // Mock generic SVGs for manual logs
     const mockMatSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23475569"/><line x1="10" y1="10" x2="90" y2="10" stroke="%2394a3b8" stroke-width="4"/><text x="25" y="85" fill="%23cbd5e1" font-size="10" font-family="sans-serif">RAW MATERIAL</text></svg>`;
     const mockProdSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%231e293b"/><circle cx="50" cy="50" r="25" fill="%23ef4444" stroke="%23dc2626" stroke-width="4"/><text x="20" y="90" fill="%2310b981" font-size="10" font-family="sans-serif">FINISHED GOOD</text></svg>`;
 
@@ -90,12 +89,15 @@ export const ProductionView: React.FC<ProductionProps> = ({
     setIsModalOpen(false);
   };
 
-  const filtered = production.filter(p => 
-    p.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.workerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.batchNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (p.materialConsumedName && p.materialConsumedName.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filtered = production.filter(p => {
+    const workerObj = employees.find(e => e.id === p.workerId);
+    const code = workerObj?.employeeCode || '';
+    return p.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.workerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.batchNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (p.materialConsumedName && p.materialConsumedName.toLowerCase().includes(searchTerm.toLowerCase()));
+  });
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -109,144 +111,353 @@ export const ProductionView: React.FC<ProductionProps> = ({
         </button>
       </div>
 
-      {/* Control filters */}
+      {/* Control filters & View Toggles */}
       <div className="card" style={{ padding: '16px' }}>
-        <div className="control-bar">
-          <div className="search-box">
+        <div className="control-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="search-box" style={{ flexGrow: 1, maxWidth: '400px' }}>
             <Search size={18} />
             <input 
               type="text" 
               className="form-control" 
-              placeholder="Search by worker, product, batch, or consumed material..." 
+              placeholder="Search by worker, employee code, batch, or material..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-            Showing {filtered.length} production logs
+
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+              Showing {filtered.length} production logs
+            </div>
+            
+            {/* View Mode Toggle Buttons */}
+            <div style={{ display: 'flex', border: '1px solid var(--border)', borderRadius: '6px', overflow: 'hidden' }}>
+              <button 
+                className={`btn`} 
+                style={{ 
+                  padding: '8px 12px', 
+                  fontSize: '12px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '6px',
+                  borderRadius: 0,
+                  backgroundColor: viewMode === 'table' ? 'var(--primary)' : 'transparent',
+                  color: viewMode === 'table' ? '#ffffff' : 'var(--text-primary)'
+                }}
+                onClick={() => setViewMode('table')}
+              >
+                <Table size={14} /> Table List
+              </button>
+              <button 
+                className={`btn`} 
+                style={{ 
+                  padding: '8px 12px', 
+                  fontSize: '12px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '6px',
+                  borderRadius: 0,
+                  backgroundColor: viewMode === 'report' ? 'var(--primary)' : 'transparent',
+                  color: viewMode === 'report' ? '#ffffff' : 'var(--text-primary)'
+                }}
+                onClick={() => setViewMode('report')}
+              >
+                <LayoutGrid size={14} /> Visual Audit Report
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Table list */}
-      <div className="table-container">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Batch ID</th>
-              <th>Material Input</th>
-              <th>Finished Output</th>
-              <th>Wastage / Scrap</th>
-              <th>Yield Efficiency %</th>
-              <th>Worker</th>
-              <th>Date Logged</th>
-              <th>Photos & Details</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.length === 0 ? (
+      {/* Render View Mode */}
+      {viewMode === 'table' ? (
+        <div className="table-container">
+          <table className="table">
+            <thead>
               <tr>
-                <td colSpan={10} style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)' }}>
-                  No production records found.
-                </td>
+                <th>Batch ID</th>
+                <th>Material Input</th>
+                <th>Finished Output</th>
+                <th>Wastage / Scrap</th>
+                <th>Yield Efficiency %</th>
+                <th>Worker</th>
+                <th>Date Logged</th>
+                <th>Photos & Details</th>
+                <th>Status</th>
+                <th>Action</th>
               </tr>
-            ) : (
-              filtered.map(p => (
-                <tr key={p.id}>
-                  <td><strong>{p.batchNumber}</strong></td>
-                  <td>
-                    {p.materialConsumedName ? (
-                      <div>
-                        <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-orange)' }}>
-                          {p.materialConsumedQty}
-                        </span>
-                        <span style={{ fontSize: '12px', marginLeft: '4px', fontWeight: 600 }}>
-                          {p.materialConsumedName}
-                        </span>
-                      </div>
-                    ) : (
-                      <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontStyle: 'italic' }}>Not specified</span>
-                    )}
-                  </td>
-                  <td>
-                    <div>
-                      <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--color-green)' }}>
-                        {p.quantityProduced} pcs
-                      </span>
-                      <span style={{ fontSize: '12px', marginLeft: '4px', fontWeight: 600 }}>
-                        {p.productName}
-                      </span>
-                    </div>
-                  </td>
-                  <td>
-                    {p.wastageQty !== undefined ? (
-                      <span style={{ fontWeight: 600, color: 'var(--color-danger)' }}>{p.wastageQty} units</span>
-                    ) : (
-                      <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>0</span>
-                    )}
-                  </td>
-                  <td>
-                    {p.efficiency !== undefined ? (
-                      <span 
-                        style={{ 
-                          fontWeight: 700, 
-                          color: p.efficiency >= 90 ? 'var(--color-green)' : p.efficiency >= 80 ? 'var(--color-orange)' : 'var(--color-danger)'
-                        }}
-                      >
-                        {p.efficiency}%
-                      </span>
-                    ) : (
-                      <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>100%</span>
-                    )}
-                  </td>
-                  <td>
-                    <div style={{ fontWeight: 600 }}>{p.workerName}</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>ID: {p.workerId}</div>
-                  </td>
-                  <td style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>{p.date}</td>
-                  <td>
-                    <button 
-                      className="btn btn-secondary" 
-                      style={{ padding: '4px 8px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px' }}
-                      onClick={() => setSelectedAuditLog(p)}
-                    >
-                      <Eye size={12} /> View Details
-                    </button>
-                  </td>
-                  <td>
-                    {p.status === 'Approved' ? (
-                      <span className="badge badge-success">
-                        <CheckCircle size={12} style={{ marginRight: '4px' }} /> Approved
-                      </span>
-                    ) : (
-                      <span className="badge badge-pending">
-                        <Clock size={12} style={{ marginRight: '4px' }} /> Pending
-                      </span>
-                    )}
-                  </td>
-                  <td>
-                    {p.status === 'Pending Approval' ? (
-                      <button 
-                        className="btn btn-primary" 
-                        style={{ padding: '6px 12px', fontSize: '12px' }}
-                        onClick={() => onApproveProduction(p.id)}
-                      >
-                        ✓ Approve
-                      </button>
-                    ) : (
-                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                        Approved {p.approvedDate}
-                      </span>
-                    )}
+            </thead>
+            <tbody>
+              {filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={10} style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)' }}>
+                    No production records found.
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              ) : (
+                filtered.map(p => (
+                  <tr key={p.id}>
+                    <td><strong>{p.batchNumber}</strong></td>
+                    <td>
+                      {p.materialConsumedName ? (
+                        <div>
+                          <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-orange)' }}>
+                            {p.materialConsumedQty}
+                          </span>
+                          <span style={{ fontSize: '12px', marginLeft: '4px', fontWeight: 600 }}>
+                            {p.materialConsumedName}
+                          </span>
+                        </div>
+                      ) : (
+                        <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontStyle: 'italic' }}>Not specified</span>
+                      )}
+                    </td>
+                    <td>
+                      <div>
+                        <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--color-green)' }}>
+                          {p.quantityProduced} pcs
+                        </span>
+                        <span style={{ fontSize: '12px', marginLeft: '4px', fontWeight: 600 }}>
+                          {p.productName}
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      {p.wastageQty !== undefined ? (
+                        <span style={{ fontWeight: 600, color: 'var(--color-danger)' }}>{p.wastageQty} units</span>
+                      ) : (
+                        <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>0</span>
+                      )}
+                    </td>
+                    <td>
+                      {p.efficiency !== undefined ? (
+                        <span 
+                          style={{ 
+                            fontWeight: 700, 
+                            color: p.efficiency >= 90 ? 'var(--color-green)' : p.efficiency >= 80 ? 'var(--color-orange)' : 'var(--color-danger)'
+                          }}
+                        >
+                          {p.efficiency}%
+                        </span>
+                      ) : (
+                        <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>100%</span>
+                      )}
+                    </td>
+                    <td>
+                      {(() => {
+                        const workerObj = employees.find(e => e.id === p.workerId);
+                        return (
+                          <div>
+                            <div style={{ fontWeight: 600 }}>{p.workerName}</div>
+                            <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Code: {workerObj?.employeeCode || p.workerId}</div>
+                          </div>
+                        );
+                      })()}
+                    </td>
+                    <td style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>{p.date}</td>
+                    <td>
+                      <button 
+                        className="btn btn-secondary" 
+                        style={{ padding: '4px 8px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px' }}
+                        onClick={() => setSelectedAuditLog(p)}
+                      >
+                        <Eye size={12} /> View Details
+                      </button>
+                    </td>
+                    <td>
+                      {p.status === 'Approved' ? (
+                        <span className="badge badge-success">
+                          <CheckCircle size={12} style={{ marginRight: '4px' }} /> Approved
+                        </span>
+                      ) : (
+                        <span className="badge badge-pending">
+                          <Clock size={12} style={{ marginRight: '4px' }} /> Pending
+                        </span>
+                      )}
+                    </td>
+                    <td>
+                      {p.status === 'Pending Approval' ? (
+                        <button 
+                          className="btn btn-primary" 
+                          style={{ padding: '6px 12px', fontSize: '12px' }}
+                          onClick={() => onApproveProduction(p.id)}
+                        >
+                          ✓ Approve
+                        </button>
+                      ) : (
+                        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                          Approved {p.approvedDate}
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        /* Unified Visual Audit Report Mode (Each card is 1 fully detailed report block) */
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+          {filtered.length === 0 ? (
+            <div className="card" style={{ padding: '48px', textAlign: 'center', color: 'var(--text-muted)' }}>
+              No production records matching the query.
+            </div>
+          ) : (
+            filtered.map(p => {
+              const workerObj = employees.find(e => e.id === p.workerId);
+              return (
+                <div key={p.id} className="card" style={{ padding: '24px', border: '1.5px solid var(--border)' }}>
+                  
+                  {/* Report Card Header */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid var(--border)', paddingBottom: '14px', marginBottom: '18px' }}>
+                    <div>
+                      <span className="badge badge-success" style={{ textTransform: 'uppercase', letterSpacing: '0.5px', fontSize: '10px', padding: '3px 8px', marginBottom: '6px', display: 'inline-block' }}>
+                        BATCH PRODUCTION AUDIT REPORT
+                      </span>
+                      <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0 }}>
+                        Batch: {p.batchNumber} <span style={{ fontSize: '14px', color: 'var(--text-muted)', fontWeight: 500 }}>(Log Ref: {p.id})</span>
+                      </h2>
+                    </div>
+
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Logged: <strong>{p.date}</strong></div>
+                      {p.status === 'Approved' ? (
+                        <span className="badge badge-success" style={{ marginTop: '4px', display: 'inline-block' }}>
+                          ✓ Approved on {p.approvedDate}
+                        </span>
+                      ) : (
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '4px' }}>
+                          <span className="badge badge-pending">⚠ Pending Approval</span>
+                          <button 
+                            className="btn btn-primary" 
+                            style={{ padding: '4px 10px', fontSize: '11px' }}
+                            onClick={() => onApproveProduction(p.id)}
+                          >
+                            Approve Now
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Employee Information Section */}
+                  <div style={{ padding: '12px 16px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', border: '1px dashed var(--border)', display: 'grid', gridTemplateColumns: '1fr 1fr 1.5fr', gap: '16px', marginBottom: '18px', fontSize: '13px' }}>
+                    <div>
+                      <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', fontWeight: 700 }}>EMPLOYEE NAME</span>
+                      <strong>{p.workerName}</strong>
+                    </div>
+                    <div>
+                      <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', fontWeight: 700 }}>EMPLOYEE CODE</span>
+                      <strong>{workerObj?.employeeCode || 'N/A'}</strong>
+                    </div>
+                    <div>
+                      <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', fontWeight: 700 }}>ADDRESS & DEPARTMENT</span>
+                      <span>{workerObj?.department} • <span style={{ fontStyle: 'italic', fontSize: '12px' }}>{workerObj?.address || 'No Address Listed'}</span></span>
+                    </div>
+                  </div>
+
+                  {/* Photos Grid & Ledger */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                    
+                    {/* Left: Input Details & Image */}
+                    <div style={{ border: '1px solid #e2e8f0', borderRadius: '10px', padding: '16px', backgroundColor: '#f8fafc' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                        <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--color-orange)' }}>← INPUT MATERIAL</span>
+                        <span className="badge" style={{ backgroundColor: '#e2e8f0', color: '#475569', fontWeight: 700 }}>
+                          Qty Taken: {p.materialConsumedQty ?? 0} units
+                        </span>
+                      </div>
+                      
+                      <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '10px' }}>
+                        {p.materialConsumedName || 'Self Supplied / Direct Scrap Log'}
+                      </div>
+
+                      {/* Raw Material Photo */}
+                      <div style={{ width: '100%', height: '220px', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border)' }}>
+                        {p.materialPhoto ? (
+                          <img src={p.materialPhoto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Raw materials logged" />
+                        ) : (
+                          <div style={{ textAlign: 'center', padding: '16px', color: 'var(--text-secondary)' }}>
+                            <AlertCircle size={28} style={{ margin: '0 auto 6px auto', color: 'var(--text-muted)' }} />
+                            <span style={{ fontSize: '12px' }}>No raw material photo verified by employee</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Right: Output Details & Image */}
+                    <div style={{ border: '1px solid #dcfce7', borderRadius: '10px', padding: '16px', backgroundColor: '#f0fdf4' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                        <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--color-green)' }}>→ OUTPUT PRODUCT</span>
+                        <span className="badge" style={{ backgroundColor: '#dcfce7', color: '#166534', fontWeight: 700 }}>
+                          Qty Made: {p.quantityProduced} pcs
+                        </span>
+                      </div>
+
+                      <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '10px' }}>
+                        {p.productName}
+                      </div>
+
+                      {/* Finished Good Photo */}
+                      <div style={{ width: '100%', height: '220px', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border)' }}>
+                        {p.productPhoto ? (
+                          <img src={p.productPhoto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Finished products logged" />
+                        ) : (
+                          <div style={{ textAlign: 'center', padding: '16px', color: 'var(--text-secondary)' }}>
+                            <AlertCircle size={28} style={{ margin: '0 auto 6px auto', color: 'var(--text-muted)' }} />
+                            <span style={{ fontSize: '12px' }}>No finished product photo uploaded by employee</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Wastage and Performance Index summary row */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginTop: '20px', padding: '14px 20px', backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: '8px' }}>
+                    <div>
+                      <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', fontWeight: 700 }}>MATERIAL WASTAGE / SCRAP</span>
+                      <span style={{ fontSize: '16px', fontWeight: 800, color: 'var(--color-danger)' }}>
+                        {p.wastageQty !== undefined ? `${p.wastageQty} units` : '0 units (No scrap logged)'}
+                      </span>
+                    </div>
+                    <div>
+                      <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', fontWeight: 700 }}>YIELD EFFICIENCY RATIO</span>
+                      <span 
+                        style={{ 
+                          fontSize: '16px', 
+                          fontWeight: 800, 
+                          color: (p.efficiency || 100) >= 90 ? 'var(--color-green)' : (p.efficiency || 100) >= 80 ? 'var(--color-orange)' : 'var(--color-danger)'
+                        }}
+                      >
+                        {p.efficiency !== undefined ? `${p.efficiency}%` : '100%'}
+                      </span>
+                    </div>
+                    <div>
+                      <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', fontWeight: 700 }}>EARNED WAGES CREDIT</span>
+                      <span style={{ fontSize: '16px', fontWeight: 800, color: 'var(--accent)' }}>
+                        {p.status === 'Approved' ? (
+                          workerObj?.payrollModel === 'Fixed Salary' ? (
+                            'Fixed Salary'
+                          ) : workerObj?.payrollModel === 'Fixed + Incentive' ? (
+                            `₹${(p.quantityProduced * (workerObj?.incentiveRate || 10)).toLocaleString()} (Incentive)`
+                          ) : (
+                            `₹${(p.quantityProduced * (workerObj?.baseRate || 30)).toLocaleString()}`
+                          )
+                        ) : (
+                          <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Pending Approval</span>
+                        )}
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+              );
+            })
+          )}
+        </div>
+      )}
 
       {/* Audit Detail / Photos side-by-side Modal */}
       {selectedAuditLog && (
