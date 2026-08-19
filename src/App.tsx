@@ -42,7 +42,7 @@ function App() {
   useEffect(() => {
     // Clear old sparse localStorage if found to seed rich client demo dataset
     const cachedProd = localStorage.getItem('aksales_production');
-    if (cachedProd && (JSON.parse(cachedProd).length < 5 || !cachedProd.includes('Samosa'))) {
+    if (cachedProd && (JSON.parse(cachedProd).length < 5 || !cachedProd.includes('Chaat'))) {
       localStorage.removeItem('aksales_employees');
       localStorage.removeItem('aksales_inventory');
       localStorage.removeItem('aksales_issues');

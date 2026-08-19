@@ -179,62 +179,74 @@ const INITIAL_EMPLOYEES: Employee[] = [
 ];
 
 const INITIAL_INVENTORY: InventoryItem[] = [
-  { id: 'INV-RAW-001', name: 'Raw Potatoes & Dough', type: 'Raw Material', quantity: 450, unit: 'kg', minThreshold: 100, lastUpdated: '2026-08-18', materialCode: 'RAW-POT-SAM', batchNumber: 'SM-101', storageLocation: 'Cold Room A' },
+  { id: 'INV-RAW-001', name: 'Raw Potatoes & Flour Dough', type: 'Raw Material', quantity: 450, unit: 'kg', minThreshold: 100, lastUpdated: '2026-08-18', materialCode: 'RAW-POT-SAM', batchNumber: 'SM-101', storageLocation: 'Cold Room A' },
   { id: 'INV-RAW-002', name: 'Raw Momo Wrapper & Veg Stuffing', type: 'Raw Material', quantity: 200, unit: 'kg', minThreshold: 50, lastUpdated: '2026-08-19', materialCode: 'RAW-MM-STF', batchNumber: 'MM-202', storageLocation: 'Cold Room B' },
   { id: 'INV-RAW-003', name: 'Uncooked Noodle Strands', type: 'Raw Material', quantity: 180, unit: 'kg', minThreshold: 40, lastUpdated: '2026-08-19', materialCode: 'RAW-NDL-STR', batchNumber: 'ND-303', storageLocation: 'Dry Storage' },
-  { id: 'INV-RAW-004', name: 'Refined Oil & Seasoning', type: 'Raw Material', quantity: 120, unit: 'liters', minThreshold: 30, lastUpdated: '2026-08-15', materialCode: 'RAW-OIL-SPC', batchNumber: 'OL-404', storageLocation: 'Dry Storage' },
-  { id: 'INV-FIN-001', name: 'Crispy Samosa (Standard)', type: 'Finished Good', quantity: 800, unit: 'pcs', minThreshold: 200, lastUpdated: '2026-08-19', materialCode: 'FIN-SAMOSA', storageLocation: 'Hot Case Bay A' },
+  { id: 'INV-RAW-004', name: 'Refined Oil & Spice Seasonings', type: 'Raw Material', quantity: 120, unit: 'liters', minThreshold: 30, lastUpdated: '2026-08-15', materialCode: 'RAW-OIL-SPC', batchNumber: 'OL-404', storageLocation: 'Dry Storage' },
+  
+  // 10 Unique Finished Goods
+  { id: 'INV-FIN-001', name: 'Classic Samosa (Standard)', type: 'Finished Good', quantity: 800, unit: 'pcs', minThreshold: 200, lastUpdated: '2026-08-19', materialCode: 'FIN-SAMOSA', storageLocation: 'Hot Case Bay A' },
   { id: 'INV-FIN-002', name: 'Steamed Veg Momos', type: 'Finished Good', quantity: 400, unit: 'pcs', minThreshold: 100, lastUpdated: '2026-08-19', materialCode: 'FIN-MOMOS', storageLocation: 'Steamer Box B' },
   { id: 'INV-FIN-003', name: 'Hakka Noodles Plate', type: 'Finished Good', quantity: 150, unit: 'plates', minThreshold: 30, lastUpdated: '2026-08-19', materialCode: 'FIN-NOODLES', storageLocation: 'Wok Assembly Station' },
-  { id: 'INV-FIN-004', name: 'French Fries (1kg Pack)', type: 'Finished Good', quantity: 120, unit: 'packs', minThreshold: 45, lastUpdated: '2026-08-19', materialCode: 'FIN-FRIES', storageLocation: 'Freezer Shelf 2' }
+  { id: 'INV-FIN-004', name: 'French Fries (1kg Pack)', type: 'Finished Good', quantity: 120, unit: 'packs', minThreshold: 45, lastUpdated: '2026-08-19', materialCode: 'FIN-FRIES', storageLocation: 'Freezer Shelf 2' },
+  { id: 'INV-FIN-005', name: 'Crispy Spring Rolls', type: 'Finished Good', quantity: 300, unit: 'pcs', minThreshold: 50, lastUpdated: '2026-08-19', materialCode: 'FIN-ROLLS', storageLocation: 'Hot Cabinet 2' },
+  { id: 'INV-FIN-006', name: 'Veg Burger Patty', type: 'Finished Good', quantity: 240, unit: 'pcs', minThreshold: 60, lastUpdated: '2026-08-19', materialCode: 'FIN-PATTY', storageLocation: 'Freezer Shelf 3' },
+  { id: 'INV-FIN-007', name: 'Paneer Tikka Roll', type: 'Finished Good', quantity: 180, unit: 'pcs', minThreshold: 30, lastUpdated: '2026-08-19', materialCode: 'FIN-TIKKA', storageLocation: 'Assembly Line 3' },
+  { id: 'INV-FIN-008', name: 'Chilli Garlic Potatoes', type: 'Finished Good', quantity: 90, unit: 'plates', minThreshold: 20, lastUpdated: '2026-08-19', materialCode: 'FIN-CHILLI', storageLocation: 'Prep Kitchen C' },
+  { id: 'INV-FIN-009', name: 'Cheese Garlic Bread', type: 'Finished Good', quantity: 110, unit: 'pcs', minThreshold: 25, lastUpdated: '2026-08-19', materialCode: 'FIN-BREAD', storageLocation: 'Bakery Deck 1' },
+  { id: 'INV-FIN-010', name: 'Aloo Tikki Chaat', type: 'Finished Good', quantity: 95, unit: 'plates', minThreshold: 15, lastUpdated: '2026-08-19', materialCode: 'FIN-CHAAT', storageLocation: 'Chaat Station 4' }
 ];
 
-// Food SVG Vector Graphics
+// Raw Food material SVGs
 const IMG_SAMOSA_RAW = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23eab308"/><circle cx="35" cy="50" r="14" fill="%23fef08a"/><circle cx="65" cy="50" r="12" fill="%23b45309"/><text x="12" y="88" fill="%2378350f" font-size="8" font-family="sans-serif">DOUGH & POTATO MIX</text></svg>`;
-const IMG_SAMOSA_COOKED = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23b45309"/><polygon points="50,15 15,75 85,75" fill="%23f59e0b" stroke="%23d97706" stroke-width="4"/><polygon points="40,30 25,70 75,70" fill="%23d97706" opacity="0.6"/><text x="14" y="90" fill="%23fef3c7" font-size="9" font-family="sans-serif">CRISPY SAMOSAS</text></svg>`;
+const IMG_MOMOS_RAW = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23d1d5db"/><circle cx="35" cy="40" r="10" fill="%23f3f4f6"/><circle cx="65" cy="40" r="10" fill="%23f3f4f6"/><text x="16" y="90" fill="%23374151" font-size="8" font-family="sans-serif">MOMO WRAP FLOUR</text></svg>`;
+const IMG_NOODLES_RAW = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23451a03"/><path d="M10,20 Q30,10 50,20 T90,20" stroke="%23fef08a" stroke-width="4" fill="none"/><text x="16" y="88" fill="%23fef08a" font-size="8" font-family="sans-serif">DRY NOODLE STRANDS</text></svg>`;
+const IMG_POTATOES = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%237c2d12"/><path d="M20,60 Q50,15 80,60 Z" fill="%23b45309"/><text x="18" y="90" fill="%23fef3c7" font-size="8" font-family="sans-serif">POTATOES SACK</text></svg>`;
+const IMG_OIL = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23065f46"/><path d="M25,25 L75,25 L85,85 L15,85 Z" fill="%23fbbf24"/><text x="22" y="92" fill="%23fef3c7" font-size="8" font-family="sans-serif">SUNFLOWER OIL</text></svg>`;
 
-const IMG_MOMOS_RAW = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23d1d5db"/><circle cx="35" cy="40" r="10" fill="%23f3f4f6"/><circle cx="65" cy="40" r="10" fill="%23f3f4f6"/><circle cx="50" cy="65" r="10" fill="%23f3f4f6"/><text x="16" y="90" fill="%23374151" font-size="8" font-family="sans-serif">UNCOOKED MOMO FLOUR</text></svg>`;
-const IMG_MOMOS_COOKED = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%2378350f"/><circle cx="50" cy="50" r="35" fill="%23d97706"/><circle cx="35" cy="45" r="8" fill="%23fafaf9" stroke="%23e7e5e4"/><circle cx="65" cy="45" r="8" fill="%23fafaf9" stroke="%23e7e5e4"/><circle cx="50" cy="65" r="8" fill="%23fafaf9" stroke="%23e7e5e4"/><text x="14" y="92" fill="%23fef3c7" font-size="8" font-family="sans-serif">STEAMED BAMBOO MOMOS</text></svg>`;
+// Finished Food product SVGs
+const IMG_SAMOSA_COOKED = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23b45309"/><polygon points="50,15 15,75 85,75" fill="%23f59e0b" stroke="%23d97706" stroke-width="4"/><text x="14" y="90" fill="%23fef3c7" font-size="9" font-family="sans-serif">CRISPY SAMOSAS</text></svg>`;
+const IMG_MOMOS_COOKED = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%2378350f"/><circle cx="50" cy="50" r="35" fill="%23d97706"/><circle cx="35" cy="45" r="8" fill="%23fafaf9"/><circle cx="65" cy="45" r="8" fill="%23fafaf9"/><text x="14" y="92" fill="%23fef3c7" font-size="8" font-family="sans-serif">STEAMED MOMOS</text></svg>`;
+const IMG_NOODLES_COOKED = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%231e293b"/><path d="M20,60 A30,30 0 0,0 80,60 Z" fill="%23b91c1c"/><path d="M15,40 Q50,90 85,40" stroke="%23fbbf24" stroke-width="5" fill="none"/><text x="12" y="92" fill="%23ffffff" font-size="8" font-family="sans-serif">HAKKA NOODLES</text></svg>`;
+const IMG_FRIES = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23991b1b"/><rect x="25" y="20" width="8" height="60" fill="%23fbbf24"/><rect x="51" y="15" width="8" height="65" fill="%23fbbf24"/><path d="M15,45 L85,45 L75,95 L25,95 Z" fill="%23dc2626"/><text x="18" y="90" fill="%23ffffff" font-size="8" font-family="sans-serif">GOLDEN FRIES</text></svg>`;
+const IMG_ROLLS = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%237c2d12"/><rect x="15" y="35" width="70" height="15" rx="5" fill="%23f59e0b"/><rect x="15" y="60" width="70" height="15" rx="5" fill="%23d97706"/><text x="18" y="90" fill="%23ffffff" font-size="8" font-family="sans-serif">SPRING ROLLS</text></svg>`;
+const IMG_PATTY = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23b45309"/><circle cx="50" cy="50" r="30" fill="%23ea580c" stroke="%23d97706" stroke-width="4"/><text x="22" y="90" fill="%23ffffff" font-size="8" font-family="sans-serif">BURGER PATTY</text></svg>`;
+const IMG_TIKKA = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%237f1d1d"/><rect x="30" y="30" width="40" height="40" fill="%23f97316"/><rect x="40" y="40" width="20" height="20" fill="%23fef08a"/><line x1="50" y1="10" x2="50" y2="90" stroke="%2394a3b8" stroke-width="3"/><text x="18" y="88" fill="%23ffffff" font-size="8" font-family="sans-serif">PANEER TIKKA</text></svg>`;
+const IMG_CHILLI = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23b91c1c"/><circle cx="30" cy="50" r="8" fill="%23ea580c"/><circle cx="50" cy="45" r="9" fill="%23ea580c"/><circle cx="70" cy="55" r="7" fill="%23ea580c"/><text x="14" y="90" fill="%23ffffff" font-size="8" font-family="sans-serif">CHILLI POTATO</text></svg>`;
+const IMG_BREAD = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%237c2d12"/><rect x="20" y="20" width="60" height="60" rx="10" fill="%23f59e0b"/><rect x="25" y="25" width="50" height="50" rx="5" fill="%23fef08a"/><circle cx="35" cy="35" r="3" fill="%2316a34a"/><text x="16" y="92" fill="%23ffffff" font-size="8" font-family="sans-serif">GARLIC BREAD</text></svg>`;
+const IMG_CHAAT = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%2314532d"/><circle cx="50" cy="50" r="32" fill="%23ea580c"/><path d="M30,30 Q50,45 70,30" stroke="%23dc2626" stroke-width="4" fill="none"/><path d="M30,70 Q50,55 70,70" stroke="%2316a34a" stroke-width="4" fill="none"/><text x="18" y="90" fill="%23ffffff" font-size="8" font-family="sans-serif">TIKKI CHAAT</text></svg>`;
 
-const IMG_NOODLES_RAW = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23451a03"/><path d="M10,20 Q30,10 50,20 T90,20" stroke="%23fef08a" stroke-width="4" fill="none"/><path d="M10,40 Q30,30 50,40 T90,40" stroke="%23fef08a" stroke-width="4" fill="none"/><path d="M10,60 Q30,50 50,60 T90,60" stroke="%23fef08a" stroke-width="4" fill="none"/><text x="16" y="88" fill="%23fef08a" font-size="8" font-family="sans-serif">DRY RAW NOODLES</text></svg>`;
-const IMG_NOODLES_COOKED = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%231e293b"/><path d="M20,60 A30,30 0 0,0 80,60 Z" fill="%23b91c1c"/><path d="M15,40 Q50,90 85,40" stroke="%23fbbf24" stroke-width="5" fill="none"/><path d="M25,30 Q50,75 75,30" stroke="%23f59e0b" stroke-width="4" fill="none"/><line x1="85" y1="10" x2="35" y2="70" stroke="%2378350f" stroke-width="4"/><text x="12" y="92" fill="%23ffffff" font-size="8" font-family="sans-serif">HOT HAKKA NOODLES</text></svg>`;
-
-const IMG_POTATOES = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%237c2d12"/><path d="M20,60 Q50,15 80,60 Z" fill="%23b45309"/><ellipse cx="35" cy="55" rx="8" ry="6" fill="%23d97706"/><ellipse cx="65" cy="50" rx="10" ry="7" fill="%23d97706"/><text x="18" y="90" fill="%23fef3c7" font-size="8" font-family="sans-serif">RAW POTATOES SACK</text></svg>`;
-const IMG_FRIES = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23991b1b"/><rect x="25" y="20" width="8" height="60" fill="%23fbbf24"/><rect x="38" y="10" width="8" height="70" fill="%23fbbf24"/><rect x="51" y="15" width="8" height="65" fill="%23fbbf24"/><path d="M15,45 L85,45 L75,95 L25,95 Z" fill="%23dc2626"/><text x="18" y="90" fill="%23ffffff" font-size="8" font-family="sans-serif">GOLDEN FRIES</text></svg>`;
-
-const IMG_OIL = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23065f46"/><rect x="35" y="10" width="30" height="15" fill="%23f59e0b"/><path d="M25,25 L75,25 L85,85 L15,85 Z" fill="%23fbbf24"/><text x="22" y="92" fill="%23fef3c7" font-size="8" font-family="sans-serif">SUNFLOWER OIL</text></svg>`;
-
-// Chronological Material Issues Feed (10 records matching food products)
+// Chronological Material Issues Feed (10 unique records)
 const INITIAL_ISSUES: MaterialIssue[] = [
-  { id: 'ISS-001', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 10, date: '2026-08-10', remarks: 'Samosa Batch #S01', photo: IMG_SAMOSA_RAW },
+  { id: 'ISS-001', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 10, date: '2026-08-10', remarks: 'Samosa Batch #S01', photo: IMG_SAMOSA_RAW },
   { id: 'ISS-002', materialId: 'INV-RAW-002', materialName: 'Raw Momo Wrapper & Veg Stuffing', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 15, date: '2026-08-11', remarks: 'Steamed Momos #M02', photo: IMG_MOMOS_RAW },
-  { id: 'ISS-003', materialId: 'INV-RAW-003', materialName: 'Uncooked Noodle Strands', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 20, date: '2026-08-12', remarks: 'Dinner Noodles batch', photo: IMG_NOODLES_RAW },
-  { id: 'ISS-004', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Dough', issuedToId: 'EMP-004', issuedToName: 'Amit Verma', quantity: 12, date: '2026-08-13', remarks: 'Fries production run', photo: IMG_POTATOES },
-  { id: 'ISS-005', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 15, date: '2026-08-14', remarks: 'Samosa Batch #S05', photo: IMG_SAMOSA_RAW },
-  { id: 'ISS-006', materialId: 'INV-RAW-002', materialName: 'Raw Momo Wrapper & Veg Stuffing', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 10, date: '2026-08-15', remarks: 'Momos lunch prep', photo: IMG_MOMOS_RAW },
-  { id: 'ISS-007', materialId: 'INV-RAW-003', materialName: 'Uncooked Noodle Strands', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 15, date: '2026-08-16', remarks: 'Hakka Spicy run', photo: IMG_NOODLES_RAW },
-  { id: 'ISS-008', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Dough', issuedToId: 'EMP-004', issuedToName: 'Amit Verma', quantity: 8, date: '2026-08-17', remarks: 'Crispy French Fries run', photo: IMG_POTATOES },
-  { id: 'ISS-009', materialId: 'INV-RAW-004', materialName: 'Refined Oil & Seasoning', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 10, date: '2026-08-18', remarks: 'Oil refill for fryer', photo: IMG_OIL },
-  { id: 'ISS-010', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Dough', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 25, date: '2026-08-19', remarks: 'Samosa mega-run', photo: IMG_SAMOSA_RAW }
+  { id: 'ISS-003', materialId: 'INV-RAW-003', materialName: 'Uncooked Noodle Strands', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 20, date: '2026-08-12', remarks: 'Hakka noodles run', photo: IMG_NOODLES_RAW },
+  { id: 'ISS-004', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-004', issuedToName: 'Amit Verma', quantity: 12, date: '2026-08-13', remarks: 'French Fries packaging', photo: IMG_POTATOES },
+  { id: 'ISS-005', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 15, date: '2026-08-14', remarks: 'Spring rolls dough', photo: IMG_SAMOSA_RAW },
+  { id: 'ISS-006', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-004', issuedToName: 'Amit Verma', quantity: 10, date: '2026-08-15', remarks: 'Veg Burger patties', photo: IMG_POTATOES },
+  { id: 'ISS-007', materialId: 'INV-RAW-004', materialName: 'Refined Oil & Spice Seasonings', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 8, date: '2026-08-16', remarks: 'Paneer tikka marination', photo: IMG_OIL },
+  { id: 'ISS-008', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 8, date: '2026-08-17', remarks: 'Chilli Garlic prep', photo: IMG_POTATOES },
+  { id: 'ISS-009', materialId: 'INV-RAW-004', materialName: 'Refined Oil & Spice Seasonings', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 10, date: '2026-08-18', remarks: 'Garlic bread deck', photo: IMG_OIL },
+  { id: 'ISS-010', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 25, date: '2026-08-19', remarks: 'Mega Chaat prep', photo: IMG_POTATOES }
 ];
 
-// Chronological Production Output Logs (10 records - samosa, fries, momos, noodles)
+// Chronological Production Output Logs (10 completely unique food finished goods!)
 const INITIAL_PRODUCTION: ProductionLog[] = [
   { 
     id: 'PROD-001', 
     batchNumber: 'B-501', 
     productId: 'INV-FIN-001', 
-    productName: 'Crispy Samosa (Standard)', 
-    quantityProduced: 50, // 10kg dough yielded 50 pcs samosas
+    productName: 'Classic Samosa (Standard)', 
+    quantityProduced: 50, 
     workerId: 'EMP-003', 
     workerName: 'Sunita Patel', 
     date: '2026-08-10', 
     status: 'Approved', 
     approvedDate: '2026-08-10',
     materialConsumedId: 'INV-RAW-001',
-    materialConsumedName: 'Raw Potatoes & Dough',
+    materialConsumedName: 'Raw Potatoes & Flour Dough',
     materialConsumedQty: 10,
-    wastageQty: 1, // 1kg waste
+    wastageQty: 1, 
     efficiency: 90,
     materialPhoto: IMG_SAMOSA_RAW,
     productPhoto: IMG_SAMOSA_COOKED
@@ -244,7 +256,7 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
     batchNumber: 'B-502', 
     productId: 'INV-FIN-002', 
     productName: 'Steamed Veg Momos', 
-    quantityProduced: 120, // 15kg raw momo mix yielded 120 pcs momos
+    quantityProduced: 120, 
     workerId: 'EMP-006', 
     workerName: 'Vikram Singh', 
     date: '2026-08-11', 
@@ -263,7 +275,7 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
     batchNumber: 'B-503', 
     productId: 'INV-FIN-003', 
     productName: 'Hakka Noodles Plate', 
-    quantityProduced: 40, // 20kg uncooked noodles yielded 40 plates
+    quantityProduced: 40, 
     workerId: 'EMP-006', 
     workerName: 'Vikram Singh', 
     date: '2026-08-12', 
@@ -282,14 +294,14 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
     batchNumber: 'B-504', 
     productId: 'INV-FIN-004', 
     productName: 'French Fries (1kg Pack)', 
-    quantityProduced: 10, // 12kg potatoes yielded 10 packs fries
+    quantityProduced: 10, 
     workerId: 'EMP-004', 
     workerName: 'Amit Verma', 
     date: '2026-08-13', 
     status: 'Approved', 
     approvedDate: '2026-08-13',
     materialConsumedId: 'INV-RAW-001',
-    materialConsumedName: 'Raw Potatoes & Dough',
+    materialConsumedName: 'Raw Potatoes & Flour Dough',
     materialConsumedQty: 12,
     wastageQty: 1.2,
     efficiency: 90,
@@ -299,112 +311,112 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
   { 
     id: 'PROD-005', 
     batchNumber: 'B-505', 
-    productId: 'INV-FIN-001', 
-    productName: 'Crispy Samosa (Standard)', 
-    quantityProduced: 70, // 15kg raw potatoes/dough yielded 70 pcs samosas
+    productId: 'INV-FIN-005', 
+    productName: 'Crispy Spring Rolls', 
+    quantityProduced: 60, 
     workerId: 'EMP-003', 
     workerName: 'Sunita Patel', 
     date: '2026-08-14', 
     status: 'Approved', 
     approvedDate: '2026-08-14',
     materialConsumedId: 'INV-RAW-001',
-    materialConsumedName: 'Raw Potatoes & Dough',
-    materialConsumedQty: 15,
-    wastageQty: 0.9,
-    efficiency: 94,
+    materialConsumedName: 'Raw Potatoes & Flour Dough',
+    materialConsumedQty: 8,
+    wastageQty: 0.8,
+    efficiency: 90,
     materialPhoto: IMG_SAMOSA_RAW,
-    productPhoto: IMG_SAMOSA_COOKED
+    productPhoto: IMG_ROLLS
   },
   { 
     id: 'PROD-006', 
     batchNumber: 'B-506', 
-    productId: 'INV-FIN-002', 
-    productName: 'Steamed Veg Momos', 
-    quantityProduced: 80, // 10kg raw mix yielded 80 momos
-    workerId: 'EMP-006', 
-    workerName: 'Vikram Singh', 
+    productId: 'INV-FIN-006', 
+    productName: 'Veg Burger Patty', 
+    quantityProduced: 45, 
+    workerId: 'EMP-004', 
+    workerName: 'Amit Verma', 
     date: '2026-08-15', 
     status: 'Approved', 
     approvedDate: '2026-08-15',
-    materialConsumedId: 'INV-RAW-002',
-    materialConsumedName: 'Raw Momo Wrapper & Veg Stuffing',
+    materialConsumedId: 'INV-RAW-001',
+    materialConsumedName: 'Raw Potatoes & Flour Dough',
     materialConsumedQty: 10,
-    wastageQty: 1.2,
-    efficiency: 88,
-    materialPhoto: IMG_MOMOS_RAW,
-    productPhoto: IMG_MOMOS_COOKED
+    wastageQty: 1.5,
+    efficiency: 85,
+    materialPhoto: IMG_POTATOES,
+    productPhoto: IMG_PATTY
   },
   { 
     id: 'PROD-007', 
     batchNumber: 'B-507', 
-    productId: 'INV-FIN-003', 
-    productName: 'Hakka Noodles Plate', 
-    quantityProduced: 30, // 15kg raw noodle yielded 30 plates
-    workerId: 'EMP-006', 
-    workerName: 'Vikram Singh', 
+    productId: 'INV-FIN-007', 
+    productName: 'Paneer Tikka Roll', 
+    quantityProduced: 30, 
+    workerId: 'EMP-003', 
+    workerName: 'Sunita Patel', 
     date: '2026-08-16', 
     status: 'Pending Approval', 
-    materialConsumedId: 'INV-RAW-003',
-    materialConsumedName: 'Uncooked Noodle Strands',
-    materialConsumedQty: 15,
-    wastageQty: 1,
-    efficiency: 93,
-    materialPhoto: IMG_NOODLES_RAW,
-    productPhoto: IMG_NOODLES_COOKED
+    materialConsumedId: 'INV-RAW-004',
+    materialConsumedName: 'Refined Oil & Spice Seasonings',
+    materialConsumedQty: 5,
+    wastageQty: 0.4,
+    efficiency: 92,
+    materialPhoto: IMG_OIL,
+    productPhoto: IMG_TIKKA
   },
   { 
     id: 'PROD-008', 
     batchNumber: 'B-508', 
-    productId: 'INV-FIN-004', 
-    productName: 'French Fries (1kg Pack)', 
-    quantityProduced: 7, // 8kg potatoes yielded 7 packs fries
-    workerId: 'EMP-004', 
-    workerName: 'Amit Verma', 
+    productId: 'INV-FIN-008', 
+    productName: 'Chilli Garlic Potatoes', 
+    quantityProduced: 25, 
+    workerId: 'EMP-006', 
+    workerName: 'Vikram Singh', 
     date: '2026-08-17', 
     status: 'Pending Approval', 
     materialConsumedId: 'INV-RAW-001',
-    materialConsumedName: 'Raw Potatoes & Dough',
-    materialConsumedQty: 8,
-    wastageQty: 0.8,
+    materialConsumedName: 'Raw Potatoes & Flour Dough',
+    materialConsumedQty: 10,
+    wastageQty: 1,
     efficiency: 90,
     materialPhoto: IMG_POTATOES,
-    productPhoto: IMG_FRIES
+    productPhoto: IMG_CHILLI
   },
   { 
     id: 'PROD-009', 
     batchNumber: 'B-509', 
-    productId: 'INV-FIN-001', 
-    productName: 'Crispy Samosa (Standard)', 
-    quantityProduced: 120, // 25kg yielded 120 samosas
+    productId: 'INV-FIN-009', 
+    productName: 'Cheese Garlic Bread', 
+    quantityProduced: 35, 
     workerId: 'EMP-003', 
     workerName: 'Sunita Patel', 
     date: '2026-08-18', 
     status: 'Pending Approval', 
-    materialConsumedId: 'INV-RAW-001',
-    materialConsumedName: 'Raw Potatoes & Dough',
-    materialConsumedQty: 25,
-    wastageQty: 2.5,
-    efficiency: 90,
-    materialPhoto: IMG_SAMOSA_RAW,
-    productPhoto: IMG_SAMOSA_COOKED
+    materialConsumedId: 'INV-RAW-004',
+    materialConsumedName: 'Refined Oil & Spice Seasonings',
+    materialConsumedQty: 6,
+    wastageQty: 0.3,
+    efficiency: 95,
+    materialPhoto: IMG_OIL,
+    productPhoto: IMG_BREAD
   },
   { 
     id: 'PROD-010', 
     batchNumber: 'B-510', 
-    productId: 'INV-FIN-002', 
-    productName: 'Steamed Veg Momos', 
-    quantityProduced: 160, 
-    workerId: 'EMP-006', 
-    workerName: 'Vikram Singh', 
+    productId: 'INV-FIN-010', 
+    productName: 'Aloo Tikki Chaat', 
+    quantityProduced: 55, 
+    workerId: 'EMP-003', 
+    workerName: 'Sunita Patel', 
     date: '2026-08-19', 
     status: 'Pending Approval', 
-    materialConsumedId: 'INV-RAW-002',
-    materialConsumedName: 'Raw Momo Wrapper & Veg Stuffing',
-    materialConsumedQty: 20,
-    wastageQty: 2,
+    materialConsumedId: 'INV-RAW-001',
+    materialConsumedName: 'Raw Potatoes & Flour Dough',
+    materialConsumedQty: 12,
+    wastageQty: 1.2,
     efficiency: 90,
-    materialPhoto: IMG_MOMOS_RAW,
-    productPhoto: IMG_MOMOS_COOKED
+    materialPhoto: IMG_POTATOES,
+    productPhoto: IMG_CHAAT
   }
 ];
 
