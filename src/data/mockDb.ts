@@ -83,11 +83,6 @@ export interface PayrollRecord {
   processedDate: string;
 }
 
-// Helper to base64 encode SVGs for 100% bulletproof browser rendering
-const svgToBase64 = (svgStr: string): string => {
-  return 'data:image/svg+xml;base64,' + btoa(svgStr);
-};
-
 // Kitchen Staff setup
 const INITIAL_EMPLOYEES: Employee[] = [
   { 
@@ -202,24 +197,36 @@ const INITIAL_INVENTORY: InventoryItem[] = [
   { id: 'INV-FIN-010', name: 'Aloo Tikki Chaat', type: 'Finished Good', quantity: 95, unit: 'plates', minThreshold: 15, lastUpdated: '2026-08-19', materialCode: 'FIN-CHAAT', storageLocation: 'Chaat Station 4' }
 ];
 
-// Raw Food material SVGs
-const IMG_SAMOSA_RAW = svgToBase64(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="#eab308"/><circle cx="35" cy="50" r="14" fill="#fef08a"/><circle cx="65" cy="50" r="12" fill="#b45309"/><text x="12" y="88" fill="#78350f" font-size="8" font-family="sans-serif">DOUGH & POTATO MIX</text></svg>`);
-const IMG_MOMOS_RAW = svgToBase64(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="#d1d5db"/><circle cx="35" cy="40" r="10" fill="#f3f4f6"/><circle cx="65" cy="40" r="10" fill="#f3f4f6"/><text x="16" y="90" fill="#374151" font-size="8" font-family="sans-serif">MOMO WRAP FLOUR</text></svg>`);
-const IMG_NOODLES_RAW = svgToBase64(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="#451a03"/><path d="M10,20 Q30,10 50,20 T90,20" stroke="#fef08a" stroke-width="4" fill="none"/><text x="16" y="88" fill="#fef08a" font-size="8" font-family="sans-serif">DRY NOODLE STRANDS</text></svg>`);
-const IMG_POTATOES = svgToBase64(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="#7c2d12"/><path d="M20,60 Q50,15 80,60 Z" fill="#b45309"/><text x="18" y="90" fill="#fef3c7" font-size="8" font-family="sans-serif">POTATOES SACK</text></svg>`);
-const IMG_OIL = svgToBase64(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="#065f46"/><path d="M25,25 L75,25 L85,85 L15,85 Z" fill="#fbbf24"/><text x="22" y="92" fill="#fef3c7" font-size="8" font-family="sans-serif">SUNFLOWER OIL</text></svg>`);
+// REAL High-Definition Photography URLs from Unsplash
+const IMG_SAMOSA_RAW = 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&auto=format&fit=crop&q=80';
+const IMG_SAMOSA_COOKED = 'https://images.unsplash.com/photo-1601050690597-df056fb49785?w=400&auto=format&fit=crop&q=80';
 
-// Finished Food product SVGs
-const IMG_SAMOSA_COOKED = svgToBase64(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="#b45309"/><polygon points="50,15 15,75 85,75" fill="#f59e0b" stroke="#d97706" stroke-width="4"/><text x="14" y="90" fill="#fef3c7" font-size="9" font-family="sans-serif">CRISPY SAMOSAS</text></svg>`);
-const IMG_MOMOS_COOKED = svgToBase64(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="#78350f"/><circle cx="50" cy="50" r="35" fill="#d97706"/><circle cx="35" cy="45" r="8" fill="#fafaf9"/><circle cx="65" cy="45" r="8" fill="#fafaf9"/><text x="14" y="92" fill="#fef3c7" font-size="8" font-family="sans-serif">STEAMED MOMOS</text></svg>`);
-const IMG_NOODLES_COOKED = svgToBase64(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="#1e293b"/><path d="M20,60 A30,30 0 0,0 80,60 Z" fill="#b91c1c"/><path d="M15,40 Q50,90 85,40" stroke="#fbbf24" stroke-width="5" fill="none"/><text x="12" y="92" fill="#ffffff" font-size="8" font-family="sans-serif">HAKKA NOODLES</text></svg>`);
-const IMG_FRIES = svgToBase64(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="#991b1b"/><rect x="25" y="20" width="8" height="60" fill="#fbbf24"/><rect x="51" y="15" width="8" height="65" fill="#fbbf24"/><path d="M15,45 L85,45 L75,95 L25,95 Z" fill="#dc2626"/><text x="18" y="90" fill="#ffffff" font-size="8" font-family="sans-serif">GOLDEN FRIES</text></svg>`);
-const IMG_ROLLS = svgToBase64(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="#7c2d12"/><rect x="15" y="35" width="70" height="15" rx="5" fill="#f59e0b"/><rect x="15" y="60" width="70" height="15" rx="5" fill="#d97706"/><text x="18" y="90" fill="#ffffff" font-size="8" font-family="sans-serif">SPRING ROLLS</text></svg>`);
-const IMG_PATTY = svgToBase64(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="#b45309"/><circle cx="50" cy="50" r="30" fill="#ea580c" stroke="#d97706" stroke-width="4"/><text x="22" y="90" fill="#ffffff" font-size="8" font-family="sans-serif">BURGER PATTY</text></svg>`);
-const IMG_TIKKA = svgToBase64(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="#7f1d1d"/><rect x="30" y="30" width="40" height="40" fill="#f97316"/><rect x="40" y="40" width="20" height="20" fill="#fef08a"/><line x1="50" y1="10" x2="50" y2="90" stroke="#94a3b8" stroke-width="3"/><text x="18" y="88" fill="#ffffff" font-size="8" font-family="sans-serif">PANEER TIKKA</text></svg>`);
-const IMG_CHILLI = svgToBase64(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="#b91c1c"/><circle cx="30" cy="50" r="8" fill="#ea580c"/><circle cx="50" cy="45" r="9" fill="#ea580c"/><circle cx="70" cy="55" r="7" fill="#ea580c"/><text x="14" y="90" fill="#ffffff" font-size="8" font-family="sans-serif">CHILLI POTATO</text></svg>`);
-const IMG_BREAD = svgToBase64(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="#7c2d12"/><rect x="20" y="20" width="60" height="60" rx="10" fill="#f59e0b"/><rect x="25" y="25" width="50" height="50" rx="5" fill="#fef08a"/><circle cx="35" cy="35" r="3" fill="#16a34a"/><text x="16" y="92" fill="#ffffff" font-size="8" font-family="sans-serif">GARLIC BREAD</text></svg>`);
-const IMG_CHAAT = svgToBase64(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="#14532d"/><circle cx="50" cy="50" r="32" fill="#ea580c"/><path d="M30,30 Q50,45 70,30" stroke="#dc2626" stroke-width="4" fill="none"/><path d="M30,70 Q50,55 70,70" stroke="#16a34a" stroke-width="4" fill="none"/><text x="18" y="90" fill="#ffffff" font-size="8" font-family="sans-serif">TIKKI CHAAT</text></svg>`);
+const IMG_MOMOS_RAW = 'https://images.unsplash.com/photo-1608833970687-14372a302517?w=400&auto=format&fit=crop&q=80';
+const IMG_MOMOS_COOKED = 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=400&auto=format&fit=crop&q=80';
+
+const IMG_NOODLES_RAW = 'https://images.unsplash.com/photo-1612966608967-312ba5791026?w=400&auto=format&fit=crop&q=80';
+const IMG_NOODLES_COOKED = 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&auto=format&fit=crop&q=80';
+
+const IMG_POTATOES = 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400&auto=format&fit=crop&q=80';
+const IMG_FRIES = 'https://images.unsplash.com/photo-1576107232684-1279f390859f?w=400&auto=format&fit=crop&q=80';
+
+const IMG_OIL = 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&auto=format&fit=crop&q=80'; // Butter/Garlic/Oil setup
+const IMG_ROLLS = 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=400&auto=format&fit=crop&q=80';
+
+const IMG_PATTY_RAW = 'https://images.unsplash.com/photo-1595855759920-86582396756a?w=400&auto=format&fit=crop&q=80';
+const IMG_PATTY_COOKED = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&auto=format&fit=crop&q=80';
+
+const IMG_TIKKA_RAW = 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&auto=format&fit=crop&q=80';
+const IMG_TIKKA_COOKED = 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=400&auto=format&fit=crop&q=80';
+
+const IMG_CHILLI_RAW = 'https://images.unsplash.com/photo-1596450514944-a302251a37c9?w=400&auto=format&fit=crop&q=80';
+const IMG_CHILLI_COOKED = 'https://images.unsplash.com/photo-1600147190474-0f2c4cb757a2?w=400&auto=format&fit=crop&q=80';
+
+const IMG_BREAD_RAW = 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&auto=format&fit=crop&q=80';
+const IMG_BREAD_COOKED = 'https://images.unsplash.com/photo-1573140247632-f8fd74997d5c?w=400&auto=format&fit=crop&q=80';
+
+const IMG_CHAAT_RAW = 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=400&auto=format&fit=crop&q=80';
+const IMG_CHAAT_COOKED = 'https://images.unsplash.com/photo-1626132647523-66f5bf380027?w=400&auto=format&fit=crop&q=80';
 
 // Chronological Material Issues Feed (10 unique records)
 const INITIAL_ISSUES: MaterialIssue[] = [
@@ -228,11 +235,11 @@ const INITIAL_ISSUES: MaterialIssue[] = [
   { id: 'ISS-003', materialId: 'INV-RAW-003', materialName: 'Uncooked Noodle Strands', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 20, date: '2026-08-12', remarks: 'Hakka noodles run', photo: IMG_NOODLES_RAW },
   { id: 'ISS-004', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-004', issuedToName: 'Amit Verma', quantity: 12, date: '2026-08-13', remarks: 'French Fries packaging', photo: IMG_POTATOES },
   { id: 'ISS-005', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 15, date: '2026-08-14', remarks: 'Spring rolls dough', photo: IMG_SAMOSA_RAW },
-  { id: 'ISS-006', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-004', issuedToName: 'Amit Verma', quantity: 10, date: '2026-08-15', remarks: 'Veg Burger patties', photo: IMG_POTATOES },
-  { id: 'ISS-007', materialId: 'INV-RAW-004', materialName: 'Refined Oil & Spice Seasonings', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 8, date: '2026-08-16', remarks: 'Paneer tikka marination', photo: IMG_OIL },
-  { id: 'ISS-008', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 8, date: '2026-08-17', remarks: 'Chilli Garlic prep', photo: IMG_POTATOES },
+  { id: 'ISS-006', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-004', issuedToName: 'Amit Verma', quantity: 10, date: '2026-08-15', remarks: 'Veg Burger patties', photo: IMG_PATTY_RAW },
+  { id: 'ISS-007', materialId: 'INV-RAW-004', materialName: 'Refined Oil & Spice Seasonings', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 8, date: '2026-08-16', remarks: 'Paneer marination', photo: IMG_OIL },
+  { id: 'ISS-008', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 8, date: '2026-08-17', remarks: 'Chilli Garlic prep', photo: IMG_CHILLI_RAW },
   { id: 'ISS-009', materialId: 'INV-RAW-004', materialName: 'Refined Oil & Spice Seasonings', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 10, date: '2026-08-18', remarks: 'Garlic bread deck', photo: IMG_OIL },
-  { id: 'ISS-010', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 25, date: '2026-08-19', remarks: 'Mega Chaat prep', photo: IMG_POTATOES }
+  { id: 'ISS-010', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 25, date: '2026-08-19', remarks: 'Mega Chaat prep', photo: IMG_CHAAT_RAW }
 ];
 
 // Chronological Production Output Logs (10 completely unique food finished goods!)
@@ -348,8 +355,8 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
     materialConsumedQty: 10,
     wastageQty: 1.5,
     efficiency: 85,
-    materialPhoto: IMG_POTATOES,
-    productPhoto: IMG_PATTY
+    materialPhoto: IMG_PATTY_RAW,
+    productPhoto: IMG_PATTY_COOKED
   },
   { 
     id: 'PROD-007', 
@@ -366,8 +373,8 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
     materialConsumedQty: 5,
     wastageQty: 0.4,
     efficiency: 92,
-    materialPhoto: IMG_OIL,
-    productPhoto: IMG_TIKKA
+    materialPhoto: IMG_TIKKA_RAW,
+    productPhoto: IMG_TIKKA_COOKED
   },
   { 
     id: 'PROD-008', 
@@ -384,8 +391,8 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
     materialConsumedQty: 10,
     wastageQty: 1,
     efficiency: 90,
-    materialPhoto: IMG_POTATOES,
-    productPhoto: IMG_CHILLI
+    materialPhoto: IMG_CHILLI_RAW,
+    productPhoto: IMG_CHILLI_COOKED
   },
   { 
     id: 'PROD-009', 
@@ -402,8 +409,8 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
     materialConsumedQty: 6,
     wastageQty: 0.3,
     efficiency: 95,
-    materialPhoto: IMG_OIL,
-    productPhoto: IMG_BREAD
+    materialPhoto: IMG_BREAD_RAW,
+    productPhoto: IMG_BREAD_COOKED
   },
   { 
     id: 'PROD-010', 
@@ -420,8 +427,8 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
     materialConsumedQty: 12,
     wastageQty: 1.2,
     efficiency: 90,
-    materialPhoto: IMG_POTATOES,
-    productPhoto: IMG_CHAAT
+    materialPhoto: IMG_CHAAT_RAW,
+    productPhoto: IMG_CHAAT_COOKED
   }
 ];
 
