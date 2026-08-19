@@ -1,12 +1,10 @@
-import React from 'react';
 import { 
   LayoutDashboard, 
   Users, 
   Package, 
   ClipboardList, 
   CheckSquare, 
-  CircleDollarSign,
-  ChevronRight
+  CircleDollarSign
 } from 'lucide-react';
 import { resetDb } from '../data/mockDb';
 
@@ -62,9 +60,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setCurrentTab }) =
                   <Icon size={18} />
                   <span>{item.label}</span>
                 </div>
-                {item.hasSub && (
-                  <ChevronRight size={14} className="submenu-chevron" />
-                )}
               </a>
             </li>
           );
