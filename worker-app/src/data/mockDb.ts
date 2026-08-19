@@ -4,7 +4,7 @@ export interface Employee {
   role: 'Admin' | 'Manager' | 'Worker' | 'Accountant';
   department: string;
   status: 'Active' | 'Inactive';
-  baseRate: number;
+  baseRate: number; // Represents rate per unit (piece rate) for workers, or hourly rate for others
   phone: string;
   email: string;
   joinedDate: string;
@@ -29,6 +29,7 @@ export interface MaterialIssue {
   quantity: number;
   date: string;
   remarks: string;
+  photo?: string;
 }
 
 export interface ProductionLog {
@@ -42,8 +43,14 @@ export interface ProductionLog {
   date: string;
   status: 'Pending Approval' | 'Approved';
   approvedDate?: string;
-  materialPhoto?: string;
-  productPhoto?: string;
+  
+  // Linkages for material consumption details
+  materialConsumedId?: string;
+  materialConsumedName?: string;
+  materialConsumedQty?: number;
+  
+  materialPhoto?: string; // Raw material photo
+  productPhoto?: string;  // Finished product photo
 }
 
 export interface PayrollRecord {
@@ -52,7 +59,7 @@ export interface PayrollRecord {
   employeeName: string;
   role: string;
   period: string;
-  baseRate: number;
+  baseRate: number; // Piece rate for workers
   approvedBatchesCount: number;
   totalQtyProduced: number;
   grossPay: number;
@@ -62,14 +69,14 @@ export interface PayrollRecord {
   processedDate: string;
 }
 
-// Initial mock data fallbacks
+// Initial mock data with piece-rate (e.g. Sunita earns ₹35 per Valve produced)
 const INITIAL_EMPLOYEES: Employee[] = [
   { id: 'EMP-001', name: 'Arjun Kumar', role: 'Admin', department: 'Administration', status: 'Active', baseRate: 150, phone: '+91 98765 43210', email: 'arjun@aksales.com', joinedDate: '2025-01-10' },
   { id: 'EMP-002', name: 'Rajesh Sharma', role: 'Manager', department: 'Operations', status: 'Active', baseRate: 120, phone: '+91 98765 43211', email: 'rajesh@aksales.com', joinedDate: '2025-02-15' },
-  { id: 'EMP-003', name: 'Sunita Patel', role: 'Worker', department: 'Production Line A', status: 'Active', baseRate: 60, phone: '+91 87654 32109', email: 'sunita@aksales.com', joinedDate: '2025-04-01' },
-  { id: 'EMP-004', name: 'Amit Verma', role: 'Worker', department: 'Production Line B', status: 'Active', baseRate: 55, phone: '+91 76543 21098', email: 'amit@aksales.com', joinedDate: '2025-05-12' },
+  { id: 'EMP-003', name: 'Sunita Patel', role: 'Worker', department: 'Production Line A', status: 'Active', baseRate: 35, phone: '+91 87654 32109', email: 'sunita@aksales.com', joinedDate: '2025-04-01' },
+  { id: 'EMP-004', name: 'Amit Verma', role: 'Worker', department: 'Production Line B', status: 'Active', baseRate: 30, phone: '+91 76543 21098', email: 'amit@aksales.com', joinedDate: '2025-05-12' },
   { id: 'EMP-005', name: 'Priya Nair', role: 'Accountant', department: 'Finance', status: 'Active', baseRate: 100, phone: '+91 65432 10987', email: 'priya@aksales.com', joinedDate: '2025-03-20' },
-  { id: 'EMP-006', name: 'Vikram Singh', role: 'Worker', department: 'Production Line A', status: 'Active', baseRate: 58, phone: '+91 90123 45678', email: 'vikram@aksales.com', joinedDate: '2025-06-01' }
+  { id: 'EMP-006', name: 'Vikram Singh', role: 'Worker', department: 'Production Line A', status: 'Active', baseRate: 32, phone: '+91 90123 45678', email: 'vikram@aksales.com', joinedDate: '2025-06-01' }
 ];
 
 const INITIAL_INVENTORY: InventoryItem[] = [
@@ -87,9 +94,39 @@ const INITIAL_ISSUES: MaterialIssue[] = [
 ];
 
 const INITIAL_PRODUCTION: ProductionLog[] = [
-  { id: 'PROD-001', batchNumber: 'B-201', productId: 'INV-FIN-001', productName: 'AK Heavy Duty Valves', quantityProduced: 45, workerId: 'EMP-003', workerName: 'Sunita Patel', date: '2026-08-18', status: 'Approved', approvedDate: '2026-08-18' },
-  { id: 'PROD-002', batchNumber: 'B-202', productId: 'INV-FIN-002', productName: 'Standard Coupling Joint B2', quantityProduced: 12, workerId: 'EMP-004', workerName: 'Amit Verma', date: '2026-08-19', status: 'Pending Approval' },
-  { id: 'PROD-003', batchNumber: 'B-203', productId: 'INV-FIN-001', productName: 'AK Heavy Duty Valves', quantityProduced: 30, workerId: 'EMP-006', workerName: 'Vikram Singh', date: '2026-08-19', status: 'Pending Approval' }
+  { 
+    id: 'PROD-001', 
+    batchNumber: 'B-201', 
+    productId: 'INV-FIN-001', 
+    productName: 'AK Heavy Duty Valves', 
+    quantityProduced: 45, 
+    workerId: 'EMP-003', 
+    workerName: 'Sunita Patel', 
+    date: '2026-08-18', 
+    status: 'Approved', 
+    approvedDate: '2026-08-18',
+    materialConsumedId: 'INV-RAW-001',
+    materialConsumedName: 'Steel Sheets (2mm)',
+    materialConsumedQty: 30,
+    materialPhoto: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23475569"/><line x1="10" y1="10" x2="90" y2="10" stroke="%2394a3b8" stroke-width="4"/><circle cx="20" cy="50" r="5" fill="%23cbd5e1"/><circle cx="80" cy="50" r="5" fill="%23cbd5e1"/><text x="25" y="85" fill="%23cbd5e1" font-size="10" font-family="sans-serif">RAW MATERIAL</text></svg>`,
+    productPhoto: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%231e293b"/><circle cx="50" cy="50" r="25" fill="%23ef4444" stroke="%23dc2626" stroke-width="4"/><rect x="42" y="10" width="16" height="30" fill="%23475569"/><rect x="25" y="42" width="50" height="16" fill="%2394a3b8"/><text x="20" y="90" fill="%2310b981" font-size="10" font-family="sans-serif">FINISHED GOOD</text></svg>`
+  },
+  { 
+    id: 'PROD-002', 
+    batchNumber: 'B-202', 
+    productId: 'INV-FIN-002', 
+    productName: 'Standard Coupling Joint B2', 
+    quantityProduced: 12, 
+    workerId: 'EMP-004', 
+    workerName: 'Amit Verma', 
+    date: '2026-08-19', 
+    status: 'Pending Approval',
+    materialConsumedId: 'INV-RAW-002',
+    materialConsumedName: 'Aluminum Alloy Bars',
+    materialConsumedQty: 8,
+    materialPhoto: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23475569"/><line x1="10" y1="10" x2="90" y2="10" stroke="%2394a3b8" stroke-width="4"/><circle cx="20" cy="50" r="5" fill="%23cbd5e1"/><circle cx="80" cy="50" r="5" fill="%23cbd5e1"/><text x="25" y="85" fill="%23cbd5e1" font-size="10" font-family="sans-serif">RAW MATERIAL</text></svg>`,
+    productPhoto: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%231e293b"/><circle cx="50" cy="50" r="25" fill="%23ef4444" stroke="%23dc2626" stroke-width="4"/><rect x="42" y="10" width="16" height="30" fill="%23475569"/><rect x="25" y="42" width="50" height="16" fill="%2394a3b8"/><text x="20" y="90" fill="%2310b981" font-size="10" font-family="sans-serif">FINISHED GOOD</text></svg>`
+  }
 ];
 
 // Helper to initialize and retrieve from localStorage

@@ -119,6 +119,11 @@ function App() {
     productId: string; 
     quantityProduced: number; 
     workerId: string; 
+    materialConsumedId?: string;
+    materialConsumedName?: string;
+    materialConsumedQty?: number;
+    materialPhoto?: string;
+    productPhoto?: string;
   }) => {
     const product = inventory.find(i => i.id === newLog.productId);
     const worker = employees.find(e => e.id === newLog.workerId);
@@ -133,7 +138,12 @@ function App() {
       workerId: newLog.workerId,
       workerName: worker.name,
       date: new Date().toISOString().split('T')[0],
-      status: 'Pending Approval'
+      status: 'Pending Approval',
+      materialConsumedId: newLog.materialConsumedId,
+      materialConsumedName: newLog.materialConsumedName,
+      materialConsumedQty: newLog.materialConsumedQty,
+      materialPhoto: newLog.materialPhoto,
+      productPhoto: newLog.productPhoto
     };
 
     const updatedProd = [newRecord, ...production];

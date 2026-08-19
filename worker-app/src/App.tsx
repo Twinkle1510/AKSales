@@ -24,7 +24,8 @@ import {
   getInventory,
   getMaterialIssues,
   saveProductionLogs,
-  getProductionLogs
+  getProductionLogs,
+  saveInventory
 } from './data/mockDb';
 
 function App() {
@@ -50,18 +51,20 @@ function App() {
   const [materialPhotos, setMaterialPhotos] = useState<Record<string, string>>({}); // issueId -> image
   const [loggedProductPhoto, setLoggedProductPhoto] = useState<string | null>(null);
 
+  // Raw material consumption states
+  const [logMaterialIssueId, setLogMaterialIssueId] = useState('');
+  const [logMaterialQty, setLogMaterialQty] = useState<number>(0);
+
   // System time clock simulator
   const [systemTime, setSystemTime] = useState('15:22');
 
   // Load from shared storage
   useEffect(() => {
-    // Load local storage states
     setEmployees(getEmployees());
     setInventory(getInventory());
     setIssues(getMaterialIssues());
     setProduction(getProductionLogs());
 
-    // Update phone time
     const updateTime = () => {
       const now = new Date();
       const hrs = String(now.getHours()).padStart(2, '0');
@@ -82,7 +85,6 @@ function App() {
       setProduction(getProductionLogs());
     };
     window.addEventListener('storage', handleStorageChange);
-    // Polling interval just in case storage event doesn't trigger on same tab
     const pollInterval = setInterval(handleStorageChange, 2000);
 
     return () => {
@@ -102,6 +104,12 @@ function App() {
     }
   }, [inventory, logProductId, logBatchNum]);
 
+  // Reset consumption selector when worker changes
+  useEffect(() => {
+    setLogMaterialIssueId('');
+    setLogMaterialQty(0);
+  }, [currentWorker]);
+
   // Filter issues and production logs for current worker
   const workerIssues = currentWorker 
     ? issues.filter(issue => issue.issuedToId === currentWorker.id)
@@ -111,11 +119,17 @@ function App() {
     ? production.filter(p => p.workerId === currentWorker.id)
     : [];
 
-  // Calculate worker earnings based on approved production records
-  // Formula: baseRate per hour * 8 hours per approved batch
-  const approvedCount = workerProduction.filter(p => p.status === 'Approved').length;
-  const workerHours = approvedCount * 8;
-  const totalEarnings = currentWorker ? currentWorker.baseRate * workerHours : 0;
+  // Initialize default material issue selection
+  useEffect(() => {
+    if (workerIssues.length > 0 && !logMaterialIssueId) {
+      setLogMaterialIssueId(workerIssues[0].id);
+    }
+  }, [workerIssues, logMaterialIssueId]);
+
+  // Calculate worker earnings based on approved production records and pieces produced
+  const approvedRuns = workerProduction.filter(p => p.status === 'Approved');
+  const totalApprovedQty = approvedRuns.reduce((sum, p) => sum + p.quantityProduced, 0);
+  const totalEarnings = currentWorker ? totalApprovedQty * currentWorker.baseRate : 0;
 
   // Open simulated camera
   const handleOpenCamera = (target: 'material' | 'product', issueId?: string) => {
@@ -127,14 +141,12 @@ function App() {
   // Capture simulated picture
   const handleCapturePhoto = () => {
     if (cameraTarget === 'material' && targetIssueId) {
-      // Simulate taking a photo of Steel sheets / bars
       const materialSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23475569"/><line x1="10" y1="10" x2="90" y2="10" stroke="%2394a3b8" stroke-width="4"/><circle cx="20" cy="50" r="5" fill="%23cbd5e1"/><circle cx="80" cy="50" r="5" fill="%23cbd5e1"/><text x="25" y="85" fill="%23cbd5e1" font-size="10" font-family="sans-serif">RAW MATERIAL</text></svg>`;
       setMaterialPhotos(prev => ({
         ...prev,
         [targetIssueId]: materialSvg
       }));
     } else if (cameraTarget === 'product') {
-      // Simulate taking a photo of a heavy duty valve
       const productSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%231e293b"/><circle cx="50" cy="50" r="25" fill="%23ef4444" stroke="%23dc2626" stroke-width="4"/><rect x="42" y="10" width="16" height="30" fill="%23475569"/><rect x="25" y="42" width="50" height="16" fill="%2394a3b8"/><text x="20" y="90" fill="%2310b981" font-size="10" font-family="sans-serif">FINISHED GOOD</text></svg>`;
       setLoggedProductPhoto(productSvg);
     }
@@ -152,6 +164,10 @@ function App() {
     const product = inventory.find(i => i.id === logProductId);
     if (!product) return;
 
+    // Retrieve consumption details if mapped
+    const selectedIssue = issues.find(issue => issue.id === logMaterialIssueId);
+    const verifiedPhoto = selectedIssue ? materialPhotos[selectedIssue.id] : undefined;
+
     const newRecord: ProductionLog = {
       id: `PROD-${String(production.length + 1).padStart(3, '0')}`,
       batchNumber: logBatchNum,
@@ -162,8 +178,28 @@ function App() {
       workerName: currentWorker.name,
       date: new Date().toISOString().split('T')[0],
       status: 'Pending Approval',
+      materialConsumedId: selectedIssue?.materialId,
+      materialConsumedName: selectedIssue?.materialName,
+      materialConsumedQty: logMaterialQty > 0 ? Number(logMaterialQty) : undefined,
+      materialPhoto: verifiedPhoto, // automatically bundle the raw material photo!
       productPhoto: loggedProductPhoto || undefined
     };
+
+    // Simulate inventory consumption deduction
+    if (selectedIssue && logMaterialQty > 0) {
+      const updatedInventory = inventory.map(item => {
+        if (item.id === selectedIssue.materialId) {
+          return {
+            ...item,
+            quantity: Math.max(0, item.quantity - Number(logMaterialQty)),
+            lastUpdated: new Date().toISOString().split('T')[0]
+          };
+        }
+        return item;
+      });
+      setInventory(updatedInventory);
+      saveInventory(updatedInventory);
+    }
 
     const updatedProd = [newRecord, ...production];
     setProduction(updatedProd);
@@ -171,6 +207,7 @@ function App() {
 
     // Reset logger states
     setLogQty(0);
+    setLogMaterialQty(0);
     setLoggedProductPhoto(null);
     setLogBatchNum(`B-${Math.floor(100 + Math.random() * 900)}`);
     alert(`Logged Output for Batch ${newRecord.batchNumber} successfully submitted!`);
@@ -185,7 +222,6 @@ function App() {
         <div className="phone-frame">
           <div className="phone-notch"></div>
           <div className="phone-screen">
-            {/* Status bar */}
             <div className="status-bar">
               <span>{systemTime}</span>
               <div className="status-bar-icons">
@@ -229,7 +265,7 @@ function App() {
                         <div style={{ flexGrow: 1 }}>
                           <div style={{ fontWeight: 700, fontSize: '14px' }}>{w.name}</div>
                           <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-                            {w.department} • Wage: ₹{w.baseRate}/hr
+                            {w.department} • Rate: ₹{w.baseRate}/piece
                           </div>
                         </div>
                       </div>
@@ -250,7 +286,6 @@ function App() {
         <div className="phone-notch"></div>
         <div className="phone-screen">
           
-          {/* Status bar */}
           <div className="status-bar">
             <span>{systemTime}</span>
             <div className="status-bar-icons">
@@ -339,6 +374,8 @@ function App() {
               <>
                 <h3 style={{ fontSize: '15px', fontWeight: 700, marginBottom: '4px' }}>Log Daily Production</h3>
                 <form className="mobile-card" onSubmit={handleLogProduction}>
+                  
+                  {/* Batch Details */}
                   <div className="form-group">
                     <label>Batch Number</label>
                     <input 
@@ -349,6 +386,44 @@ function App() {
                     />
                   </div>
 
+                  {/* Materials consumed selector */}
+                  <div style={{ border: '1px solid #e5e7eb', padding: '12px', borderRadius: '8px', backgroundColor: '#fafafa' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 700, marginBottom: '6px', color: 'var(--color-orange)' }}>
+                      Consumed Material (Ledger Link)
+                    </div>
+                    
+                    <div className="form-group" style={{ marginBottom: '8px' }}>
+                      <label>Select Issued Material</label>
+                      <select
+                        className="form-input"
+                        value={logMaterialIssueId}
+                        onChange={(e) => setLogMaterialIssueId(e.target.value)}
+                      >
+                        <option value="">-- Self Supplied / None --</option>
+                        {workerIssues.map(issue => (
+                          <option key={issue.id} value={issue.id}>
+                            {issue.materialName} ({issue.quantity} available)
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {logMaterialIssueId && (
+                      <div className="form-group" style={{ marginBottom: '0' }}>
+                        <label>Material Qty Consumed</label>
+                        <input
+                          type="number"
+                          className="form-input"
+                          min="1"
+                          value={logMaterialQty || ''}
+                          onChange={(e) => setLogMaterialQty(Number(e.target.value))}
+                          placeholder="e.g. 10"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Finished Goods Output */}
                   <div className="form-group">
                     <label>Manufactured Finished Good</label>
                     <select 
@@ -363,7 +438,7 @@ function App() {
                   </div>
 
                   <div className="form-group">
-                    <label>Quantity Completed</label>
+                    <label>Quantity Completed (Output)</label>
                     <input 
                       type="number" 
                       className="form-input" 
@@ -375,6 +450,7 @@ function App() {
                     />
                   </div>
 
+                  {/* Snapshot of product */}
                   <div className="form-group" style={{ marginBottom: '8px' }}>
                     <label>Finished Product Snapshot</label>
                     
@@ -410,12 +486,12 @@ function App() {
 
             {activeTab === 'earnings' && (
               <>
-                {/* Earnings card banner */}
+                {/* Piece rate earnings card banner */}
                 <div className="earnings-box">
-                  <span className="earnings-label">ACCUMULATED EARNINGS</span>
+                  <span className="earnings-label">ACCUMULATED EARNINGS (PIECE RATE)</span>
                   <div className="earnings-amount">₹{totalEarnings.toLocaleString()}</div>
                   <span className="earnings-subtext">
-                    Calculated from {approvedCount} approved manufacturing runs
+                    Calculated at ₹{currentWorker.baseRate} per unit produced ({totalApprovedQty} total units approved)
                   </span>
                 </div>
 
@@ -439,17 +515,37 @@ function App() {
                       </div>
                       
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-secondary)' }}>
-                        <span>{p.productName} ({p.quantityProduced} pcs)</span>
-                        <span style={{ fontWeight: 700 }}>
-                          {p.status === 'Approved' ? `+₹${(currentWorker.baseRate * 8).toLocaleString()}` : 'Pending wage'}
+                        <div>
+                          <div>{p.productName} ({p.quantityProduced} pcs)</div>
+                          {p.materialConsumedName && (
+                            <div style={{ fontSize: '10px', color: 'var(--color-orange)', marginTop: '2px' }}>
+                              Used: {p.materialConsumedQty} {p.materialConsumedName}
+                            </div>
+                          )}
+                        </div>
+                        <span style={{ fontWeight: 700, color: 'var(--color-green)' }}>
+                          {p.status === 'Approved' ? `+₹${(p.quantityProduced * currentWorker.baseRate).toLocaleString()}` : 'Pending wage'}
                         </span>
                       </div>
 
-                      {p.productPhoto && (
-                        <div className="photo-thumbnail-container" style={{ height: '70px', marginTop: '4px' }}>
-                          <img src={p.productPhoto} className="photo-thumbnail-img" alt="Batch production" />
+                      {/* Side-by-side Photo thumbnails if present */}
+                      {(p.materialPhoto || p.productPhoto) && (
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '6px' }}>
+                          {p.materialPhoto && (
+                            <div className="photo-thumbnail-container" style={{ height: '60px' }}>
+                              <img src={p.materialPhoto} className="photo-thumbnail-img" alt="Material consumed" />
+                              <span style={{ position: 'absolute', bottom: '2px', left: '4px', fontSize: '8px', color: '#ffffff', backgroundColor: 'rgba(0,0,0,0.5)', padding: '1px 3px', borderRadius: '2px' }}>Material</span>
+                            </div>
+                          )}
+                          {p.productPhoto && (
+                            <div className="photo-thumbnail-container" style={{ height: '60px' }}>
+                              <img src={p.productPhoto} className="photo-thumbnail-img" alt="Finished item" />
+                              <span style={{ position: 'absolute', bottom: '2px', left: '4px', fontSize: '8px', color: '#ffffff', backgroundColor: 'rgba(0,0,0,0.5)', padding: '1px 3px', borderRadius: '2px' }}>Product</span>
+                            </div>
+                          )}
                         </div>
                       )}
+
                     </div>
                   ))
                 )}
@@ -466,18 +562,16 @@ function App() {
                   </p>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    {/* Approved outputs notifications */}
                     {workerProduction.filter(p => p.status === 'Approved').map(p => (
                       <div key={p.id} className="mobile-card notify-card success">
                         <div style={{ fontWeight: 700, fontSize: '13px' }}>Batch Approved!</div>
                         <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                          Batch <strong>{p.batchNumber}</strong> has been approved by admin. 8 hours of labor wage (₹{currentWorker.baseRate * 8}) credited to your panel.
+                          Batch <strong>{p.batchNumber}</strong> has been approved. Pieces produced: {p.quantityProduced} units. Piece rate payout (₹{p.quantityProduced * currentWorker.baseRate}) credited to your panel.
                         </p>
                         <div className="notify-time">{p.approvedDate}</div>
                       </div>
                     ))}
 
-                    {/* Issued materials notifications */}
                     {workerIssues.map(issue => (
                       <div key={issue.id} className="mobile-card notify-card alert">
                         <div style={{ fontWeight: 700, fontSize: '13px' }}>Raw Material Assigned</div>
@@ -539,7 +633,6 @@ function App() {
             <a className={`bottom-nav-item ${activeTab === 'notifications' ? 'active' : ''}`} onClick={() => setActiveTab('notifications')} style={{ position: 'relative' }}>
               <Bell />
               <span>Alerts</span>
-              {/* Alert indicator dot */}
               {(workerIssues.length > 0 || workerProduction.filter(p => p.status === 'Approved').length > 0) && (
                 <div className="notification-dot"></div>
               )}
