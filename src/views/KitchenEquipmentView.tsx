@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Thermometer, Layers, PlayCircle, UserCheck } from 'lucide-react';
+import { Plus, Search, Hammer, Layers, PlayCircle, UserCheck } from 'lucide-react';
 import type { KitchenEquipment, Employee } from '../data/mockDb';
 
 interface KitchenEquipmentProps {
@@ -17,14 +17,14 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
   // Equipment Form states
   const [eqName, setEqName] = useState('');
   const [eqType, setEqType] = useState<'Fryer' | 'Steamer' | 'Wok' | 'Oven' | 'Griddle'>('Fryer');
-  const [tempSettings, setTempSettings] = useState('180°C');
+  const [tempSettings, setTempSettings] = useState('Pressure: 200 Bar');
 
   // Allocation Form states
   const [assignedWorkerId, setAssignedWorkerId] = useState('');
-  const [allocatedMaterialName, setAllocatedMaterialName] = useState('Raw Potatoes & Flour Dough (Sheets)');
-  const [allocatedQtyKg, setAllocatedQtyKg] = useState(10);
-  const [actualOutputName, setActualOutputName] = useState('Classic Samosa (Standard)');
-  const [actualOutputQty, setActualOutputQty] = useState(50);
+  const [allocatedMaterialName, setAllocatedMaterialName] = useState('Stainless Steel Sheets (SS 304 / 18-Gauge)');
+  const [allocatedQtyKg, setAllocatedQtyKg] = useState(150);
+  const [actualOutputName, setActualOutputName] = useState('Stainless Steel Work Table (with Under-shelf)');
+  const [actualOutputQty, setActualOutputQty] = useState(8);
   const [outputUnit, setOutputUnit] = useState<'pcs' | 'plates' | 'packs'>('pcs');
 
   const workers = employees.filter(e => e.role === 'Worker');
@@ -53,7 +53,7 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
     
     // Clear inputs
     setEqName('');
-    setTempSettings('180°C');
+    setTempSettings('Pressure: 200 Bar');
   };
 
   const handleAllocateSheets = (e: React.FormEvent) => {
@@ -113,12 +113,12 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
       {/* Header Panel */}
       <div className="top-header">
         <div>
-          <h1 className="page-title">Kitchen Stations & Equipment</h1>
-          <p className="page-subtitle">Track commercial kitchen stations. Allocate flour sheets / raw materials (KG) and log finished plates/pcs yields.</p>
+          <h1 className="page-title">Fabrication Stations & Machinery</h1>
+          <p className="page-subtitle">Track commercial steel machinery. Allocate raw metal sheets (KG) and log finished kitchen equipment pcs yields.</p>
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
           <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
-            <Plus size={18} /> Register Station
+            <Plus size={18} /> Register Machine
           </button>
         </div>
       </div>
@@ -131,13 +131,13 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
             <input 
               type="text" 
               className="form-control" 
-              placeholder="Search station, equipment name, or assigned worker..." 
+              placeholder="Search machine, shear brake, or assigned fabricator..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-            Showing {filtered.length} active stations
+            Showing {filtered.length} active machines
           </div>
         </div>
       </div>
@@ -154,31 +154,31 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
                 <span className="badge" style={{ backgroundColor: 'rgba(255,255,255,0.05)', fontSize: '10px', padding: '2px 6px', display: 'inline-block', marginBottom: '4px' }}>
-                  {eq.id} | {eq.type.toUpperCase()}
+                  {eq.id} | MACHINE
                 </span>
                 <h3 style={{ fontSize: '16px', fontWeight: 800 }}>{eq.name}</h3>
               </div>
               <span className={`badge ${
                 eq.status === 'Active Cooking' ? 'badge-success' :
                 eq.status === 'Idle' ? 'badge-primary' : 'badge-danger'
-              }`}>
-                {eq.status}
+              }`} style={{ contentVisibility: 'auto' }}>
+                {eq.status === 'Active Cooking' ? 'Active Fabrication' : eq.status}
               </span>
             </div>
 
-            {/* Photo & Temp details */}
+            {/* Photo & Specs details */}
             <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
               {eq.photo ? (
                 <img src={eq.photo} style={{ width: '80px', height: '60px', borderRadius: '4px', objectFit: 'cover', border: '1px solid var(--border)' }} alt={eq.name} />
               ) : (
-                <div style={{ width: '80px', height: '60px', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: 'var(--text-secondary)' }}>Station</div>
+                <div style={{ width: '80px', height: '60px', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: 'var(--text-secondary)' }}>Machine</div>
               )}
               
               <div style={{ fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <Thermometer size={14} className="text-secondary" /> Settings: <strong>{eq.temperatureSettings || 'Standard'}</strong>
+                  <Hammer size={14} className="text-secondary" /> Settings: <strong>{eq.temperatureSettings || 'Pressure: 200 Bar'}</strong>
                 </span>
-                <span>Last cleaned: <strong>{eq.lastCleanedDate}</strong></span>
+                <span>Last Calibrated: <strong>{eq.lastCleanedDate}</strong></span>
               </div>
             </div>
 
@@ -187,12 +187,12 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
               <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '10px', borderRadius: '6px', fontSize: '12px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
                   <UserCheck size={14} color="var(--primary)" />
-                  <span>Chef: <strong>{eq.assignedWorkerName}</strong></span>
+                  <span>Fabricator: <strong>{eq.assignedWorkerName}</strong></span>
                 </div>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', borderTop: '1px solid var(--border)', paddingTop: '6px', marginTop: '6px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: 'var(--text-secondary)' }}>Allocated (Input):</span>
+                    <span style={{ color: 'var(--text-secondary)' }}>Issued Steel (Input):</span>
                     <strong>{eq.allocatedQtyKg} kg Sheets</strong>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -218,7 +218,7 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
                     setIsAllocationModalOpen(true);
                   }}
                 >
-                  <Layers size={12} /> Allocate sheets
+                  <Layers size={12} /> Issue SS Sheets (KG)
                 </button>
               )}
               
@@ -228,7 +228,7 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
                   style={{ flex: 1, padding: '6px 8px', fontSize: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
                   onClick={() => setStatus(eq.id, 'Idle')}
                 >
-                  <PlayCircle size={12} /> Complete Cook Run
+                  <PlayCircle size={12} /> Complete Fabricate Run
                 </button>
               )}
 
@@ -251,23 +251,23 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
       {/* Sheets Allocation vs Plates Yield Analysis Table */}
       <div className="card" style={{ marginTop: '16px' }}>
         <div style={{ padding: '16px', borderBottom: '1px solid var(--border)' }}>
-          <h2 style={{ fontSize: '15px', fontWeight: 800 }}>Dough Sheets vs. Plates Yield Ledger</h2>
-          <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Analysis table linking input dough sheets (KG) to output plates / pieces cooked across all stations.</p>
+          <h2 style={{ fontSize: '15px', fontWeight: 800 }}>SS Sheets vs. Fabricated Equipment Yield Ledger</h2>
+          <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Analysis table linking allocated metal sheets (KG) to final kitchen equipment produced (pcs).</p>
         </div>
         
         <div className="table-container">
           <table className="table">
             <thead>
               <tr>
-                <th>Cooking Station</th>
-                <th>Assigned worker</th>
-                <th>Material Input</th>
+                <th>Machine / Station</th>
+                <th>Assigned Fabricator</th>
+                <th>SS Sheet Code (Input)</th>
                 <th>Quantity Issued (KG)</th>
-                <th>Product Output</th>
-                <th>Quantity Produced</th>
+                <th>Fabricated Product (Output)</th>
+                <th>Quantity Produced (Pcs)</th>
                 <th>Conversion Index</th>
-                <th>Station Temp</th>
-                <th>Cleaned</th>
+                <th>Calibration Specs</th>
+                <th>Last Inspected</th>
               </tr>
             </thead>
             <tbody>
@@ -295,7 +295,7 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
                   </td>
                   <td>
                     {eq.allocatedQtyKg > 0 && eq.actualOutputQty > 0 ? (
-                      <strong>{(eq.actualOutputQty / eq.allocatedQtyKg).toFixed(1)} items/KG</strong>
+                      <strong>{(eq.actualOutputQty / eq.allocatedQtyKg).toFixed(2)} items/KG</strong>
                     ) : '-'}
                   </td>
                   <td>{eq.temperatureSettings || 'Standard'}</td>
@@ -312,48 +312,48 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
         <div className="modal-overlay">
           <form className="modal-content" onSubmit={handleAddEquipment} style={{ maxWidth: '450px', width: '90%' }}>
             <div className="modal-header">
-              <h2 className="modal-title">Register Station</h2>
+              <h2 className="modal-title">Register Machine / Station</h2>
               <button type="button" className="modal-close" onClick={() => setIsModalOpen(false)}>×</button>
             </div>
 
             <div className="form-group">
-              <label>Station / Equipment Name</label>
+              <label>Machine / Station Name</label>
               <input 
                 type="text" 
                 className="form-control" 
                 required 
                 value={eqName} 
                 onChange={(e) => setEqName(e.target.value)}
-                placeholder="e.g. Bamboo Steamer Box B"
+                placeholder="e.g. 500W Fiber Laser Cutter"
               />
             </div>
 
             <div className="form-group">
-              <label>Equipment Type</label>
+              <label>Machine Type</label>
               <select className="form-control" value={eqType} onChange={(e) => setEqType(e.target.value as any)}>
-                <option value="Fryer">Fryer</option>
-                <option value="Steamer">Steamer</option>
-                <option value="Wok">Wok / Stir-fry</option>
-                <option value="Oven">Oven</option>
-                <option value="Griddle">Griddle</option>
+                <option value="Fryer">Shearing Machine</option>
+                <option value="Steamer">Bending Brake</option>
+                <option value="Wok">Welding Bay</option>
+                <option value="Oven">Polishing Deck</option>
+                <option value="Griddle">Laser Cutting Bed</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label>Temperature Settings / Level</label>
+              <label>Calibration Specs / Settings</label>
               <input 
                 type="text" 
                 className="form-control" 
                 required 
                 value={tempSettings} 
                 onChange={(e) => setTempSettings(e.target.value)}
-                placeholder="e.g. 180°C / Medium Flame"
+                placeholder="e.g. 150 Amps / TIG Ar"
               />
             </div>
 
             <div className="modal-footer" style={{ marginTop: '20px' }}>
               <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>Cancel</button>
-              <button type="submit" className="btn btn-primary">Save Station</button>
+              <button type="submit" className="btn btn-primary">Save Machine</button>
             </div>
           </form>
         </div>
@@ -364,19 +364,19 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
         <div className="modal-overlay">
           <form className="modal-content" onSubmit={handleAllocateSheets} style={{ maxWidth: '480px', width: '90%' }}>
             <div className="modal-header">
-              <h2 className="modal-title">Allocate Sheets & Materials</h2>
+              <h2 className="modal-title">Allocate SS Sheets to Fabricator</h2>
               <button type="button" className="modal-close" onClick={() => setIsAllocationModalOpen(false)}>×</button>
             </div>
 
             <div className="form-group">
-              <label>Select Chef / Worker</label>
+              <label>Select Assigned Fabricator</label>
               <select 
                 className="form-control" 
                 required 
                 value={assignedWorkerId} 
                 onChange={(e) => setAssignedWorkerId(e.target.value)}
               >
-                <option value="">-- Choose Worker --</option>
+                <option value="">-- Choose Fabricator --</option>
                 {workers.map(w => (
                   <option key={w.id} value={w.id}>{w.name} ({w.employeeCode || w.id})</option>
                 ))}
@@ -384,14 +384,14 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
             </div>
 
             <div className="form-group">
-              <label>Allocated Sheets / Material (KG)</label>
+              <label>Allocated Raw Material (Sheets / Pipes)</label>
               <input 
                 type="text" 
                 className="form-control" 
                 required 
                 value={allocatedMaterialName} 
                 onChange={(e) => setAllocatedMaterialName(e.target.value)}
-                placeholder="e.g. Samosa Dough Sheets (KG)"
+                placeholder="e.g. Stainless Steel Sheets (SS 304 / 18-Gauge)"
               />
             </div>
 
@@ -407,14 +407,14 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
             </div>
 
             <div className="form-group">
-              <label>Expected Food Output</label>
+              <label>Expected Fabricated Equipment</label>
               <input 
                 type="text" 
                 className="form-control" 
                 required 
                 value={actualOutputName} 
                 onChange={(e) => setActualOutputName(e.target.value)}
-                placeholder="e.g. Crispy Samosas"
+                placeholder="e.g. Stainless Steel Work Table"
               />
             </div>
 
@@ -442,7 +442,7 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
 
             <div className="modal-footer" style={{ marginTop: '20px' }}>
               <button type="button" className="btn btn-secondary" onClick={() => setIsAllocationModalOpen(false)}>Cancel</button>
-              <button type="submit" className="btn btn-primary">Allocate & Start Cooking</button>
+              <button type="submit" className="btn btn-primary">Allocate & Start Fabrication</button>
             </div>
           </form>
         </div>

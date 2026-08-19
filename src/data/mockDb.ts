@@ -107,7 +107,7 @@ const INITIAL_EMPLOYEES: Employee[] = [
     id: 'EMP-001', 
     name: 'Arjun Kumar', 
     role: 'Admin', 
-    department: 'Kitchen Administration', 
+    department: 'Fabrication Administration', 
     status: 'Active', 
     baseRate: 150, 
     phone: '+91 98765 43210', 
@@ -122,7 +122,7 @@ const INITIAL_EMPLOYEES: Employee[] = [
     id: 'EMP-002', 
     name: 'Rajesh Sharma', 
     role: 'Manager', 
-    department: 'Kitchen Management', 
+    department: 'Floor Management', 
     status: 'Active', 
     baseRate: 120, 
     phone: '+91 98765 43211', 
@@ -137,32 +137,32 @@ const INITIAL_EMPLOYEES: Employee[] = [
     id: 'EMP-003', 
     name: 'Sunita Patel', 
     role: 'Worker', 
-    department: 'Food Prep Section A', 
+    department: 'Sheet Metal Cutting', 
     status: 'Active', 
-    baseRate: 2, 
+    baseRate: 50, 
     phone: '+91 87654 32109', 
     email: 'sunita@aksales.com', 
     joinedDate: '2025-04-01',
     employeeCode: 'AK-003',
     address: 'Bapunagar Labor Colony, Block B, Ahmedabad',
     payrollModel: 'Per Piece',
-    incentiveRate: 2
+    incentiveRate: 5
   },
   { 
     id: 'EMP-004', 
     name: 'Amit Verma', 
     role: 'Worker', 
-    department: 'Frying & Packing Section', 
+    department: 'Welding & Finishing', 
     status: 'Active', 
-    baseRate: 30, 
+    baseRate: 120, 
     phone: '+91 76543 21098', 
     email: 'amit@aksales.com', 
     joinedDate: '2025-05-12',
     employeeCode: 'AK-004',
     address: 'Naroda GIDC Quarter 105, Ahmedabad',
     payrollModel: 'Fixed + Incentive',
-    fixedSalaryAmount: 12000,
-    incentiveRate: 5
+    fixedSalaryAmount: 15000,
+    incentiveRate: 20
   },
   { 
     id: 'EMP-005', 
@@ -183,136 +183,176 @@ const INITIAL_EMPLOYEES: Employee[] = [
     id: 'EMP-006', 
     name: 'Vikram Singh', 
     role: 'Worker', 
-    department: 'Noodles & Momo Section', 
+    department: 'Bending & Assembling', 
     status: 'Active', 
-    baseRate: 20, 
+    baseRate: 80, 
     phone: '+91 90123 45678', 
     email: 'vikram@aksales.com', 
     joinedDate: '2025-06-01',
     employeeCode: 'AK-006',
     address: 'Odhav GIDC block 12, Ahmedabad',
     payrollModel: 'Per Piece',
-    incentiveRate: 20
+    incentiveRate: 80
   }
 ];
 
 const INITIAL_INVENTORY: InventoryItem[] = [
-  { id: 'INV-RAW-001', name: 'Raw Potatoes & Flour Dough', type: 'Raw Material', quantity: 450, unit: 'kg', minThreshold: 100, lastUpdated: '2026-08-18', materialCode: 'RAW-POT-SAM', batchNumber: 'SM-101', storageLocation: 'Cold Room A' },
-  { id: 'INV-RAW-002', name: 'Raw Momo Wrapper & Veg Stuffing', type: 'Raw Material', quantity: 200, unit: 'kg', minThreshold: 50, lastUpdated: '2026-08-19', materialCode: 'RAW-MM-STF', batchNumber: 'MM-202', storageLocation: 'Cold Room B' },
-  { id: 'INV-RAW-003', name: 'Uncooked Noodle Strands', type: 'Raw Material', quantity: 180, unit: 'kg', minThreshold: 40, lastUpdated: '2026-08-19', materialCode: 'RAW-NDL-STR', batchNumber: 'ND-303', storageLocation: 'Dry Storage' },
-  { id: 'INV-RAW-004', name: 'Refined Oil & Spice Seasonings', type: 'Raw Material', quantity: 120, unit: 'liters', minThreshold: 30, lastUpdated: '2026-08-15', materialCode: 'RAW-OIL-SPC', batchNumber: 'OL-404', storageLocation: 'Dry Storage' },
+  { id: 'INV-RAW-001', name: 'Stainless Steel Sheets (SS 304 / 18-Gauge)', type: 'Raw Material', quantity: 1450, unit: 'kg', minThreshold: 300, lastUpdated: '2026-08-18', materialCode: 'RAW-SS304-18G', batchNumber: 'SS-101', storageLocation: 'Bay A Sheet Rack' },
+  { id: 'INV-RAW-002', name: 'Stainless Steel Sheets (SS 202 / 20-Gauge)', type: 'Raw Material', quantity: 980, unit: 'kg', minThreshold: 200, lastUpdated: '2026-08-19', materialCode: 'RAW-SS202-20G', batchNumber: 'SS-202', storageLocation: 'Bay B Sheet Rack' },
+  { id: 'INV-RAW-003', name: 'SS Square Tubes & Angled Pipes', type: 'Raw Material', quantity: 640, unit: 'kg', minThreshold: 150, lastUpdated: '2026-08-19', materialCode: 'RAW-SS-PIPES', batchNumber: 'PP-303', storageLocation: 'Pipe Yard Slot 3' },
+  { id: 'INV-RAW-004', name: 'Welding Rods & Grinding Discs', type: 'Raw Material', quantity: 180, unit: 'packs', minThreshold: 40, lastUpdated: '2026-08-15', materialCode: 'RAW-WELD- rods', batchNumber: 'WL-404', storageLocation: 'Tool Room Cabinet C' },
   
-  // 14 Unique Finished Goods
-  { id: 'INV-FIN-001', name: 'Classic Samosa (Standard)', type: 'Finished Good', quantity: 800, unit: 'pcs', minThreshold: 200, lastUpdated: '2026-08-19', materialCode: 'FIN-SAMOSA', storageLocation: 'Hot Case Bay A' },
-  { id: 'INV-FIN-002', name: 'Steamed Veg Momos', type: 'Finished Good', quantity: 400, unit: 'pcs', minThreshold: 100, lastUpdated: '2026-08-19', materialCode: 'FIN-MOMOS', storageLocation: 'Steamer Box B' },
-  { id: 'INV-FIN-003', name: 'Hakka Noodles Plate', type: 'Finished Good', quantity: 150, unit: 'plates', minThreshold: 30, lastUpdated: '2026-08-19', materialCode: 'FIN-NOODLES', storageLocation: 'Wok Assembly Station' },
-  { id: 'INV-FIN-004', name: 'French Fries (1kg Pack)', type: 'Finished Good', quantity: 120, unit: 'packs', minThreshold: 45, lastUpdated: '2026-08-19', materialCode: 'FIN-FRIES', storageLocation: 'Freezer Shelf 2' },
-  { id: 'INV-FIN-005', name: 'Crispy Spring Rolls', type: 'Finished Good', quantity: 300, unit: 'pcs', minThreshold: 50, lastUpdated: '2026-08-19', materialCode: 'FIN-ROLLS', storageLocation: 'Hot Cabinet 2' },
-  { id: 'INV-FIN-006', name: 'Veg Burger Patty', type: 'Finished Good', quantity: 240, unit: 'pcs', minThreshold: 60, lastUpdated: '2026-08-19', materialCode: 'FIN-PATTY', storageLocation: 'Freezer Shelf 3' },
-  { id: 'INV-FIN-007', name: 'Paneer Tikka Roll', type: 'Finished Good', quantity: 180, unit: 'pcs', minThreshold: 30, lastUpdated: '2026-08-19', materialCode: 'FIN-TIKKA', storageLocation: 'Assembly Line 3' },
-  { id: 'INV-FIN-008', name: 'Chilli Garlic Potatoes', type: 'Finished Good', quantity: 90, unit: 'plates', minThreshold: 20, lastUpdated: '2026-08-19', materialCode: 'FIN-CHILLI', storageLocation: 'Prep Kitchen C' },
-  { id: 'INV-FIN-009', name: 'Cheese Garlic Bread', type: 'Finished Good', quantity: 110, unit: 'pcs', minThreshold: 25, lastUpdated: '2026-08-19', materialCode: 'FIN-BREAD', storageLocation: 'Bakery Deck 1' },
-  { id: 'INV-FIN-010', name: 'Aloo Tikki Chaat', type: 'Finished Good', quantity: 95, unit: 'plates', minThreshold: 15, lastUpdated: '2026-08-19', materialCode: 'FIN-CHAAT', storageLocation: 'Chaat Station 4' },
-  { id: 'INV-FIN-011', name: 'Masala Dosa', type: 'Finished Good', quantity: 70, unit: 'pcs', minThreshold: 10, lastUpdated: '2026-08-19', materialCode: 'FIN-DOSA', storageLocation: 'Griddle Station 1' },
-  { id: 'INV-FIN-012', name: 'Paneer Butter Masala', type: 'Finished Good', quantity: 85, unit: 'packs', minThreshold: 15, lastUpdated: '2026-08-19', materialCode: 'FIN-PANEER-CURRY', storageLocation: 'Cold Room C' },
-  { id: 'INV-FIN-013', name: 'Veg Biryani Bowl', type: 'Finished Good', quantity: 60, unit: 'plates', minThreshold: 10, lastUpdated: '2026-08-19', materialCode: 'FIN-BIRYANI', storageLocation: 'Hot Case Bay B' },
-  { id: 'INV-FIN-014', name: 'Crispy Onion Pakoda', type: 'Finished Good', quantity: 110, unit: 'pcs', minThreshold: 20, lastUpdated: '2026-08-19', materialCode: 'FIN-PAKODA', storageLocation: 'Hot Case Bay C' }
+  // 14 Unique Fabricated Steel Kitchen Equipment Goods
+  { id: 'INV-FIN-001', name: 'Stainless Steel Work Table (with Under-shelf)', type: 'Finished Good', quantity: 45, unit: 'pcs', minThreshold: 10, lastUpdated: '2026-08-19', materialCode: 'FIN-SS-TABLE-U', storageLocation: 'Loading Dock A' },
+  { id: 'INV-FIN-002', name: 'SS Compartment Tray (Dining Plates)', type: 'Finished Good', quantity: 800, unit: 'pcs', minThreshold: 150, lastUpdated: '2026-08-19', materialCode: 'FIN-SS-PLATES', storageLocation: 'Small Parts Warehouse' },
+  { id: 'INV-FIN-003', name: 'Fabricated Storage Rack (4-Tier)', type: 'Finished Good', quantity: 30, unit: 'pcs', minThreshold: 5, lastUpdated: '2026-08-19', materialCode: 'FIN-SS-RACK-4T', storageLocation: 'Loading Dock B' },
+  { id: 'INV-FIN-004', name: 'Commercial Double Sink Unit', type: 'Finished Good', quantity: 20, unit: 'pcs', minThreshold: 4, lastUpdated: '2026-08-19', materialCode: 'FIN-SS-SINK-DBL', storageLocation: 'Warehouse Deck C' },
+  { id: 'INV-FIN-005', name: 'Stainless Steel Exhaust Hood', type: 'Finished Good', quantity: 15, unit: 'pcs', minThreshold: 3, lastUpdated: '2026-08-19', materialCode: 'FIN-SS-HOOD', storageLocation: 'Finished Assembly Section' },
+  { id: 'INV-FIN-006', name: 'Mobile Kitchen Trolley (3-Tier)', type: 'Finished Good', quantity: 35, unit: 'pcs', minThreshold: 8, lastUpdated: '2026-08-19', materialCode: 'FIN-SS-TROLLEY', storageLocation: 'Loading Dock B' },
+  { id: 'INV-FIN-007', name: 'SS Preparation Table (with Splashback)', type: 'Finished Good', quantity: 25, unit: 'pcs', minThreshold: 6, lastUpdated: '2026-08-19', materialCode: 'FIN-SS-TABLE-SP', storageLocation: 'Loading Dock A' },
+  { id: 'INV-FIN-008', name: 'SS GN Pan (Gastronorm Container)', type: 'Finished Good', quantity: 340, unit: 'pcs', minThreshold: 50, lastUpdated: '2026-08-19', materialCode: 'FIN-SS-GNPAN', storageLocation: 'Small Parts Warehouse' },
+  { id: 'INV-FIN-009', name: 'SS Dishwashing Table', type: 'Finished Good', quantity: 12, unit: 'pcs', minThreshold: 3, lastUpdated: '2026-08-19', materialCode: 'FIN-SS-DISH-TAB', storageLocation: 'Warehouse Deck C' },
+  { id: 'INV-FIN-010', name: 'SS Bain Marie Counter', type: 'Finished Good', quantity: 8, unit: 'pcs', minThreshold: 2, lastUpdated: '2026-08-19', materialCode: 'FIN-SS-BAIN-MARIE', storageLocation: 'Heavy Equipment Area' },
+  { id: 'INV-FIN-011', name: 'SS Storage Cabinet (with Sliding Doors)', type: 'Finished Good', quantity: 14, unit: 'pcs', minThreshold: 3, lastUpdated: '2026-08-19', materialCode: 'FIN-SS-CABINET', storageLocation: 'Finished Assembly Section' },
+  { id: 'INV-FIN-012', name: 'SS Wall Mounted Shelf', type: 'Finished Good', quantity: 55, unit: 'pcs', minThreshold: 12, lastUpdated: '2026-08-19', materialCode: 'FIN-SS-WALL-SHELF', storageLocation: 'Loading Dock A' },
+  { id: 'INV-FIN-013', name: 'SS Masala Box Utility Rack', type: 'Finished Good', quantity: 120, unit: 'pcs', minThreshold: 20, lastUpdated: '2026-08-19', materialCode: 'FIN-SS-MASALA-RCK', storageLocation: 'Small Parts Warehouse' },
+  { id: 'INV-FIN-014', name: 'Industrial Griddle Plate Base', type: 'Finished Good', quantity: 18, unit: 'pcs', minThreshold: 4, lastUpdated: '2026-08-19', materialCode: 'FIN-SS-GRIDDLE-BASE', storageLocation: 'Heavy Equipment Area' }
 ];
 
-// REAL High-Definition Photography URLs from Unsplash
-const IMG_SAMOSA_RAW = 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&auto=format&fit=crop&q=80';
-const IMG_SAMOSA_COOKED = 'https://images.unsplash.com/photo-1601050690597-df056fb49785?w=400&auto=format&fit=crop&q=80';
+// REAL High-Definition Steel Fabrication Photography URLs from Unsplash
+const IMG_SS_SHEET_304 = 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=400&auto=format&fit=crop&q=80'; // Steel metal plate
+const IMG_TABLE_FINISHED = 'https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?w=400&auto=format&fit=crop&q=80'; // Stainless tables
 
-const IMG_MOMOS_RAW = 'https://images.unsplash.com/photo-1608833970687-14372a302517?w=400&auto=format&fit=crop&q=80';
-const IMG_MOMOS_COOKED = 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=400&auto=format&fit=crop&q=80';
+const IMG_SS_PLATES_RAW = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&auto=format&fit=crop&q=80'; // Sheet metal cutouts
+const IMG_PLATES_FINISHED = 'https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&auto=format&fit=crop&q=80'; // Steel bowls / kitchenware
 
-const IMG_NOODLES_RAW = 'https://images.unsplash.com/photo-1612966608967-312ba5791026?w=400&auto=format&fit=crop&q=80';
-const IMG_NOODLES_COOKED = 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&auto=format&fit=crop&q=80';
+const IMG_PIPES_RAW = 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=400&auto=format&fit=crop&q=80'; // Metal bars
+const IMG_RACK_FINISHED = 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&auto=format&fit=crop&q=80'; // Storage rack shelving
 
-const IMG_POTATOES = 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400&auto=format&fit=crop&q=80';
-const IMG_FRIES = 'https://images.unsplash.com/photo-1576107232684-1279f390859f?w=400&auto=format&fit=crop&q=80';
+const IMG_SINK_RAW = 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=400&auto=format&fit=crop&q=80';
+const IMG_SINK_FINISHED = 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&auto=format&fit=crop&q=80'; // Stainless sinks
 
-const IMG_OIL = 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&auto=format&fit=crop&q=80';
-const IMG_ROLLS = 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=400&auto=format&fit=crop&q=80';
+const IMG_WELDING_RAW = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&auto=format&fit=crop&q=80'; // Welding rods sparks
+const IMG_HOOD_FINISHED = 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&auto=format&fit=crop&q=80'; // Exhaust hood canopy
 
-const IMG_PATTY_RAW = 'https://images.unsplash.com/photo-1595855759920-86582396756a?w=400&auto=format&fit=crop&q=80';
-const IMG_PATTY_COOKED = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&auto=format&fit=crop&q=80';
+const IMG_TROLLEY_RAW = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&auto=format&fit=crop&q=80';
+const IMG_TROLLEY_FINISHED = 'https://images.unsplash.com/photo-1596567189542-7e2417a74df9?w=400&auto=format&fit=crop&q=80'; // Utility cart trolley
 
-const IMG_TIKKA_RAW = 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&auto=format&fit=crop&q=80';
-const IMG_TIKKA_COOKED = 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=400&auto=format&fit=crop&q=80';
+const IMG_GNPAN_RAW = 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=400&auto=format&fit=crop&q=80';
+const IMG_GNPAN_FINISHED = 'https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&auto=format&fit=crop&q=80';
 
-const IMG_CHILLI_RAW = 'https://images.unsplash.com/photo-1596450514944-a302251a37c9?w=400&auto=format&fit=crop&q=80';
-const IMG_CHILLI_COOKED = 'https://images.unsplash.com/photo-1600147190474-0f2c4cb757a2?w=400&auto=format&fit=crop&q=80';
-
-const IMG_BREAD_RAW = 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&auto=format&fit=crop&q=80';
-const IMG_BREAD_COOKED = 'https://images.unsplash.com/photo-1573140247632-f8fd74997d5c?w=400&auto=format&fit=crop&q=80';
-
-const IMG_CHAAT_RAW = 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=400&auto=format&fit=crop&q=80';
-const IMG_CHAAT_COOKED = 'https://images.unsplash.com/photo-1626132647523-66f5bf380027?w=400&auto=format&fit=crop&q=80';
-
-// Added 4 new Unsplash raw & cooked food photo pairs
-const IMG_DOSA_RAW = 'https://images.unsplash.com/photo-1601050690597-df056fb49785?w=400&auto=format&fit=crop&q=80';
-const IMG_DOSA_COOKED = 'https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=400&auto=format&fit=crop&q=80';
-
-const IMG_PANEER_RAW = 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&auto=format&fit=crop&q=80';
-const IMG_PANEER_COOKED = 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&auto=format&fit=crop&q=80'; // Paneer Curry
-
-const IMG_BIRYANI_RAW = 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&auto=format&fit=crop&q=80';
-const IMG_BIRYANI_COOKED = 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&auto=format&fit=crop&q=80';
-
-const IMG_PAKODA_RAW = 'https://images.unsplash.com/photo-1508747703725-719ae2cc29d4?w=400&auto=format&fit=crop&q=80';
-const IMG_PAKODA_COOKED = 'https://images.unsplash.com/photo-1601050690597-df056fb49785?w=400&auto=format&fit=crop&q=80';
-
-// Real Equipment Photos
-const IMG_FRYER = 'https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?w=400&auto=format&fit=crop&q=80';
-const IMG_STEAMER = 'https://images.unsplash.com/photo-1594756297462-0214a66807d4?w=400&auto=format&fit=crop&q=80';
-const IMG_WOK = 'https://images.unsplash.com/photo-1543087903-1ac2ec7aa8c5?w=400&auto=format&fit=crop&q=80';
-const IMG_OVEN = 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&auto=format&fit=crop&q=80';
+// Initial Kitchen Equipment Data (4 active fabrication machines / shear brakes)
+const INITIAL_EQUIPMENT: KitchenEquipment[] = [
+  {
+    id: 'EQ-001',
+    name: 'Hydraulic Shear Cutting Station',
+    type: 'Fryer', // Kept type structure to avoid compilation issues, renamed UI name
+    status: 'Active Cooking',
+    assignedWorkerId: 'EMP-003',
+    assignedWorkerName: 'Sunita Patel',
+    allocatedMaterialName: 'SS 304 Sheet Metal (KG)',
+    allocatedQtyKg: 120,
+    actualOutputName: 'Stainless Steel Work Table',
+    actualOutputQty: 8,
+    outputUnit: 'pcs',
+    temperatureSettings: 'Pressure: 200 Bar',
+    lastCleanedDate: '2026-08-18',
+    photo: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=400&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'EQ-002',
+    name: 'Press Brake Bending Deck',
+    type: 'Steamer',
+    status: 'Active Cooking',
+    assignedWorkerId: 'EMP-006',
+    assignedWorkerName: 'Vikram Singh',
+    allocatedMaterialName: 'SS 202 Sheet Metal (KG)',
+    allocatedQtyKg: 90,
+    actualOutputName: 'Fabricated Storage Rack (4-Tier)',
+    actualOutputQty: 6,
+    outputUnit: 'pcs',
+    temperatureSettings: 'Angle Set: 90 Deg',
+    lastCleanedDate: '2026-08-19',
+    photo: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=400&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'EQ-003',
+    name: 'Heavy Duty Welding Bay C',
+    type: 'Wok',
+    status: 'Idle',
+    assignedWorkerId: 'EMP-004',
+    assignedWorkerName: 'Amit Verma',
+    allocatedMaterialName: 'SS Square Tubes & Rods (KG)',
+    allocatedQtyKg: 50,
+    actualOutputName: 'Commercial Double Sink Unit',
+    actualOutputQty: 4,
+    outputUnit: 'pcs',
+    temperatureSettings: 'Welding Amp: 140A',
+    lastCleanedDate: '2026-08-19',
+    photo: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'EQ-004',
+    name: 'TIG Welding & Buffing Station',
+    type: 'Oven',
+    status: 'Active Cooking',
+    assignedWorkerId: 'EMP-004',
+    assignedWorkerName: 'Amit Verma',
+    allocatedMaterialName: 'SS 304 Sheets (KG)',
+    allocatedQtyKg: 75,
+    actualOutputName: 'Stainless Steel Exhaust Hood',
+    actualOutputQty: 3,
+    outputUnit: 'pcs',
+    temperatureSettings: 'Argon Flow: 10L/m',
+    lastCleanedDate: '2026-08-19',
+    photo: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&auto=format&fit=crop&q=80'
+  }
+];
 
 // Chronological Material Issues Feed (14 unique records)
 const INITIAL_ISSUES: MaterialIssue[] = [
-  { id: 'ISS-001', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 10, date: '2026-08-10', remarks: 'Samosa Batch #S01', photo: IMG_SAMOSA_RAW },
-  { id: 'ISS-002', materialId: 'INV-RAW-002', materialName: 'Raw Momo Wrapper & Veg Stuffing', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 15, date: '2026-08-11', remarks: 'Steamed Momos #M02', photo: IMG_MOMOS_RAW },
-  { id: 'ISS-003', materialId: 'INV-RAW-003', materialName: 'Uncooked Noodle Strands', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 20, date: '2026-08-12', remarks: 'Hakka noodles run', photo: IMG_NOODLES_RAW },
-  { id: 'ISS-004', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-004', issuedToName: 'Amit Verma', quantity: 12, date: '2026-08-13', remarks: 'French Fries packaging', photo: IMG_POTATOES },
-  { id: 'ISS-005', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 15, date: '2026-08-14', remarks: 'Spring rolls dough', photo: IMG_SAMOSA_RAW },
-  { id: 'ISS-006', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-004', issuedToName: 'Amit Verma', quantity: 10, date: '2026-08-15', remarks: 'Veg Burger patties', photo: IMG_PATTY_RAW },
-  { id: 'ISS-007', materialId: 'INV-RAW-004', materialName: 'Refined Oil & Spice Seasonings', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 8, date: '2026-08-16', remarks: 'Paneer marination', photo: IMG_OIL },
-  { id: 'ISS-008', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 8, date: '2026-08-17', remarks: 'Chilli Garlic prep', photo: IMG_CHILLI_RAW },
-  { id: 'ISS-009', materialId: 'INV-RAW-004', materialName: 'Refined Oil & Spice Seasonings', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 10, date: '2026-08-18', remarks: 'Garlic bread deck', photo: IMG_OIL },
-  { id: 'ISS-010', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 25, date: '2026-08-19', remarks: 'Mega Chaat prep', photo: IMG_CHAAT_RAW },
-  { id: 'ISS-011', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 18, date: '2026-08-20', remarks: 'Dosa Griddle Setup', photo: IMG_DOSA_RAW },
-  { id: 'ISS-012', materialId: 'INV-RAW-004', materialName: 'Refined Oil & Spice Seasonings', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 14, date: '2026-08-21', remarks: 'Paneer butter curry preparation', photo: IMG_PANEER_RAW },
-  { id: 'ISS-013', materialId: 'INV-RAW-003', materialName: 'Uncooked Noodle Strands', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 22, date: '2026-08-22', remarks: 'Biryani Basmati rice allotment', photo: IMG_BIRYANI_RAW },
-  { id: 'ISS-014', materialId: 'INV-RAW-001', materialName: 'Raw Potatoes & Flour Dough', issuedToId: 'EMP-004', issuedToName: 'Amit Verma', quantity: 15, date: '2026-08-23', remarks: 'Onion Pakoda prep', photo: IMG_PAKODA_RAW }
+  { id: 'ISS-001', materialId: 'INV-RAW-001', materialName: 'Stainless Steel Sheets (SS 304)', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 150, date: '2026-08-10', remarks: 'Work Table Top Cutting', photo: IMG_SS_SHEET_304 },
+  { id: 'ISS-002', materialId: 'INV-RAW-002', materialName: 'Stainless Steel Sheets (SS 202)', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 110, date: '2026-08-11', remarks: '4-Tier Rack bend lines', photo: IMG_SS_PLATES_RAW },
+  { id: 'ISS-003', materialId: 'INV-RAW-003', materialName: 'SS Square Tubes & Angled Pipes', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 90, date: '2026-08-12', remarks: 'Frame structure welding', photo: IMG_PIPES_RAW },
+  { id: 'ISS-004', materialId: 'INV-RAW-001', materialName: 'Stainless Steel Sheets (SS 304)', issuedToId: 'EMP-004', issuedToName: 'Amit Verma', quantity: 120, date: '2026-08-13', remarks: 'Double Sink Bowl pressing', photo: IMG_SINK_RAW },
+  { id: 'ISS-005', materialId: 'INV-RAW-001', materialName: 'Stainless Steel Sheets (SS 304)', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 80, date: '2026-08-14', remarks: 'Exhaust Hood bend templates', photo: IMG_WELDING_RAW },
+  { id: 'ISS-006', materialId: 'INV-RAW-001', materialName: 'Stainless Steel Sheets (SS 304)', issuedToId: 'EMP-004', issuedToName: 'Amit Verma', quantity: 100, date: '2026-08-15', remarks: 'Mobile Trolley frame sheets', photo: IMG_TROLLEY_RAW },
+  { id: 'ISS-007', materialId: 'INV-RAW-004', materialName: 'Welding Rods & Grinding Discs', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 8, date: '2026-08-16', remarks: 'Preparation table welding', photo: IMG_WELDING_RAW },
+  { id: 'ISS-008', materialId: 'INV-RAW-001', materialName: 'Stainless Steel Sheets (SS 304)', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 65, date: '2026-08-17', remarks: 'GN Pans stamping sheets', photo: IMG_GNPAN_RAW },
+  { id: 'ISS-009', materialId: 'INV-RAW-004', materialName: 'Welding Rods & Grinding Discs', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 10, date: '2026-08-18', remarks: 'Dishwashing Table assembly', photo: IMG_WELDING_RAW },
+  { id: 'ISS-010', materialId: 'INV-RAW-001', materialName: 'Stainless Steel Sheets (SS 304)', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 220, date: '2026-08-19', remarks: 'Heavy Bain Marie fabrication', photo: IMG_SS_SHEET_304 },
+  { id: 'ISS-011', materialId: 'INV-RAW-001', materialName: 'Stainless Steel Sheets (SS 304)', issuedToId: 'EMP-003', issuedToName: 'Sunita Patel', quantity: 130, date: '2026-08-20', remarks: 'Storage Cabinets panels', photo: IMG_SS_SHEET_304 },
+  { id: 'ISS-012', materialId: 'INV-RAW-004', materialName: 'Welding Rods & Grinding Discs', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 12, date: '2026-08-21', remarks: 'Wall Shelves welds', photo: IMG_WELDING_RAW },
+  { id: 'ISS-013', materialId: 'INV-RAW-003', materialName: 'SS Square Tubes & Angled Pipes', issuedToId: 'EMP-006', issuedToName: 'Vikram Singh', quantity: 70, date: '2026-08-22', remarks: 'Utility Rack weld frames', photo: IMG_PIPES_RAW },
+  { id: 'ISS-014', materialId: 'INV-RAW-001', materialName: 'Stainless Steel Sheets (SS 304)', issuedToId: 'EMP-004', issuedToName: 'Amit Verma', quantity: 140, date: '2026-08-23', remarks: 'Griddle plate sheet bending', photo: IMG_SS_SHEET_304 }
 ];
 
-// Chronological Production Output Logs (14 completely unique food finished goods!)
+// Chronological Production Output Logs (14 completely unique fabricated kitchen products!)
 const INITIAL_PRODUCTION: ProductionLog[] = [
   { 
     id: 'PROD-001', 
     batchNumber: 'B-501', 
     productId: 'INV-FIN-001', 
-    productName: 'Classic Samosa (Standard)', 
-    quantityProduced: 50, 
+    productName: 'Stainless Steel Work Table (with Under-shelf)', 
+    quantityProduced: 8, 
     workerId: 'EMP-003', 
     workerName: 'Sunita Patel', 
     date: '2026-08-10', 
     status: 'Approved', 
     approvedDate: '2026-08-10',
     materialConsumedId: 'INV-RAW-001',
-    materialConsumedName: 'Raw Potatoes & Flour Dough',
-    materialConsumedQty: 10,
-    wastageQty: 1, 
+    materialConsumedName: 'Stainless Steel Sheets (SS 304)',
+    materialConsumedQty: 150,
+    wastageQty: 15, 
     efficiency: 90,
-    materialPhoto: IMG_SAMOSA_RAW,
-    productPhoto: IMG_SAMOSA_COOKED
+    materialPhoto: IMG_SS_SHEET_304,
+    productPhoto: IMG_TABLE_FINISHED
   },
   { 
     id: 'PROD-002', 
     batchNumber: 'B-502', 
     productId: 'INV-FIN-002', 
-    productName: 'Steamed Veg Momos', 
+    productName: 'SS Compartment Tray (Dining Plates)', 
     quantityProduced: 120, 
     workerId: 'EMP-006', 
     workerName: 'Vikram Singh', 
@@ -320,302 +360,234 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
     status: 'Approved',
     approvedDate: '2026-08-11',
     materialConsumedId: 'INV-RAW-002',
-    materialConsumedName: 'Raw Momo Wrapper & Veg Stuffing',
-    materialConsumedQty: 15,
-    wastageQty: 1.5,
+    materialConsumedName: 'Stainless Steel Sheets (SS 202)',
+    materialConsumedQty: 110,
+    wastageQty: 11,
     efficiency: 90,
-    materialPhoto: IMG_MOMOS_RAW,
-    productPhoto: IMG_MOMOS_COOKED
+    materialPhoto: IMG_SS_PLATES_RAW,
+    productPhoto: IMG_PLATES_FINISHED
   },
   { 
     id: 'PROD-003', 
     batchNumber: 'B-503', 
     productId: 'INV-FIN-003', 
-    productName: 'Hakka Noodles Plate', 
-    quantityProduced: 40, 
+    productName: 'Fabricated Storage Rack (4-Tier)', 
+    quantityProduced: 6, 
     workerId: 'EMP-006', 
     workerName: 'Vikram Singh', 
     date: '2026-08-12', 
     status: 'Approved', 
     approvedDate: '2026-08-12',
     materialConsumedId: 'INV-RAW-003',
-    materialConsumedName: 'Uncooked Noodle Strands',
-    materialConsumedQty: 20,
-    wastageQty: 2,
+    materialConsumedName: 'SS Square Tubes & Angled Pipes',
+    materialConsumedQty: 90,
+    wastageQty: 9,
     efficiency: 90,
-    materialPhoto: IMG_NOODLES_RAW,
-    productPhoto: IMG_NOODLES_COOKED
+    materialPhoto: IMG_PIPES_RAW,
+    productPhoto: IMG_RACK_FINISHED
   },
   { 
     id: 'PROD-004', 
     batchNumber: 'B-504', 
     productId: 'INV-FIN-004', 
-    productName: 'French Fries (1kg Pack)', 
-    quantityProduced: 10, 
+    productName: 'Commercial Double Sink Unit', 
+    quantityProduced: 4, 
     workerId: 'EMP-004', 
     workerName: 'Amit Verma', 
     date: '2026-08-13', 
     status: 'Approved', 
     approvedDate: '2026-08-13',
     materialConsumedId: 'INV-RAW-001',
-    materialConsumedName: 'Raw Potatoes & Flour Dough',
-    materialConsumedQty: 12,
-    wastageQty: 1.2,
+    materialConsumedName: 'Stainless Steel Sheets (SS 304)',
+    materialConsumedQty: 120,
+    wastageQty: 12,
     efficiency: 90,
-    materialPhoto: IMG_POTATOES,
-    productPhoto: IMG_FRIES
+    materialPhoto: IMG_SINK_RAW,
+    productPhoto: IMG_SINK_FINISHED
   },
   { 
     id: 'PROD-005', 
     batchNumber: 'B-505', 
     productId: 'INV-FIN-005', 
-    productName: 'Crispy Spring Rolls', 
-    quantityProduced: 60, 
+    productName: 'Stainless Steel Exhaust Hood', 
+    quantityProduced: 3, 
     workerId: 'EMP-003', 
     workerName: 'Sunita Patel', 
     date: '2026-08-14', 
     status: 'Approved', 
     approvedDate: '2026-08-14',
     materialConsumedId: 'INV-RAW-001',
-    materialConsumedName: 'Raw Potatoes & Flour Dough',
-    materialConsumedQty: 8,
-    wastageQty: 0.8,
+    materialConsumedName: 'Stainless Steel Sheets (SS 304)',
+    materialConsumedQty: 80,
+    wastageQty: 8,
     efficiency: 90,
-    materialPhoto: IMG_SAMOSA_RAW,
-    productPhoto: IMG_ROLLS
+    materialPhoto: IMG_SS_SHEET_304,
+    productPhoto: IMG_HOOD_FINISHED
   },
   { 
     id: 'PROD-006', 
     batchNumber: 'B-506', 
     productId: 'INV-FIN-006', 
-    productName: 'Veg Burger Patty', 
-    quantityProduced: 45, 
+    productName: 'Mobile Kitchen Trolley (3-Tier)', 
+    quantityProduced: 5, 
     workerId: 'EMP-004', 
     workerName: 'Amit Verma', 
     date: '2026-08-15', 
     status: 'Approved', 
     approvedDate: '2026-08-15',
     materialConsumedId: 'INV-RAW-001',
-    materialConsumedName: 'Raw Potatoes & Flour Dough',
-    materialConsumedQty: 10,
-    wastageQty: 1.5,
+    materialConsumedName: 'Stainless Steel Sheets (SS 304)',
+    materialConsumedQty: 100,
+    wastageQty: 15,
     efficiency: 85,
-    materialPhoto: IMG_PATTY_RAW,
-    productPhoto: IMG_PATTY_COOKED
+    materialPhoto: IMG_TROLLEY_RAW,
+    productPhoto: IMG_TROLLEY_FINISHED
   },
   { 
     id: 'PROD-007', 
     batchNumber: 'B-507', 
     productId: 'INV-FIN-007', 
-    productName: 'Paneer Tikka Roll', 
-    quantityProduced: 30, 
+    productName: 'SS Preparation Table (with Splashback)', 
+    quantityProduced: 4, 
     workerId: 'EMP-003', 
     workerName: 'Sunita Patel', 
     date: '2026-08-16', 
     status: 'Pending Approval', 
     materialConsumedId: 'INV-RAW-004',
-    materialConsumedName: 'Refined Oil & Spice Seasonings',
-    materialConsumedQty: 5,
-    wastageQty: 0.4,
-    efficiency: 92,
-    materialPhoto: IMG_TIKKA_RAW,
-    productPhoto: IMG_TIKKA_COOKED
+    materialConsumedName: 'Welding Rods & Grinding Discs',
+    materialConsumedQty: 8,
+    wastageQty: 0.8,
+    efficiency: 90,
+    materialPhoto: IMG_WELDING_RAW,
+    productPhoto: IMG_TABLE_FINISHED
   },
   { 
     id: 'PROD-008', 
     batchNumber: 'B-508', 
     productId: 'INV-FIN-008', 
-    productName: 'Chilli Garlic Potatoes', 
-    quantityProduced: 25, 
+    productName: 'SS GN Pan (Gastronorm Container)', 
+    quantityProduced: 50, 
     workerId: 'EMP-006', 
     workerName: 'Vikram Singh', 
     date: '2026-08-17', 
     status: 'Pending Approval', 
     materialConsumedId: 'INV-RAW-001',
-    materialConsumedName: 'Raw Potatoes & Flour Dough',
-    materialConsumedQty: 10,
-    wastageQty: 1,
+    materialConsumedName: 'Stainless Steel Sheets (SS 304)',
+    materialConsumedQty: 65,
+    wastageQty: 6,
     efficiency: 90,
-    materialPhoto: IMG_CHILLI_RAW,
-    productPhoto: IMG_CHILLI_COOKED
+    materialPhoto: IMG_GNPAN_RAW,
+    productPhoto: IMG_GNPAN_FINISHED
   },
   { 
     id: 'PROD-009', 
     batchNumber: 'B-509', 
     productId: 'INV-FIN-009', 
-    productName: 'Cheese Garlic Bread', 
-    quantityProduced: 35, 
+    productName: 'SS Dishwashing Table', 
+    quantityProduced: 2, 
     workerId: 'EMP-003', 
     workerName: 'Sunita Patel', 
     date: '2026-08-18', 
     status: 'Pending Approval', 
     materialConsumedId: 'INV-RAW-004',
-    materialConsumedName: 'Refined Oil & Spice Seasonings',
-    materialConsumedQty: 6,
-    wastageQty: 0.3,
-    efficiency: 95,
-    materialPhoto: IMG_BREAD_RAW,
-    productPhoto: IMG_BREAD_COOKED
+    materialConsumedName: 'Welding Rods & Grinding Discs',
+    materialConsumedQty: 10,
+    wastageQty: 1,
+    efficiency: 90,
+    materialPhoto: IMG_WELDING_RAW,
+    productPhoto: IMG_TABLE_FINISHED
   },
   { 
     id: 'PROD-010', 
     batchNumber: 'B-510', 
     productId: 'INV-FIN-010', 
-    productName: 'Aloo Tikki Chaat', 
-    quantityProduced: 55, 
+    productName: 'SS Bain Marie Counter', 
+    quantityProduced: 2, 
     workerId: 'EMP-003', 
     workerName: 'Sunita Patel', 
     date: '2026-08-19', 
     status: 'Pending Approval', 
     materialConsumedId: 'INV-RAW-001',
-    materialConsumedName: 'Raw Potatoes & Flour Dough',
-    materialConsumedQty: 12,
-    wastageQty: 1.2,
+    materialConsumedName: 'Stainless Steel Sheets (SS 304)',
+    materialConsumedQty: 220,
+    wastageQty: 20,
     efficiency: 90,
-    materialPhoto: IMG_CHAAT_RAW,
-    productPhoto: IMG_CHAAT_COOKED
+    materialPhoto: IMG_SS_SHEET_304,
+    productPhoto: IMG_TABLE_FINISHED
   },
   { 
     id: 'PROD-011', 
     batchNumber: 'B-511', 
     productId: 'INV-FIN-011', 
-    productName: 'Masala Dosa', 
-    quantityProduced: 60, 
+    productName: 'SS Storage Cabinet (with Sliding Doors)', 
+    quantityProduced: 3, 
     workerId: 'EMP-003', 
     workerName: 'Sunita Patel', 
     date: '2026-08-20', 
     status: 'Approved', 
     approvedDate: '2026-08-20',
     materialConsumedId: 'INV-RAW-001',
-    materialConsumedName: 'Raw Potatoes & Flour Dough',
-    materialConsumedQty: 18,
-    wastageQty: 1.5,
-    efficiency: 91,
-    materialPhoto: IMG_DOSA_RAW,
-    productPhoto: IMG_DOSA_COOKED
+    materialConsumedName: 'Stainless Steel Sheets (SS 304)',
+    materialConsumedQty: 130,
+    wastageQty: 10,
+    efficiency: 92,
+    materialPhoto: IMG_SS_SHEET_304,
+    productPhoto: IMG_TABLE_FINISHED
   },
   { 
     id: 'PROD-012', 
     batchNumber: 'B-512', 
     productId: 'INV-FIN-012', 
-    productName: 'Paneer Butter Masala', 
-    quantityProduced: 30, 
+    productName: 'SS Wall Mounted Shelf', 
+    quantityProduced: 15, 
     workerId: 'EMP-006', 
     workerName: 'Vikram Singh', 
     date: '2026-08-21', 
     status: 'Approved', 
     approvedDate: '2026-08-21',
     materialConsumedId: 'INV-RAW-004',
-    materialConsumedName: 'Refined Oil & Spice Seasonings',
-    materialConsumedQty: 14,
-    wastageQty: 0.8,
-    efficiency: 94,
-    materialPhoto: IMG_PANEER_RAW,
-    productPhoto: IMG_PANEER_COOKED
+    materialConsumedName: 'Welding Rods & Grinding Discs',
+    materialConsumedQty: 12,
+    wastageQty: 1,
+    efficiency: 91,
+    materialPhoto: IMG_WELDING_RAW,
+    productPhoto: IMG_TABLE_FINISHED
   },
   { 
     id: 'PROD-013', 
     batchNumber: 'B-513', 
     productId: 'INV-FIN-013', 
-    productName: 'Veg Biryani Bowl', 
-    quantityProduced: 50, 
+    productName: 'SS Masala Box Utility Rack', 
+    quantityProduced: 20, 
     workerId: 'EMP-006', 
     workerName: 'Vikram Singh', 
     date: '2026-08-22', 
     status: 'Pending Approval', 
     materialConsumedId: 'INV-RAW-003',
-    materialConsumedName: 'Uncooked Noodle Strands',
-    materialConsumedQty: 22,
-    wastageQty: 1.8,
-    efficiency: 91,
-    materialPhoto: IMG_BIRYANI_RAW,
-    productPhoto: IMG_BIRYANI_COOKED
+    materialConsumedName: 'SS Square Tubes & Angled Pipes',
+    materialConsumedQty: 70,
+    wastageQty: 7,
+    efficiency: 90,
+    materialPhoto: IMG_PIPES_RAW,
+    productPhoto: IMG_RACK_FINISHED
   },
   { 
     id: 'PROD-014', 
     batchNumber: 'B-514', 
     productId: 'INV-FIN-014', 
-    productName: 'Crispy Onion Pakoda', 
-    quantityProduced: 80, 
+    productName: 'Industrial Griddle Plate Base', 
+    quantityProduced: 4, 
     workerId: 'EMP-004', 
     workerName: 'Amit Verma', 
     date: '2026-08-23', 
     status: 'Pending Approval', 
     materialConsumedId: 'INV-RAW-001',
-    materialConsumedName: 'Raw Potatoes & Flour Dough',
-    materialConsumedQty: 15,
-    wastageQty: 1,
-    efficiency: 93,
-    materialPhoto: IMG_PAKODA_RAW,
-    productPhoto: IMG_PAKODA_COOKED
-  }
-];
-
-// Initial Kitchen Equipment Data (4 active machinery)
-const INITIAL_EQUIPMENT: KitchenEquipment[] = [
-  {
-    id: 'EQ-001',
-    name: 'Commercial Deep Fryer A',
-    type: 'Fryer',
-    status: 'Active Cooking',
-    assignedWorkerId: 'EMP-004',
-    assignedWorkerName: 'Amit Verma',
-    allocatedMaterialName: 'Raw Potatoes & Flour Dough (Sheets)',
-    allocatedQtyKg: 12,
-    actualOutputName: 'French Fries (1kg Pack)',
-    actualOutputQty: 10,
-    outputUnit: 'packs',
-    temperatureSettings: '180°C',
-    lastCleanedDate: '2026-08-18',
-    photo: IMG_FRYER
-  },
-  {
-    id: 'EQ-002',
-    name: 'Steamer Box Deck 1',
-    type: 'Steamer',
-    status: 'Active Cooking',
-    assignedWorkerId: 'EMP-006',
-    assignedWorkerName: 'Vikram Singh',
-    allocatedMaterialName: 'Raw Momo Wrapper & Veg Stuffing (Sheets)',
-    allocatedQtyKg: 15,
-    actualOutputName: 'Steamed Veg Momos',
-    actualOutputQty: 120,
-    outputUnit: 'pcs',
-    temperatureSettings: '100°C Steam',
-    lastCleanedDate: '2026-08-19',
-    photo: IMG_STEAMER
-  },
-  {
-    id: 'EQ-003',
-    name: 'High-Power noodle Cooker',
-    type: 'Wok',
-    status: 'Idle',
-    assignedWorkerId: 'EMP-006',
-    assignedWorkerName: 'Vikram Singh',
-    allocatedMaterialName: 'Uncooked Noodle Strands (Sheets)',
-    allocatedQtyKg: 20,
-    actualOutputName: 'Hakka Noodles Plate',
-    actualOutputQty: 40,
-    outputUnit: 'plates',
-    temperatureSettings: 'Medium Flame',
-    lastCleanedDate: '2026-08-19',
-    photo: IMG_WOK
-  },
-  {
-    id: 'EQ-004',
-    name: 'Italian Pizza Deck Oven',
-    type: 'Oven',
-    status: 'Active Cooking',
-    assignedWorkerId: 'EMP-003',
-    assignedWorkerName: 'Sunita Patel',
-    allocatedMaterialName: 'Flour Dough & Cheese Sheets',
-    allocatedQtyKg: 6,
-    actualOutputName: 'Cheese Garlic Bread',
-    actualOutputQty: 35,
-    outputUnit: 'pcs',
-    temperatureSettings: '220°C',
-    lastCleanedDate: '2026-08-19',
-    photo: IMG_OVEN
+    materialConsumedName: 'Stainless Steel Sheets (SS 304)',
+    materialConsumedQty: 140,
+    wastageQty: 14,
+    efficiency: 90,
+    materialPhoto: IMG_SS_SHEET_304,
+    productPhoto: IMG_TABLE_FINISHED
   }
 ];
 
