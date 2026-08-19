@@ -6,6 +6,7 @@ import { InventoryView } from './views/InventoryView';
 import { MaterialIssueView } from './views/MaterialIssueView';
 import { ProductionView } from './views/ProductionView';
 import { PayrollView } from './views/PayrollView';
+import { FlowReportView } from './views/FlowReportView';
 import { Menu, Search, Bell, Mail, Settings } from 'lucide-react';
 
 import type {
@@ -263,6 +264,14 @@ function App() {
         return (
           <PayrollView 
             employees={employees}
+            production={production}
+          />
+        );
+      case 'flow_report':
+        return (
+          <FlowReportView 
+            employees={employees}
+            issues={issues}
             production={production}
           />
         );
