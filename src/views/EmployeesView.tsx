@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { Plus, Search, Edit2, CheckCircle2, XCircle } from 'lucide-react';
-import type { Employee } from '../data/mockDb';
+import { Plus, Search, Edit2, CheckCircle2, XCircle, Image as ImageIcon } from 'lucide-react';
+import type { Employee, ProductionLog } from '../data/mockDb';
 
 interface EmployeesProps {
   employees: Employee[];
   setEmployees: (employees: Employee[]) => void;
+  production?: ProductionLog[];
 }
 
-export const EmployeesView: React.FC<EmployeesProps> = ({ employees, setEmployees }) => {
+export const EmployeesView: React.FC<EmployeesProps> = ({ employees, setEmployees, production = [] }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+  const [expandedWorkers, setExpandedWorkers] = useState<Record<string, boolean>>({});
 
   // Form states
   const [name, setName] = useState('');
@@ -185,92 +187,181 @@ export const EmployeesView: React.FC<EmployeesProps> = ({ employees, setEmployee
               </tr>
             ) : (
               filtered.map(emp => (
-                <tr key={emp.id}>
-                  <td>
-                    <div style={{ fontWeight: 700, color: 'var(--primary)' }}>{emp.employeeCode || 'N/A'}</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Ref: {emp.id}</div>
-                  </td>
-                  <td>
-                    <div style={{ fontWeight: 600 }}>{emp.name}</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Joined: {emp.joinedDate}</div>
-                  </td>
-                  <td>
-                    <span 
-                      className="badge" 
-                      style={{ 
-                        backgroundColor: emp.role === 'Admin' ? 'rgba(59, 130, 246, 0.15)' : 
-                                         emp.role === 'Manager' ? 'rgba(139, 92, 246, 0.15)' : 
-                                         emp.role === 'Accountant' ? 'rgba(236, 72, 153, 0.15)' : 'rgba(255, 255, 255, 0.05)',
-                        color: emp.role === 'Admin' ? '#3b82f6' : 
-                               emp.role === 'Manager' ? '#8b5cf6' : 
-                               emp.role === 'Accountant' ? '#ec4899' : 'var(--text-primary)'
-                      }}
-                    >
-                      {emp.role}
-                    </span>
-                  </td>
-                  <td>
-                    <div>{emp.department}</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)', maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={emp.address}>
-                      {emp.address || 'No Address Listed'}
-                    </div>
-                  </td>
-                  <td>
-                    <span className="badge badge-success" style={{ padding: '4px 8px', borderRadius: '4px' }}>
-                      {emp.payrollModel || 'Per Piece'}
-                    </span>
-                  </td>
-                  <td>
-                    {emp.payrollModel === 'Fixed Salary' && (
-                      <strong>₹{emp.fixedSalaryAmount?.toLocaleString()}/mo</strong>
-                    )}
-                    {emp.payrollModel === 'Fixed + Incentive' && (
-                      <div>
-                        <strong>₹{emp.fixedSalaryAmount?.toLocaleString()}/mo</strong>
-                        <div style={{ fontSize: '11px', color: 'var(--color-green)' }}>+₹{emp.incentiveRate}/unit</div>
+                <React.Fragment key={emp.id}>
+                  <tr>
+                    <td>
+                      <div style={{ fontWeight: 700, color: 'var(--primary)' }}>{emp.employeeCode || 'N/A'}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Ref: {emp.id}</div>
+                    </td>
+                    <td>
+                      <div style={{ fontWeight: 600 }}>{emp.name}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Joined: {emp.joinedDate}</div>
+                    </td>
+                    <td>
+                      <span 
+                        className="badge" 
+                        style={{ 
+                          backgroundColor: emp.role === 'Admin' ? 'rgba(59, 130, 246, 0.15)' : 
+                                           emp.role === 'Manager' ? 'rgba(139, 92, 246, 0.15)' : 
+                                           emp.role === 'Accountant' ? 'rgba(236, 72, 153, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                          color: emp.role === 'Admin' ? '#3b82f6' : 
+                                 emp.role === 'Manager' ? '#8b5cf6' : 
+                                 emp.role === 'Accountant' ? '#ec4899' : 'var(--text-primary)'
+                        }}
+                      >
+                        {emp.role}
+                      </span>
+                    </td>
+                    <td>
+                      <div>{emp.department}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)', maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={emp.address}>
+                        {emp.address || 'No Address Listed'}
                       </div>
-                    )}
-                    {emp.payrollModel === 'Per Piece' && (
-                      <strong>₹{emp.baseRate}/piece</strong>
-                    )}
-                    {emp.payrollModel === 'Per KG' && (
-                      <strong>₹{emp.baseRate}/KG</strong>
-                    )}
-                  </td>
-                  <td>
-                    <div style={{ fontSize: '13px' }}>{emp.email}</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{emp.phone}</div>
-                  </td>
-                  <td>
-                    <span 
-                      className={`badge ${emp.status === 'Active' ? 'badge-success' : 'badge-danger'}`}
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => toggleStatus(emp.id)}
-                      title="Click to toggle status"
-                    >
-                      {emp.status}
-                    </span>
-                  </td>
-                  <td>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <button 
-                        className="btn btn-secondary" 
-                        style={{ padding: '6px 10px', fontSize: '12px' }}
-                        onClick={() => openEditModal(emp)}
-                      >
-                        <Edit2 size={12} /> Edit
-                      </button>
-                      <button 
-                        className={`btn ${emp.status === 'Active' ? 'btn-secondary' : 'btn-primary'}`}
-                        style={{ padding: '6px 10px', fontSize: '12px' }}
+                    </td>
+                    <td>
+                      <span className="badge badge-success" style={{ padding: '4px 8px', borderRadius: '4px' }}>
+                        {emp.payrollModel || 'Per Piece'}
+                      </span>
+                    </td>
+                    <td>
+                      {emp.payrollModel === 'Fixed Salary' && (
+                        <strong>₹{emp.fixedSalaryAmount?.toLocaleString()}/mo</strong>
+                      )}
+                      {emp.payrollModel === 'Fixed + Incentive' && (
+                        <div>
+                          <strong>₹{emp.fixedSalaryAmount?.toLocaleString()}/mo</strong>
+                          <div style={{ fontSize: '11px', color: 'var(--color-green)' }}>+₹{emp.incentiveRate}/unit</div>
+                        </div>
+                      )}
+                      {emp.payrollModel === 'Per Piece' && (
+                        <strong>₹{emp.baseRate}/piece</strong>
+                      )}
+                      {emp.payrollModel === 'Per KG' && (
+                        <strong>₹{emp.baseRate}/KG</strong>
+                      )}
+                    </td>
+                    <td>
+                      <div style={{ fontSize: '13px' }}>{emp.email}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{emp.phone}</div>
+                    </td>
+                    <td>
+                      <span 
+                        className={`badge ${emp.status === 'Active' ? 'badge-success' : 'badge-danger'}`}
+                        style={{ cursor: 'pointer' }}
                         onClick={() => toggleStatus(emp.id)}
+                        title="Click to toggle status"
                       >
-                        {emp.status === 'Active' ? <XCircle size={12} /> : <CheckCircle2 size={12} />} 
-                        <span style={{ marginLeft: '4px' }}>{emp.status === 'Active' ? 'Suspend' : 'Activate'}</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                        {emp.status}
+                      </span>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        {emp.role === 'Worker' && (
+                          <button 
+                            className="btn btn-primary"
+                            style={{ padding: '6px 10px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}
+                            onClick={() => setExpandedWorkers(prev => ({ ...prev, [emp.id]: !prev[emp.id] }))}
+                          >
+                            <ImageIcon size={12} />
+                            <span>{expandedWorkers[emp.id] ? 'Hide' : 'Photos'}</span>
+                          </button>
+                        )}
+                        <button 
+                          className="btn btn-secondary" 
+                          style={{ padding: '6px 10px', fontSize: '12px' }}
+                          onClick={() => openEditModal(emp)}
+                        >
+                          <Edit2 size={12} /> Edit
+                        </button>
+                        <button 
+                          className={`btn ${emp.status === 'Active' ? 'btn-secondary' : 'btn-primary'}`}
+                          style={{ padding: '6px 10px', fontSize: '12px' }}
+                          onClick={() => toggleStatus(emp.id)}
+                        >
+                          {emp.status === 'Active' ? <XCircle size={12} /> : <CheckCircle2 size={12} />} 
+                          <span style={{ marginLeft: '4px' }}>{emp.status === 'Active' ? 'Suspend' : 'Activate'}</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  {/* Expanded Row showing item-wise photos */}
+                  {expandedWorkers[emp.id] && (
+                    <tr>
+                      <td colSpan={9} style={{ backgroundColor: 'rgba(255,255,255,0.02)', padding: '16px' }}>
+                        <div style={{ padding: '16px', borderRadius: '8px', border: '1px solid var(--border)', backgroundColor: 'var(--bg-secondary)' }}>
+                          <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '16px', color: 'var(--primary)', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
+                            📸 Production & Material Ledger: {emp.name} ({emp.employeeCode || emp.id})
+                          </h4>
+                          
+                          {(() => {
+                            const workerLogs = production.filter(p => p.workerId === emp.id);
+                            if (workerLogs.length === 0) {
+                              return (
+                                <div style={{ padding: '12px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '13px' }}>
+                                  No items logged by this worker.
+                                </div>
+                              );
+                            }
+
+                            return (
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '16px' }}>
+                                {workerLogs.map(log => (
+                                  <div key={log.id} style={{ border: '1px solid var(--border)', borderRadius: '8px', padding: '14px', backgroundColor: 'var(--bg-primary)', position: 'relative' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                                      <span>Date: <strong>{log.date}</strong></span>
+                                      <span className="badge" style={{ backgroundColor: log.status === 'Approved' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)', color: log.status === 'Approved' ? '#10b981' : '#f59e0b' }}>
+                                        {log.status}
+                                      </span>
+                                    </div>
+
+                                    <h5 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-green)', marginBottom: '6px' }}>
+                                      {log.productName}
+                                    </h5>
+                                    <div style={{ fontSize: '12px', marginBottom: '4px' }}>
+                                      Produced: <strong>{log.quantityProduced} pcs</strong> | Batch: <strong>{log.batchNumber}</strong>
+                                    </div>
+
+                                    {log.materialConsumedName && (
+                                      <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
+                                        Used: <strong>{log.materialConsumedQty}</strong> units of {log.materialConsumedName}
+                                      </div>
+                                    )}
+
+                                    {/* Side by side genuine photos */}
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '8px' }}>
+                                      <div>
+                                        <div style={{ fontSize: '10px', color: 'var(--text-secondary)', marginBottom: '4px', fontWeight: 600 }}>Raw Material (Input)</div>
+                                        {log.materialPhoto ? (
+                                          <div style={{ height: '90px', borderRadius: '4px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+                                            <img src={log.materialPhoto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Raw Input" />
+                                          </div>
+                                        ) : (
+                                          <div style={{ height: '90px', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: 'var(--text-muted)' }}>No Photo</div>
+                                        )}
+                                      </div>
+
+                                      <div>
+                                        <div style={{ fontSize: '10px', color: 'var(--text-secondary)', marginBottom: '4px', fontWeight: 600 }}>Finished Good (Output)</div>
+                                        {log.productPhoto ? (
+                                          <div style={{ height: '90px', borderRadius: '4px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+                                            <img src={log.productPhoto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Finished Output" />
+                                          </div>
+                                        ) : (
+                                          <div style={{ height: '90px', backgroundColor: 'var(--bg-secondary)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: 'var(--text-muted)' }}>No Photo</div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            );
+                          })()}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
               ))
             )}
           </tbody>

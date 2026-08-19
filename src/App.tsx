@@ -242,6 +242,7 @@ function App() {
           <EmployeesView 
             employees={employees}
             setEmployees={handleSetEmployees}
+            production={production}
           />
         );
       case 'inventory':
