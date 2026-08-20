@@ -603,7 +603,7 @@ function App() {
 
                       {/* Structured Input vs Output details card */}
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', padding: '8px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '11px', marginBottom: '8px' }}>
-                        <div>
+                        <div style={{ minWidth: 0 }}>
                           <span style={{ color: 'var(--text-secondary)', display: 'block', fontWeight: 700, marginBottom: '2px', fontSize: '9px' }}>INPUT (SS SHEETS)</span>
                           <strong style={{ fontSize: '14px', color: 'var(--color-orange)' }}>
                             {p.materialConsumedQty} kg
@@ -613,7 +613,7 @@ function App() {
                           </div>
                         </div>
 
-                        <div style={{ borderLeft: '1px dashed var(--border)', paddingLeft: '8px' }}>
+                        <div style={{ borderLeft: '1px dashed var(--border)', paddingLeft: '8px', minWidth: 0 }}>
                           <span style={{ color: 'var(--text-secondary)', display: 'block', fontWeight: 700, marginBottom: '2px', fontSize: '9px' }}>OUTPUT (PRODUCT)</span>
                           <strong style={{ fontSize: '14px', color: 'var(--color-green)' }}>
                             {p.quantityProduced} pcs
