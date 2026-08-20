@@ -63,3 +63,12 @@ declare module 'lucide-react' {
   export const Percent: any;
   export default {} as any;
 }
+
+// Provide a global JSX namespace so JSX elements have an implicit any type until real types are installed
+declare global {
+  namespace JSX {
+    interface IntrinsicElements { [elem: string]: any }
+  }
+}
+
+export {};
