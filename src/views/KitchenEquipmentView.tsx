@@ -265,24 +265,16 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
                 <th>Quantity Issued (KG)</th>
                 <th>Fabricated Product (Output)</th>
                 <th>Quantity Produced (Pcs)</th>
-                <th>Conversion Index</th>
-                <th>Calibration Specs</th>
                 <th>Last Inspected</th>
               </tr>
-            </thead>
-            <tbody>
-              {equipment.map(eq => (
-                <tr key={eq.id}>
                   <td>
-                    <strong style={{ color: 'var(--primary)' }}>{eq.name}</strong>
-                  </td>
-                  <td>{eq.assignedWorkerName || <span className="text-secondary">Unassigned</span>}</td>
-                  <td>{eq.allocatedMaterialName || <span className="text-secondary">-</span>}</td>
-                  <td>
-                    {eq.allocatedQtyKg > 0 ? (
-                      <span className="badge badge-warning" style={{ fontSize: '12px', fontWeight: 700 }}>
-                        {eq.allocatedQtyKg} KG
+                    {eq.actualOutputQty > 0 ? (
+                      <span className="badge badge-success" style={{ fontSize: '12px', fontWeight: 700 }}>
+                        {eq.actualOutputQty} {eq.outputUnit}
                       </span>
+                    ) : '-'}
+                  </td>
+                  <td>{eq.lastCleanedDate}</td>
                     ) : '-'}
                   </td>
                   <td>{eq.actualOutputName || <span className="text-secondary">-</span>}</td>
