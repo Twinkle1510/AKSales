@@ -6,7 +6,6 @@ import {
   TrendingUp,
   Plus,
   Globe,
-  Trash2,
   Percent
 } from 'lucide-react';
 import type { Employee, InventoryItem, ProductionLog } from '../data/mockDb';
@@ -56,9 +55,7 @@ export const DashboardView: React.FC<DashboardProps> = ({
     });
 
   const maxVal = Math.max(...workerStats.map(w => w.amount), 1);
-  const maxWaste = Math.max(...workerStats.map(w => w.waste), 1);
   const totalQty = workerStats.reduce((sum, w) => sum + w.amount, 0) || 1;
-  const totalWastage = production.reduce((sum, p) => sum + (p.wastageQty || 0), 0);
 
   // Average factory efficiency percentage
   const logsWithEff = production.filter(p => p.status === 'Approved' && p.efficiency !== undefined);
@@ -94,6 +91,7 @@ export const DashboardView: React.FC<DashboardProps> = ({
           </div>
         </div>
 
+        {/* Commented out as requested
         <div className="stat-card-wrapper" style={{ cursor: 'pointer' }} onClick={() => setCurrentTab('inventory')}>
           <div className="stat-card">
             <span className="stat-title">Factory Wastage (Scrap)</span>
@@ -107,6 +105,7 @@ export const DashboardView: React.FC<DashboardProps> = ({
             <Trash2 size={20} />
           </div>
         </div>
+        */}
 
         <div className="stat-card-wrapper" style={{ cursor: 'pointer' }} onClick={() => setCurrentTab('production')}>
           <div className="stat-card">
@@ -214,7 +213,7 @@ export const DashboardView: React.FC<DashboardProps> = ({
             <TrendingUp size={18} style={{ color: 'var(--primary)' }} />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}>
             {/* Yield Output bar */}
             <div>
               <h4 style={{ fontSize: '12px', color: 'var(--color-green)', marginBottom: '8px', textAlign: 'center' }}>Completed Output (Units)</h4>
@@ -236,7 +235,7 @@ export const DashboardView: React.FC<DashboardProps> = ({
               </div>
             </div>
 
-            {/* Wastage bar */}
+            {/* Wastage bar commented out as requested
             <div>
               <h4 style={{ fontSize: '12px', color: 'var(--color-danger)', marginBottom: '8px', textAlign: 'center' }}>Scrap / Wastage (Units)</h4>
               <div className="chart-container" style={{ height: '140px' }}>
@@ -256,6 +255,7 @@ export const DashboardView: React.FC<DashboardProps> = ({
                 })}
               </div>
             </div>
+            */}
           </div>
         </div>
 

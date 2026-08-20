@@ -178,7 +178,9 @@ export const ProductionView: React.FC<ProductionProps> = ({
                 <th>Batch ID</th>
                 <th>Material Input</th>
                 <th>Finished Output</th>
+                {/* Commented out as requested
                 <th>Wastage / Scrap</th>
+                */}
                 <th>Yield Efficiency %</th>
                 <th>Worker</th>
                 <th>Date Logged</th>
@@ -222,6 +224,7 @@ export const ProductionView: React.FC<ProductionProps> = ({
                         </span>
                       </div>
                     </td>
+                    {/* Commented out as requested
                     <td>
                       {p.wastageQty !== undefined ? (
                         <span style={{ fontWeight: 600, color: 'var(--color-danger)' }}>{p.wastageQty} units</span>
@@ -229,6 +232,7 @@ export const ProductionView: React.FC<ProductionProps> = ({
                         <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>0</span>
                       )}
                     </td>
+                    */}
                     <td>
                       {p.efficiency !== undefined ? (
                         <span 
@@ -415,13 +419,15 @@ export const ProductionView: React.FC<ProductionProps> = ({
                   </div>
 
                   {/* Wastage and Performance Index summary row */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginTop: '20px', padding: '14px 20px', backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: '8px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '20px', padding: '14px 20px', backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: '8px' }}>
+                    {/* Commented out as requested
                     <div>
                       <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', fontWeight: 700 }}>MATERIAL WASTAGE / SCRAP</span>
                       <span style={{ fontSize: '16px', fontWeight: 800, color: 'var(--color-danger)' }}>
                         {p.wastageQty !== undefined ? `${p.wastageQty} units` : '0 units (No scrap logged)'}
                       </span>
                     </div>
+                    */}
                     <div>
                       <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', fontWeight: 700 }}>YIELD EFFICIENCY RATIO</span>
                       <span 
@@ -512,13 +518,15 @@ export const ProductionView: React.FC<ProductionProps> = ({
             </div>
 
             {/* Wastage and Efficiency Details */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px', padding: '12px', backgroundColor: '#fdf2f8', border: '1px solid #fbcfe8', borderRadius: '8px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px', marginTop: '16px', padding: '12px', backgroundColor: '#fdf2f8', border: '1px solid #fbcfe8', borderRadius: '8px' }}>
+              {/* Commented out as requested
               <div>
                 <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600 }}>MATERIAL WASTAGE / SCRAP</span>
                 <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--color-danger)' }}>
                   {selectedAuditLog.wastageQty !== undefined ? `${selectedAuditLog.wastageQty} units` : '0 units (No waste logged)'}
                 </span>
               </div>
+              */}
               <div>
                 <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600 }}>YIELD EFFICIENCY PERCENTAGE</span>
                 <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--color-green)' }}>
@@ -619,7 +627,8 @@ export const ProductionView: React.FC<ProductionProps> = ({
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
+              {/* Commented out as requested
               <div className="form-group">
                 <label>Wastage / Scrap Quantity</label>
                 <input 
@@ -630,6 +639,7 @@ export const ProductionView: React.FC<ProductionProps> = ({
                   placeholder="e.g. 2"
                 />
               </div>
+              */}
 
               <div className="form-group">
                 <label>Worker Accountable</label>

@@ -23,7 +23,6 @@ export const FlowReportView: React.FC<FlowReportProps> = ({ employees, issues, p
     .reduce((sum, i) => sum + i.quantity, 0);
 
   const totalEquipmentProduced = workerProduction.reduce((sum, p) => sum + p.quantityProduced, 0);
-  const totalWaste = workerProduction.reduce((sum, p) => sum + (p.wastageQty || 0), 0);
 
   const handlePrint = () => {
     window.print();
@@ -69,7 +68,7 @@ export const FlowReportView: React.FC<FlowReportProps> = ({ employees, issues, p
               Code: <strong>{selectedWorker.employeeCode || 'N/A'}</strong> | Department: <strong>{selectedWorker.department}</strong> | Station: <strong>{selectedWorker.address || 'Fabrication Floor'}</strong>
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
               <div style={{ padding: '12px', backgroundColor: 'var(--bg-secondary)', borderRadius: '6px', textAlign: 'center' }}>
                 <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600 }}>TOTAL SS SHEETS TAKEN</span>
                 <span style={{ fontSize: '20px', fontWeight: 800, color: 'var(--color-orange)' }}>{totalSheetsTaken} KG</span>
@@ -78,10 +77,12 @@ export const FlowReportView: React.FC<FlowReportProps> = ({ employees, issues, p
                 <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600 }}>TOTAL EQUIPMENT PRODUCED</span>
                 <span style={{ fontSize: '20px', fontWeight: 800, color: 'var(--color-green)' }}>{totalEquipmentProduced} Pcs</span>
               </div>
+              {/* Commented out as requested
               <div style={{ padding: '12px', backgroundColor: 'var(--bg-secondary)', borderRadius: '6px', textAlign: 'center' }}>
                 <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600 }}>TOTAL STEEL SCRAP / WASTE</span>
                 <span style={{ fontSize: '20px', fontWeight: 800, color: 'var(--color-danger)' }}>{totalWaste} KG</span>
               </div>
+              */}
               <div style={{ padding: '12px', backgroundColor: 'var(--bg-secondary)', borderRadius: '6px', textAlign: 'center' }}>
                 <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600 }}>SHEET UTILIZATION EFFICIENCY</span>
                 <span style={{ fontSize: '20px', fontWeight: 800, color: 'var(--primary)' }}>
@@ -184,7 +185,9 @@ export const FlowReportView: React.FC<FlowReportProps> = ({ employees, issues, p
                   {/* Flow Footer Metrics */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', paddingTop: '14px', borderTop: '1px dashed var(--border)', fontSize: '13px' }}>
                     <div style={{ display: 'flex', gap: '20px' }}>
+                      {/* Commented out as requested
                       <span>Metal scrap / wastage: <strong style={{ color: 'var(--color-danger)' }}>{log.wastageQty || 0} KG</strong></span>
+                      */}
                       <span>Conversion Index: <strong>{log.quantityProduced && log.materialConsumedQty ? (log.quantityProduced / log.materialConsumedQty).toFixed(3) : 0} pcs/KG</strong></span>
                     </div>
 

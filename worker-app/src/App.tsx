@@ -443,7 +443,7 @@ function App() {
                     </div>
 
                     {logMaterialIssueId && (
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '8px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '8px', marginTop: '8px' }}>
                         <div className="form-group" style={{ marginBottom: '0' }}>
                           <label>Qty Consumed</label>
                           <input
@@ -455,6 +455,7 @@ function App() {
                             placeholder="e.g. 10"
                           />
                         </div>
+                        {/* Commented out as requested
                         <div className="form-group" style={{ marginBottom: '0' }}>
                           <label>Scrap / Wastage</label>
                           <input
@@ -466,6 +467,7 @@ function App() {
                             placeholder="e.g. 2"
                           />
                         </div>
+                        */}
                       </div>
                     )}
                   </div>
@@ -580,7 +582,7 @@ function App() {
                           {p.materialConsumedName && (
                             <div style={{ fontSize: '10px', color: 'var(--color-orange)', marginTop: '2px' }}>
                               Used: {p.materialConsumedQty} {p.materialConsumedName} 
-                              {p.wastageQty !== undefined && ` (Wastage: ${p.wastageQty})`}
+                              {/* p.wastageQty !== undefined && ` (Wastage: ${p.wastageQty})` */}
                             </div>
                           )}
                           {p.efficiency !== undefined && (
