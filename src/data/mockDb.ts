@@ -220,25 +220,25 @@ const INITIAL_INVENTORY: InventoryItem[] = [
 ];
 
 // REAL High-Definition Steel Fabrication Photography URLs from Unsplash
-const IMG_SS_SHEET_304 = 'https://images.unsplash.com/photo-1535813547-99c456a41d4a?w=800&auto=format&fit=crop&q=80'; // Clean stacked brushed steel plates
+const IMG_SS_SHEET_304 = 'https://images.unsplash.com/photo-1589739900243-4b52cd9b104e?w=800&auto=format&fit=crop&q=80'; // Single diagonal brushed steel sheet
 const IMG_TABLE_FINISHED = 'https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?w=400&auto=format&fit=crop&q=80'; // Stainless tables
 
-const IMG_SS_PLATES_RAW = 'https://images.unsplash.com/photo-1535813547-99c456a41d4a?w=800&auto=format&fit=crop&q=80'; // Clean stacked brushed steel plates
+const IMG_SS_PLATES_RAW = 'https://images.unsplash.com/photo-1589739900243-4b52cd9b104e?w=800&auto=format&fit=crop&q=80'; // Single diagonal brushed steel sheet
 const IMG_PLATES_FINISHED = 'https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&auto=format&fit=crop&q=80'; // Steel bowls / kitchenware
 
 const IMG_PIPES_RAW = 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=400&auto=format&fit=crop&q=80'; // Metal bars
 const IMG_RACK_FINISHED = 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&auto=format&fit=crop&q=80'; // Storage rack shelving
 
-const IMG_SINK_RAW = 'https://images.unsplash.com/photo-1535813547-99c456a41d4a?w=800&auto=format&fit=crop&q=80'; // Clean stacked brushed steel plates
+const IMG_SINK_RAW = 'https://images.unsplash.com/photo-1589739900243-4b52cd9b104e?w=800&auto=format&fit=crop&q=80'; // Single diagonal brushed steel sheet
 const IMG_SINK_FINISHED = 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&auto=format&fit=crop&q=80'; // Stainless sinks
 
 const IMG_WELDING_RAW = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&auto=format&fit=crop&q=80'; // Welding rods sparks
 const IMG_HOOD_FINISHED = 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&auto=format&fit=crop&q=80'; // Exhaust hood canopy
 
-const IMG_TROLLEY_RAW = 'https://images.unsplash.com/photo-1535813547-99c456a41d4a?w=800&auto=format&fit=crop&q=80'; // Clean stacked brushed steel plates
+const IMG_TROLLEY_RAW = 'https://images.unsplash.com/photo-1589739900243-4b52cd9b104e?w=800&auto=format&fit=crop&q=80'; // Single diagonal brushed steel sheet
 const IMG_TROLLEY_FINISHED = 'https://images.unsplash.com/photo-1596567189542-7e2417a74df9?w=400&auto=format&fit=crop&q=80'; // Utility cart trolley
 
-const IMG_GNPAN_RAW = 'https://images.unsplash.com/photo-1535813547-99c456a41d4a?w=800&auto=format&fit=crop&q=80'; // Clean stacked brushed steel plates
+const IMG_GNPAN_RAW = 'https://images.unsplash.com/photo-1589739900243-4b52cd9b104e?w=800&auto=format&fit=crop&q=80'; // Single diagonal brushed steel sheet
 const IMG_GNPAN_FINISHED = 'https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&auto=format&fit=crop&q=80';
 
 // Initial Kitchen Equipment Data (4 active fabrication machines / shear brakes)
