@@ -15,6 +15,11 @@ declare module 'react/jsx-runtime' {
   export const Fragment: any;
 }
 
+declare module 'vite/client' {
+  interface ImportMetaEnv { [key: string]: string | boolean | undefined }
+  interface ImportMeta { readonly env: ImportMetaEnv }
+}
+
 // Named exports used from lucide-react across the app
 declare module 'lucide-react' {
   export const Menu: any;
