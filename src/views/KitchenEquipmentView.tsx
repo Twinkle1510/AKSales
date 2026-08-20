@@ -59,7 +59,6 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
   const handleAllocateSheets = (e: React.FormEvent) => {
     e.preventDefault();
     const worker = workers.find(w => w.id === assignedWorkerId);
-
     const updated = equipment.map(eq => {
       if (eq.id === selectedEqId) {
         return {
@@ -71,34 +70,14 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
           allocatedQtyKg: Number(allocatedQtyKg),
           actualOutputName,
           actualOutputQty: Number(actualOutputQty),
-            </thead>
-            <tbody>
-              {equipment.map(eq => (
-                <tr key={eq.id}>
-                  <td>
-                    <strong style={{ color: 'var(--primary)' }}>{eq.name}</strong>
-                  </td>
-                  <td>{eq.assignedWorkerName || <span className="text-secondary">Unassigned</span>}</td>
-                  <td>{eq.allocatedMaterialName || <span className="text-secondary">-</span>}</td>
-                  <td>
-                    {eq.allocatedQtyKg > 0 ? (
-                      <span className="badge badge-warning" style={{ fontSize: '12px', fontWeight: 700 }}>
-                        {eq.allocatedQtyKg} KG
-                      </span>
-                    ) : '-'}
-                  </td>
-                  <td>{eq.actualOutputName || <span className="text-secondary">-</span>}</td>
-                  <td>
-                    {eq.actualOutputQty > 0 ? (
-                      <span className="badge badge-success" style={{ fontSize: '12px', fontWeight: 700 }}>
-                        {eq.actualOutputQty} {eq.outputUnit}
-                      </span>
-                    ) : '-'}
-                  </td>
-                  <td>{eq.lastCleanedDate}</td>
-                </tr>
-              ))}
-            </tbody>
+          outputUnit
+        };
+      }
+      return eq;
+    });
+
+    setEquipment(updated);
+    setIsAllocationModalOpen(false);
 
   const filtered = equipment.filter(eq =>
     eq.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
