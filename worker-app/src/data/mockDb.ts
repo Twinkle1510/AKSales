@@ -593,16 +593,16 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
 
 // Helper to initialize and retrieve from localStorage
 const getFromStorage = <T>(key: string, initial: T): T => {
-  const data = localStorage.getItem(`aksales_${key}`);
+  const data = localStorage.getItem(`aksales_v3_${key}`);
   if (!data) {
-    localStorage.setItem(`aksales_${key}`, JSON.stringify(initial));
+    localStorage.setItem(`aksales_v3_${key}`, JSON.stringify(initial));
     return initial;
   }
   return JSON.parse(data);
 };
 
 const setToStorage = <T>(key: string, value: T): void => {
-  localStorage.setItem(`aksales_${key}`, JSON.stringify(value));
+  localStorage.setItem(`aksales_v3_${key}`, JSON.stringify(value));
 };
 
 export const getEmployees = (): Employee[] => getFromStorage('employees', INITIAL_EMPLOYEES);
@@ -621,10 +621,10 @@ export const getEquipment = (): KitchenEquipment[] => getFromStorage('equipment'
 export const saveEquipment = (equipment: KitchenEquipment[]) => setToStorage('equipment', equipment);
 
 export const resetDb = () => {
-  localStorage.removeItem('aksales_employees');
-  localStorage.removeItem('aksales_inventory');
-  localStorage.removeItem('aksales_issues');
-  localStorage.removeItem('aksales_production');
-  localStorage.removeItem('aksales_equipment');
+  localStorage.removeItem('aksales_v3_employees');
+  localStorage.removeItem('aksales_v3_inventory');
+  localStorage.removeItem('aksales_v3_issues');
+  localStorage.removeItem('aksales_v3_production');
+  localStorage.removeItem('aksales_v3_equipment');
   window.location.reload();
 };
