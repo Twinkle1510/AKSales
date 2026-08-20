@@ -727,26 +727,54 @@ function App() {
         </div>
       </div>
 
-      {/* Lightbox Zoom Overlay */}
+      {/* Lightbox Zoom Panel (Side-by-side next to the Phone Frame) */}
       {zoomImage && (
-        <div 
-          className="modal-overlay" 
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 99999, cursor: 'pointer' }}
-          onClick={() => setZoomImage(null)}
-        >
-          <div style={{ position: 'relative', maxWidth: '90%', maxHeight: '90%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => e.stopPropagation()}>
-            <img 
-              src={zoomImage} 
-              style={{ maxWidth: '100%', maxHeight: '85vh', borderRadius: '8px', border: '4px solid white', boxShadow: '0 8px 30px rgba(0,0,0,0.6)', objectFit: 'contain' }} 
-              alt="Zoomed view" 
-            />
-            <button 
-              style={{ position: 'absolute', top: '-15px', right: '-15px', width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#ef4444', color: 'white', border: '2px solid white', fontWeight: 'bold', fontSize: '18px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
-              onClick={() => setZoomImage(null)}
-            >
-              ×
-            </button>
-          </div>
+        <div style={{
+          marginLeft: '24px',
+          width: '450px',
+          height: '85vh',
+          maxHeight: '640px',
+          backgroundColor: '#ffffff',
+          borderRadius: '24px',
+          border: '4px solid #1e293b',
+          boxShadow: '0 25px 60px -10px rgba(0, 0, 0, 0.8)',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'relative',
+          padding: '12px',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          <img 
+            src={zoomImage} 
+            style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '16px', backgroundColor: '#0f172a' }} 
+            alt="Zoomed view" 
+          />
+          <button 
+            style={{
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              backgroundColor: '#ef4444',
+              color: 'white',
+              border: '2px solid white',
+              fontWeight: 'bold',
+              fontSize: '18px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+              lineHeight: 1
+            }}
+            onClick={() => setZoomImage(null)}
+          >
+            ×
+          </button>
         </div>
       )}
     </div>
