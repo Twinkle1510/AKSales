@@ -265,8 +265,8 @@ function App() {
             </div>
 
             <div className="login-screen">
-              <div className="login-logo">
-                <TrendingUp size={40} />
+              <div className="login-logo" style={{ overflow: 'hidden', borderRadius: '50%', width: '70px', height: '70px', border: '3px solid var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzhqZjFpdHloYTdxdTRrdGtzNXN1MHc1bTBvZnNnYjhsbDdkMXo5MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9AI3DOykfAH1UXOP1c/giphy.gif" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Laser cutting logo" />
               </div>
               <div className="login-header-group">
                 <h1 className="login-title">AKSales Floor</h1>
@@ -329,10 +329,15 @@ function App() {
           </div>
 
           {/* App Header */}
-          <div className="app-header">
-            <div>
-              <div className="app-title">AKSales App</div>
-              <div className="app-subtitle">{currentWorker.department}</div>
+          <div className="app-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '50%', overflow: 'hidden', border: '1px solid var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzhqZjFpdHloYTdxdTRrdGtzNXN1MHc1bTBvZnNnYjhsbDdkMXo5MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9AI3DOykfAH1UXOP1c/giphy.gif" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Laser loop badge" />
+              </div>
+              <div>
+                <div className="app-title">AKSales App</div>
+                <div className="app-subtitle" style={{ fontSize: '10px' }}>{currentWorker.department}</div>
+              </div>
             </div>
             
             <div className="worker-profile-chip" onClick={() => setCurrentWorker(null)}>

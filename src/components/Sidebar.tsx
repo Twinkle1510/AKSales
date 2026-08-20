@@ -25,18 +25,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setCurrentTab }) =
 
   return (
     <div className="sidebar">
-      {/* Brand Header with Quadrant Logo */}
+      {/* Brand Header with Animated Laser Sparks Logo */}
       <div className="brand">
-        <div className="brand-logo-quadrant">
-          <svg viewBox="0 0 100 100" width="28" height="28" style={{ display: 'block' }}>
-            <path d="M 50,50 L 50,10 A 40,40 0 0,0 10,50 Z" fill="#ef4444" />
-            <path d="M 50,50 L 90,50 A 40,40 0 0,0 50,10 Z" fill="#3b82f6" />
-            <path d="M 50,50 L 50,90 A 40,40 0 0,0 90,50 Z" fill="#10b981" />
-            <path d="M 50,50 L 10,50 A 40,40 0 0,0 50,90 Z" fill="#06b6d4" />
-          </svg>
+        <div className="brand-logo-quadrant" style={{ overflow: 'hidden', borderRadius: '50%', width: '34px', height: '34px', border: '2px solid var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzhqZjFpdHloYTdxdTRrdGtzNXN1MHc1bTBvZnNnYjhsbDdkMXo5MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9AI3DOykfAH1UXOP1c/giphy.gif" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Laser cutting logo" />
         </div>
         <div className="brand-name">
-          MaterialDash
+          AKSales Admin
         </div>
       </div>
 
