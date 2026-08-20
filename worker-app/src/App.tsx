@@ -266,8 +266,31 @@ function App() {
             </div>
 
             <div className="login-screen">
-              <div className="login-logo" style={{ overflow: 'hidden', borderRadius: '50%', width: '70px', height: '70px', border: '3px solid var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzhqZjFpdHloYTdxdTRrdGtzNXN1MHc1bTBvZnNnYjhsbDdkMXo5MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9AI3DOykfAH1UXOP1c/giphy.gif" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Laser cutting logo" />
+              <div className="login-logo" style={{ width: '70px', height: '70px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {/* Animated Laser Sparks Spinner */}
+                <div style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: '50%',
+                  border: '4px solid transparent',
+                  borderTopColor: '#f97316',
+                  borderRightColor: '#fbbf24',
+                  animation: 'spin 1s linear infinite'
+                }} />
+                <div style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '50%',
+                  backgroundColor: '#0f172a',
+                  border: '2px solid #1e293b',
+                  boxShadow: '0 0 16px rgba(249, 115, 22, 0.6)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <div style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#f97316', boxShadow: '0 0 10px #f97316' }} />
+                </div>
               </div>
               <div className="login-header-group">
                 <h1 className="login-title">AKSales Floor</h1>
@@ -332,8 +355,31 @@ function App() {
           {/* App Header */}
           <div className="app-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ width: '28px', height: '28px', borderRadius: '50%', overflow: 'hidden', border: '1px solid var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzhqZjFpdHloYTdxdTRrdGtzNXN1MHc1bTBvZnNnYjhsbDdkMXo5MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9AI3DOykfAH1UXOP1c/giphy.gif" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Laser loop badge" />
+              <div style={{ width: '28px', height: '28px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {/* Animated Laser Sparks Spinner */}
+                <div style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: '50%',
+                  border: '2px solid transparent',
+                  borderTopColor: '#f97316',
+                  borderRightColor: '#fbbf24',
+                  animation: 'spin 1s linear infinite'
+                }} />
+                <div style={{
+                  width: '16px',
+                  height: '16px',
+                  borderRadius: '50%',
+                  backgroundColor: '#0f172a',
+                  border: '1px solid #1e293b',
+                  boxShadow: '0 0 6px rgba(249, 115, 22, 0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <div style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: '#f97316', boxShadow: '0 0 4px #f97316' }} />
+                </div>
               </div>
               <div>
                 <div className="app-title">AKSales App</div>

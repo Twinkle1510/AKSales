@@ -27,8 +27,31 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setCurrentTab }) =
     <div className="sidebar">
       {/* Brand Header with Animated Laser Sparks Logo */}
       <div className="brand">
-        <div className="brand-logo-quadrant" style={{ overflow: 'hidden', borderRadius: '50%', width: '34px', height: '34px', border: '2px solid var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzhqZjFpdHloYTdxdTRrdGtzNXN1MHc1bTBvZnNnYjhsbDdkMXo5MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9AI3DOykfAH1UXOP1c/giphy.gif" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Laser cutting logo" />
+        <div className="brand-logo-quadrant" style={{ width: '34px', height: '34px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '8px' }}>
+          {/* Animated Laser Sparks Spinner */}
+          <div style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            borderRadius: '50%',
+            border: '2.5px solid transparent',
+            borderTopColor: '#f97316',
+            borderRightColor: '#fbbf24',
+            animation: 'spin 1s linear infinite'
+          }} />
+          <div style={{
+            width: '20px',
+            height: '20px',
+            borderRadius: '50%',
+            backgroundColor: '#0f172a',
+            border: '1.5px solid #1e293b',
+            boxShadow: '0 0 8px rgba(249, 115, 22, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#f97316', boxShadow: '0 0 6px #f97316' }} />
+          </div>
         </div>
         <div className="brand-name">
           AKSales Admin

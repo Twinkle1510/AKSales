@@ -596,3 +596,12 @@ body {
   margin-top: 4px;
   text-align: right;
 }
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
