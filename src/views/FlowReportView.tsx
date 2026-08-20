@@ -10,17 +10,23 @@ interface FlowReportProps {
 
 export const FlowReportView: React.FC<FlowReportProps> = ({ employees, issues, production }) => {
   const workers = employees.filter(emp => emp.role === 'Worker');
-  const [selectedWorkerId, setSelectedWorkerId] = useState(workers[0]?.id || '');
+  const [selectedWorkerId, setSelectedWorkerId] = useState('ALL');
   const [zoomImage, setZoomImage] = useState<string | null>(null);
 
-  const selectedWorker = employees.find(emp => emp.id === selectedWorkerId);
+  const selectedWorker = selectedWorkerId === 'ALL'
+    ? { id: 'ALL', name: 'All Fabricators', employeeCode: 'ALL', department: 'All Departments', address: 'All Stations' }
+    : employees.find(emp => emp.id === selectedWorkerId);
 
   // Filter production runs for the selected worker
-  const workerProduction = production.filter(prod => prod.workerId === selectedWorkerId);
+  const workerProduction = selectedWorkerId === 'ALL'
+    ? production
+    : production.filter(prod => prod.workerId === selectedWorkerId);
 
-  const totalSheetsTaken = issues
-    .filter(issue => issue.issuedToId === selectedWorkerId)
-    .reduce((sum, i) => sum + i.quantity, 0);
+  const totalSheetsTaken = selectedWorkerId === 'ALL'
+    ? issues.reduce((sum, i) => sum + i.quantity, 0)
+    : issues
+        .filter(issue => issue.issuedToId === selectedWorkerId)
+        .reduce((sum, i) => sum + i.quantity, 0);
 
   const totalEquipmentProduced = workerProduction.reduce((sum, p) => sum + p.quantityProduced, 0);
 
@@ -46,6 +52,7 @@ export const FlowReportView: React.FC<FlowReportProps> = ({ employees, issues, p
             onChange={(e) => setSelectedWorkerId(e.target.value)}
             style={{ width: '220px' }}
           >
+            <option value="ALL">All Fabricators</option>
             {workers.map(w => (
               <option key={w.id} value={w.id}>{w.name} ({w.employeeCode || w.id})</option>
             ))}
