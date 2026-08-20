@@ -219,27 +219,27 @@ const INITIAL_INVENTORY: InventoryItem[] = [
   { id: 'INV-FIN-014', name: 'Industrial Griddle Plate Base', type: 'Finished Good', quantity: 18, unit: 'pcs', minThreshold: 4, lastUpdated: '2026-08-19', materialCode: 'FIN-SS-GRIDDLE-BASE', storageLocation: 'Heavy Equipment Area' }
 ];
 
-// REAL High-Definition Steel Fabrication Photography URLs from Unsplash
-const IMG_SS_SHEET_304 = 'https://images.unsplash.com/photo-1589739900243-4b52cd9b104e?w=800&auto=format&fit=crop&q=80'; // Single diagonal brushed steel sheet
-const IMG_TABLE_FINISHED = 'https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?w=800&auto=format&fit=crop&q=80'; // Commercial kitchen stainless steel table
+// REAL High-Definition Steel Fabrication Photography URLs from public folder
+const IMG_SS_SHEET_304 = '/single_sheet.png'; // Single diagonal brushed steel sheet you uploaded
+const IMG_TABLE_FINISHED = '/work_table.png'; // Commercial kitchen stainless steel table you uploaded
 
-const IMG_SS_PLATES_RAW = 'https://images.unsplash.com/photo-1589739900243-4b52cd9b104e?w=800&auto=format&fit=crop&q=80'; // Single diagonal brushed steel sheet
-const IMG_PLATES_FINISHED = 'https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&auto=format&fit=crop&q=80'; // Steel bowls / kitchenware
+const IMG_SS_PLATES_RAW = '/single_sheet.png'; // Single diagonal brushed steel sheet you uploaded
+const IMG_PLATES_FINISHED = '/work_table.png'; // Fallback to work table
 
-const IMG_PIPES_RAW = 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=400&auto=format&fit=crop&q=80'; // Metal bars
-const IMG_RACK_FINISHED = 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&auto=format&fit=crop&q=80'; // Storage rack shelving
+const IMG_PIPES_RAW = '/single_sheet.png'; // Single diagonal brushed steel sheet you uploaded
+const IMG_RACK_FINISHED = '/work_table.png'; // Fallback to work table
 
-const IMG_SINK_RAW = 'https://images.unsplash.com/photo-1589739900243-4b52cd9b104e?w=800&auto=format&fit=crop&q=80'; // Single diagonal brushed steel sheet
-const IMG_SINK_FINISHED = 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&auto=format&fit=crop&q=80'; // Stainless sinks
+const IMG_SINK_RAW = '/single_sheet.png'; // Single diagonal brushed steel sheet you uploaded
+const IMG_SINK_FINISHED = '/work_table.png'; // Fallback to work table
 
 const IMG_WELDING_RAW = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&auto=format&fit=crop&q=80'; // Welding rods sparks
-const IMG_HOOD_FINISHED = 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&auto=format&fit=crop&q=80'; // Exhaust hood canopy
+const IMG_HOOD_FINISHED = '/work_table.png'; // Fallback to work table
 
-const IMG_TROLLEY_RAW = 'https://images.unsplash.com/photo-1589739900243-4b52cd9b104e?w=800&auto=format&fit=crop&q=80'; // Single diagonal brushed steel sheet
-const IMG_TROLLEY_FINISHED = 'https://images.unsplash.com/photo-1596567189542-7e2417a74df9?w=400&auto=format&fit=crop&q=80'; // Utility cart trolley
+const IMG_TROLLEY_RAW = '/single_sheet.png'; // Single diagonal brushed steel sheet you uploaded
+const IMG_TROLLEY_FINISHED = '/work_table.png'; // Fallback to work table
 
-const IMG_GNPAN_RAW = 'https://images.unsplash.com/photo-1589739900243-4b52cd9b104e?w=800&auto=format&fit=crop&q=80'; // Single diagonal brushed steel sheet
-const IMG_GNPAN_FINISHED = 'https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&auto=format&fit=crop&q=80';
+const IMG_GNPAN_RAW = '/single_sheet.png'; // Single diagonal brushed steel sheet you uploaded
+const IMG_GNPAN_FINISHED = '/work_table.png';
 
 // Initial Kitchen Equipment Data (4 active fabrication machines / shear brakes)
 const INITIAL_EQUIPMENT: KitchenEquipment[] = [
