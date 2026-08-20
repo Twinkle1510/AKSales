@@ -240,7 +240,7 @@ const IMG_WELDING_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed stee
 const IMG_HOOD_FINISHED = '/exhaust_hood.png?v=4'; // Commercial kitchen exhaust hood you uploaded
 
 const IMG_TROLLEY_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
-const IMG_TROLLEY_FINISHED = '/work_table.png?v=3'; // Fallback to work table
+const IMG_TROLLEY_FINISHED = '/kitchen_trolley.png?v=4'; // Kitchen trolley you uploaded
 
 const IMG_GNPAN_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
 const IMG_GNPAN_FINISHED = '/work_table.png?v=3';
@@ -597,16 +597,16 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
 
 // Helper to initialize and retrieve from localStorage
 const getFromStorage = <T>(key: string, initial: T): T => {
-  const data = localStorage.getItem(`aksales_v12_${key}`);
+  const data = localStorage.getItem(`aksales_v13_${key}`);
   if (!data) {
-    localStorage.setItem(`aksales_v12_${key}`, JSON.stringify(initial));
+    localStorage.setItem(`aksales_v13_${key}`, JSON.stringify(initial));
     return initial;
   }
   return JSON.parse(data);
 };
 
 const setToStorage = <T>(key: string, value: T): void => {
-  localStorage.setItem(`aksales_v12_${key}`, JSON.stringify(value));
+  localStorage.setItem(`aksales_v13_${key}`, JSON.stringify(value));
 };
 
 export const getEmployees = (): Employee[] => getFromStorage('employees', INITIAL_EMPLOYEES);
@@ -625,10 +625,10 @@ export const getEquipment = (): KitchenEquipment[] => getFromStorage('equipment'
 export const saveEquipment = (equipment: KitchenEquipment[]) => setToStorage('equipment', equipment);
 
 export const resetDb = () => {
-  localStorage.removeItem('aksales_v12_employees');
-  localStorage.removeItem('aksales_v12_inventory');
-  localStorage.removeItem('aksales_v12_issues');
-  localStorage.removeItem('aksales_v12_production');
-  localStorage.removeItem('aksales_v12_equipment');
+  localStorage.removeItem('aksales_v13_employees');
+  localStorage.removeItem('aksales_v13_inventory');
+  localStorage.removeItem('aksales_v13_issues');
+  localStorage.removeItem('aksales_v13_production');
+  localStorage.removeItem('aksales_v13_equipment');
   window.location.reload();
 };
