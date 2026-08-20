@@ -11,11 +11,11 @@ interface FlowReportProps {
 export const FlowReportView: React.FC<FlowReportProps> = ({ employees, issues, production }) => {
   const workers = employees.filter(emp => emp.role === 'Worker');
   const [selectedWorkerId, setSelectedWorkerId] = useState(workers[0]?.id || '');
+  const [zoomImage, setZoomImage] = useState<string | null>(null);
 
   const selectedWorker = employees.find(emp => emp.id === selectedWorkerId);
 
   // Filter production runs for the selected worker
-  // Every production log acts as a direct link between input SS sheets consumed and finished kitchen outputs.
   const workerProduction = production.filter(prod => prod.workerId === selectedWorkerId);
 
   const totalSheetsTaken = issues
@@ -77,12 +77,6 @@ export const FlowReportView: React.FC<FlowReportProps> = ({ employees, issues, p
                 <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600 }}>TOTAL EQUIPMENT PRODUCED</span>
                 <span style={{ fontSize: '20px', fontWeight: 800, color: 'var(--color-green)' }}>{totalEquipmentProduced} Pcs</span>
               </div>
-              {/* Commented out as requested
-              <div style={{ padding: '12px', backgroundColor: 'var(--bg-secondary)', borderRadius: '6px', textAlign: 'center' }}>
-                <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600 }}>TOTAL STEEL SCRAP / WASTE</span>
-                <span style={{ fontSize: '20px', fontWeight: 800, color: 'var(--color-danger)' }}>{totalWaste} KG</span>
-              </div>
-              */}
               <div style={{ padding: '12px', backgroundColor: 'var(--bg-secondary)', borderRadius: '6px', textAlign: 'center' }}>
                 <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600 }}>SHEET UTILIZATION EFFICIENCY</span>
                 <span style={{ fontSize: '20px', fontWeight: 800, color: 'var(--primary)' }}>
@@ -142,9 +136,15 @@ export const FlowReportView: React.FC<FlowReportProps> = ({ employees, issues, p
                       </p>
 
                       {/* Photo Box */}
-                      <div style={{ width: '100%', height: '150px', borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+                      <div 
+                        style={{ width: '100%', height: '150px', borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--border)', cursor: 'pointer', position: 'relative' }}
+                        onClick={() => { if (log.materialPhoto) setZoomImage(log.materialPhoto); }}
+                      >
                         {log.materialPhoto ? (
-                          <img src={log.materialPhoto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="SS Raw Sheets" />
+                          <>
+                            <img src={log.materialPhoto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="SS Raw Sheets" />
+                            <div className="no-print" style={{ position: 'absolute', bottom: '4px', right: '4px', backgroundColor: 'rgba(0,0,0,0.6)', color: 'white', fontSize: '9px', padding: '2px 6px', borderRadius: '3px' }}>Click to view</div>
+                          </>
                         ) : (
                           <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg-secondary)', fontSize: '11px', color: 'var(--text-muted)' }}>No Sheet Image</div>
                         )}
@@ -171,9 +171,15 @@ export const FlowReportView: React.FC<FlowReportProps> = ({ employees, issues, p
                       </p>
 
                       {/* Photo Box */}
-                      <div style={{ width: '100%', height: '150px', borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+                      <div 
+                        style={{ width: '100%', height: '150px', borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--border)', cursor: 'pointer', position: 'relative' }}
+                        onClick={() => { if (log.productPhoto) setZoomImage(log.productPhoto); }}
+                      >
                         {log.productPhoto ? (
-                          <img src={log.productPhoto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="SS Finished Table" />
+                          <>
+                            <img src={log.productPhoto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="SS Finished Table" />
+                            <div className="no-print" style={{ position: 'absolute', bottom: '4px', right: '4px', backgroundColor: 'rgba(0,0,0,0.6)', color: 'white', fontSize: '9px', padding: '2px 6px', borderRadius: '3px' }}>Click to view</div>
+                          </>
                         ) : (
                           <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg-secondary)', fontSize: '11px', color: 'var(--text-muted)' }}>No Product Image</div>
                         )}
@@ -185,9 +191,6 @@ export const FlowReportView: React.FC<FlowReportProps> = ({ employees, issues, p
                   {/* Flow Footer Metrics */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', paddingTop: '14px', borderTop: '1px dashed var(--border)', fontSize: '13px' }}>
                     <div style={{ display: 'flex', gap: '20px' }}>
-                      {/* Commented out as requested
-                      <span>Metal scrap / wastage: <strong style={{ color: 'var(--color-danger)' }}>{log.wastageQty || 0} KG</strong></span>
-                      */}
                       <span>Conversion Index: <strong>{log.quantityProduced && log.materialConsumedQty ? (log.quantityProduced / log.materialConsumedQty).toFixed(3) : 0} pcs/KG</strong></span>
                     </div>
 
@@ -205,6 +208,29 @@ export const FlowReportView: React.FC<FlowReportProps> = ({ employees, issues, p
       ) : (
         <div className="card" style={{ padding: '24px', textAlign: 'center' }}>
           Please select a fabricator from the dropdown list.
+        </div>
+      )}
+
+      {/* Lightbox Zoom Overlay */}
+      {zoomImage && (
+        <div 
+          className="modal-overlay no-print" 
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 99999, cursor: 'pointer' }}
+          onClick={() => setZoomImage(null)}
+        >
+          <div style={{ position: 'relative', maxWidth: '90%', maxHeight: '90%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => e.stopPropagation()}>
+            <img 
+              src={zoomImage} 
+              style={{ maxWidth: '100%', maxHeight: '85vh', borderRadius: '8px', border: '4px solid white', boxShadow: '0 8px 30px rgba(0,0,0,0.6)', objectFit: 'contain' }} 
+              alt="Zoomed view" 
+            />
+            <button 
+              style={{ position: 'absolute', top: '-15px', right: '-15px', width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#ef4444', color: 'white', border: '2px solid white', fontWeight: 'bold', fontSize: '18px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
+              onClick={() => setZoomImage(null)}
+            >
+              ×
+            </button>
+          </div>
         </div>
       )}
 

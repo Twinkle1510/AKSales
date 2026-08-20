@@ -32,6 +32,7 @@ function App() {
   // Navigation & session state
   const [activeTab, setActiveTab] = useState<'tasks' | 'log_output' | 'earnings' | 'notifications'>('tasks');
   const [currentWorker, setCurrentWorker] = useState<Employee | null>(null);
+  const [zoomImage, setZoomImage] = useState<string | null>(null);
   
   // Database state copies
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -615,15 +616,15 @@ function App() {
                       {(p.materialPhoto || p.productPhoto) && (
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '6px' }}>
                           {p.materialPhoto && (
-                            <div className="photo-thumbnail-container" style={{ height: '60px' }}>
+                            <div className="photo-thumbnail-container" style={{ height: '60px', cursor: 'pointer' }} onClick={() => setZoomImage(p.materialPhoto || null)}>
                               <img src={p.materialPhoto} className="photo-thumbnail-img" alt="Material consumed" />
-                              <span style={{ position: 'absolute', bottom: '2px', left: '4px', fontSize: '8px', color: '#ffffff', backgroundColor: 'rgba(0,0,0,0.5)', padding: '1px 3px', borderRadius: '2px' }}>Material</span>
+                              <span style={{ position: 'absolute', bottom: '2px', left: '4px', fontSize: '8px', color: '#ffffff', backgroundColor: 'rgba(0,0,0,0.5)', padding: '1px 3px', borderRadius: '2px' }}>Material (Click)</span>
                             </div>
                           )}
                           {p.productPhoto && (
-                            <div className="photo-thumbnail-container" style={{ height: '60px' }}>
+                            <div className="photo-thumbnail-container" style={{ height: '60px', cursor: 'pointer' }} onClick={() => setZoomImage(p.productPhoto || null)}>
                               <img src={p.productPhoto} className="photo-thumbnail-img" alt="Finished item" />
-                              <span style={{ position: 'absolute', bottom: '2px', left: '4px', fontSize: '8px', color: '#ffffff', backgroundColor: 'rgba(0,0,0,0.5)', padding: '1px 3px', borderRadius: '2px' }}>Product</span>
+                              <span style={{ position: 'absolute', bottom: '2px', left: '4px', fontSize: '8px', color: '#ffffff', backgroundColor: 'rgba(0,0,0,0.5)', padding: '1px 3px', borderRadius: '2px' }}>Product (Click)</span>
                             </div>
                           )}
                         </div>
@@ -725,6 +726,29 @@ function App() {
 
         </div>
       </div>
+
+      {/* Lightbox Zoom Overlay */}
+      {zoomImage && (
+        <div 
+          className="modal-overlay" 
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 99999, cursor: 'pointer' }}
+          onClick={() => setZoomImage(null)}
+        >
+          <div style={{ position: 'relative', maxWidth: '90%', maxHeight: '90%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => e.stopPropagation()}>
+            <img 
+              src={zoomImage} 
+              style={{ maxWidth: '100%', maxHeight: '85vh', borderRadius: '8px', border: '4px solid white', boxShadow: '0 8px 30px rgba(0,0,0,0.6)', objectFit: 'contain' }} 
+              alt="Zoomed view" 
+            />
+            <button 
+              style={{ position: 'absolute', top: '-15px', right: '-15px', width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#ef4444', color: 'white', border: '2px solid white', fontWeight: 'bold', fontSize: '18px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
+              onClick={() => setZoomImage(null)}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

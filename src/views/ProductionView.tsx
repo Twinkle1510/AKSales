@@ -33,6 +33,7 @@ export const ProductionView: React.FC<ProductionProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAuditLog, setSelectedAuditLog] = useState<ProductionLog | null>(null);
   const [viewMode, setViewMode] = useState<'table' | 'report'>('table'); // Toggle view mode
+  const [zoomImage, setZoomImage] = useState<string | null>(null);
 
   // Form states
   const [batchNumber, setBatchNumber] = useState('');
@@ -488,9 +489,15 @@ export const ProductionView: React.FC<ProductionProps> = ({
                   Quantity Consumed: <strong>{selectedAuditLog.materialConsumedQty ?? 0} units</strong>
                 </div>
 
-                <div style={{ width: '100%', height: '180px', backgroundColor: '#e2e8f0', borderRadius: '6px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div 
+                  style={{ width: '100%', height: '180px', backgroundColor: '#e2e8f0', borderRadius: '6px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', position: 'relative' }}
+                  onClick={() => { if (selectedAuditLog.materialPhoto) setZoomImage(selectedAuditLog.materialPhoto); }}
+                >
                   {selectedAuditLog.materialPhoto ? (
-                    <img src={selectedAuditLog.materialPhoto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Material raw" />
+                    <>
+                      <img src={selectedAuditLog.materialPhoto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Material raw" />
+                      <div style={{ position: 'absolute', bottom: '4px', right: '4px', backgroundColor: 'rgba(0,0,0,0.6)', color: 'white', fontSize: '9px', padding: '2px 6px', borderRadius: '3px' }}>Click to view</div>
+                    </>
                   ) : (
                     <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>No Material Photo Captured</span>
                   )}
@@ -507,9 +514,15 @@ export const ProductionView: React.FC<ProductionProps> = ({
                   Quantity Produced: <strong>{selectedAuditLog.quantityProduced} pcs</strong>
                 </div>
 
-                <div style={{ width: '100%', height: '180px', backgroundColor: '#d1fae5', borderRadius: '6px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div 
+                  style={{ width: '100%', height: '180px', backgroundColor: '#d1fae5', borderRadius: '6px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', position: 'relative' }}
+                  onClick={() => { if (selectedAuditLog.productPhoto) setZoomImage(selectedAuditLog.productPhoto); }}
+                >
                   {selectedAuditLog.productPhoto ? (
-                    <img src={selectedAuditLog.productPhoto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Product finished" />
+                    <>
+                      <img src={selectedAuditLog.productPhoto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Product finished" />
+                      <div style={{ position: 'absolute', bottom: '4px', right: '4px', backgroundColor: 'rgba(0,0,0,0.6)', color: 'white', fontSize: '9px', padding: '2px 6px', borderRadius: '3px' }}>Click to view</div>
+                    </>
                   ) : (
                     <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>No Product Photo Captured</span>
                   )}
@@ -664,6 +677,29 @@ export const ProductionView: React.FC<ProductionProps> = ({
               </button>
             </div>
           </form>
+        </div>
+      )}
+
+      {/* Lightbox Zoom Overlay */}
+      {zoomImage && (
+        <div 
+          className="modal-overlay" 
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 99999, cursor: 'pointer' }}
+          onClick={() => setZoomImage(null)}
+        >
+          <div style={{ position: 'relative', maxWidth: '90%', maxHeight: '90%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => e.stopPropagation()}>
+            <img 
+              src={zoomImage} 
+              style={{ maxWidth: '100%', maxHeight: '85vh', borderRadius: '8px', border: '4px solid white', boxShadow: '0 8px 30px rgba(0,0,0,0.6)', objectFit: 'contain' }} 
+              alt="Zoomed view" 
+            />
+            <button 
+              style={{ position: 'absolute', top: '-15px', right: '-15px', width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#ef4444', color: 'white', border: '2px solid white', fontWeight: 'bold', fontSize: '18px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
+              onClick={() => setZoomImage(null)}
+            >
+              ×
+            </button>
+          </div>
         </div>
       )}
     </div>
