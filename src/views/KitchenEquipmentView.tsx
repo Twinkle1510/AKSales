@@ -71,35 +71,34 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
           allocatedQtyKg: Number(allocatedQtyKg),
           actualOutputName,
           actualOutputQty: Number(actualOutputQty),
-          outputUnit
-        };
-      }
-      return eq;
-    });
-
-    setEquipment(updated);
-    setIsAllocationModalOpen(false);
-  };
-
-  const setStatus = (id: string, status: 'Active Cooking' | 'Idle' | 'Under Maintenance') => {
-    const updated = equipment.map(eq => {
-      if (eq.id === id) {
-        return {
-          ...eq,
-          status,
-          // Clear allocations if going idle
-          ...(status === 'Idle' ? {
-            assignedWorkerId: undefined,
-            assignedWorkerName: undefined,
-            allocatedQtyKg: 0,
-            actualOutputQty: 0
-          } : {})
-        };
-      }
-      return eq;
-    });
-    setEquipment(updated);
-  };
+            </thead>
+            <tbody>
+              {equipment.map(eq => (
+                <tr key={eq.id}>
+                  <td>
+                    <strong style={{ color: 'var(--primary)' }}>{eq.name}</strong>
+                  </td>
+                  <td>{eq.assignedWorkerName || <span className="text-secondary">Unassigned</span>}</td>
+                  <td>{eq.allocatedMaterialName || <span className="text-secondary">-</span>}</td>
+                  <td>
+                    {eq.allocatedQtyKg > 0 ? (
+                      <span className="badge badge-warning" style={{ fontSize: '12px', fontWeight: 700 }}>
+                        {eq.allocatedQtyKg} KG
+                      </span>
+                    ) : '-'}
+                  </td>
+                  <td>{eq.actualOutputName || <span className="text-secondary">-</span>}</td>
+                  <td>
+                    {eq.actualOutputQty > 0 ? (
+                      <span className="badge badge-success" style={{ fontSize: '12px', fontWeight: 700 }}>
+                        {eq.actualOutputQty} {eq.outputUnit}
+                      </span>
+                    ) : '-'}
+                  </td>
+                  <td>{eq.lastCleanedDate}</td>
+                </tr>
+              ))}
+            </tbody>
 
   const filtered = equipment.filter(eq =>
     eq.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
