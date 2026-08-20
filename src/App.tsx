@@ -94,16 +94,16 @@ function App() {
     quantity: number; 
     remarks: string; 
   }): boolean => {
-    const rawMaterial = inventory.find(i => i.id === newIssue.materialId);
+    const rawMaterial = inventory.find((i: InventoryItem) => i.id === newIssue.materialId);
     if (!rawMaterial || rawMaterial.quantity < newIssue.quantity) {
       return false;
     }
 
-    const worker = employees.find(e => e.id === newIssue.issuedToId);
+    const worker = employees.find((e: Employee) => e.id === newIssue.issuedToId);
     if (!worker) return false;
 
     // 1. Deduct stock
-    const updatedInventory = inventory.map(item => {
+    const updatedInventory = inventory.map((item: InventoryItem) => {
       if (item.id === newIssue.materialId) {
         return {
           ...item,
@@ -151,8 +151,8 @@ function App() {
     wastageQty?: number;
     efficiency?: number;
   }) => {
-    const product = inventory.find(i => i.id === newLog.productId);
-    const worker = employees.find(e => e.id === newLog.workerId);
+    const product = inventory.find((i: InventoryItem) => i.id === newLog.productId);
+    const worker = employees.find((e: Employee) => e.id === newLog.workerId);
     if (!product || !worker) return;
 
     const newRecord: ProductionLog = {
@@ -199,7 +199,7 @@ function App() {
     });
 
     // 2. Increment inventory stock for finished good & decrement raw material consumed
-    const updatedInventory = inventory.map(item => {
+    const updatedInventory = inventory.map((item: InventoryItem) => {
       if (item.id === log.productId) {
         return {
           ...item,
