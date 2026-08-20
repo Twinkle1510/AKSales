@@ -226,12 +226,13 @@ const IMG_PREP_TABLE_FINISHED = '/prep_table.png?v=4'; // Prep table with splash
 const IMG_DISH_TABLE_FINISHED = '/dishwashing_table.png?v=4'; // Dishwashing table you uploaded
 const IMG_BAIN_MARIE_FINISHED = '/bain_marie.png?v=4'; // Bain Marie Counter you uploaded
 const IMG_CABINET_FINISHED = '/storage_cabinet.png?v=4'; // Storage Cabinet you uploaded
+const IMG_GRIDDLE_FINISHED = '/griddle_base.png?v=4'; // Griddle plate base you uploaded
 
 const IMG_SS_PLATES_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
-const IMG_PLATES_FINISHED = '/work_table.png?v=3'; // Fallback to work table
+const IMG_PLATES_FINISHED = '/compartment_tray.png?v=4'; // Compartment tray you uploaded
 
 const IMG_PIPES_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
-const IMG_RACK_FINISHED = '/work_table.png?v=3'; // Fallback to work table
+const IMG_RACK_FINISHED = '/storage_rack.png?v=4'; // 4-Tier storage rack you uploaded
 
 const IMG_SINK_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
 const IMG_SINK_FINISHED = '/double_sink.png?v=4'; // Double sink unit you uploaded
@@ -243,7 +244,9 @@ const IMG_TROLLEY_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed stee
 const IMG_TROLLEY_FINISHED = '/kitchen_trolley.png?v=4'; // Kitchen trolley you uploaded
 
 const IMG_GNPAN_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
-const IMG_GNPAN_FINISHED = '/work_table.png?v=3';
+const IMG_GNPAN_FINISHED = '/gn_pan.png?v=4'; // GN Pan you uploaded
+const IMG_SHELF_FINISHED = '/wall_shelf.png?v=4'; // Wall mounted shelf you uploaded
+const IMG_MASALA_FINISHED = '/masala_box.png?v=4'; // Masala box you uploaded
 
 // Initial Kitchen Equipment Data (4 active fabrication machines / shear brakes)
 const INITIAL_EQUIPMENT: KitchenEquipment[] = [
@@ -555,7 +558,7 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
     wastageQty: 1,
     efficiency: 91,
     materialPhoto: IMG_WELDING_RAW,
-    productPhoto: IMG_TABLE_FINISHED
+    productPhoto: IMG_SHELF_FINISHED
   },
   { 
     id: 'PROD-013', 
@@ -573,7 +576,7 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
     wastageQty: 7,
     efficiency: 90,
     materialPhoto: IMG_PIPES_RAW,
-    productPhoto: IMG_RACK_FINISHED
+    productPhoto: IMG_MASALA_FINISHED
   },
   { 
     id: 'PROD-014', 
@@ -591,22 +594,22 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
     wastageQty: 14,
     efficiency: 90,
     materialPhoto: IMG_SS_SHEET_304,
-    productPhoto: IMG_TABLE_FINISHED
+    productPhoto: IMG_GRIDDLE_FINISHED
   }
 ];
 
 // Helper to initialize and retrieve from localStorage
 const getFromStorage = <T>(key: string, initial: T): T => {
-  const data = localStorage.getItem(`aksales_v13_${key}`);
+  const data = localStorage.getItem(`aksales_v16_${key}`);
   if (!data) {
-    localStorage.setItem(`aksales_v13_${key}`, JSON.stringify(initial));
+    localStorage.setItem(`aksales_v16_${key}`, JSON.stringify(initial));
     return initial;
   }
   return JSON.parse(data);
 };
 
 const setToStorage = <T>(key: string, value: T): void => {
-  localStorage.setItem(`aksales_v13_${key}`, JSON.stringify(value));
+  localStorage.setItem(`aksales_v16_${key}`, JSON.stringify(value));
 };
 
 export const getEmployees = (): Employee[] => getFromStorage('employees', INITIAL_EMPLOYEES);
@@ -625,10 +628,10 @@ export const getEquipment = (): KitchenEquipment[] => getFromStorage('equipment'
 export const saveEquipment = (equipment: KitchenEquipment[]) => setToStorage('equipment', equipment);
 
 export const resetDb = () => {
-  localStorage.removeItem('aksales_v13_employees');
-  localStorage.removeItem('aksales_v13_inventory');
-  localStorage.removeItem('aksales_v13_issues');
-  localStorage.removeItem('aksales_v13_production');
-  localStorage.removeItem('aksales_v13_equipment');
+  localStorage.removeItem('aksales_v16_employees');
+  localStorage.removeItem('aksales_v16_inventory');
+  localStorage.removeItem('aksales_v16_issues');
+  localStorage.removeItem('aksales_v16_production');
+  localStorage.removeItem('aksales_v16_equipment');
   window.location.reload();
 };
