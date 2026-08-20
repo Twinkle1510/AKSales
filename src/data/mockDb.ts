@@ -232,7 +232,7 @@ const IMG_RACK_FINISHED = '/work_table.png?v=3'; // Fallback to work table
 const IMG_SINK_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
 const IMG_SINK_FINISHED = '/work_table.png?v=3'; // Fallback to work table
 
-const IMG_WELDING_RAW = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&auto=format&fit=crop&q=80'; // Welding rods sparks
+const IMG_WELDING_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
 const IMG_HOOD_FINISHED = '/work_table.png?v=3'; // Fallback to work table
 
 const IMG_TROLLEY_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
@@ -593,16 +593,16 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
 
 // Helper to initialize and retrieve from localStorage
 const getFromStorage = <T>(key: string, initial: T): T => {
-  const data = localStorage.getItem(`aksales_v4_${key}`);
+  const data = localStorage.getItem(`aksales_v5_${key}`);
   if (!data) {
-    localStorage.setItem(`aksales_v4_${key}`, JSON.stringify(initial));
+    localStorage.setItem(`aksales_v5_${key}`, JSON.stringify(initial));
     return initial;
   }
   return JSON.parse(data);
 };
 
 const setToStorage = <T>(key: string, value: T): void => {
-  localStorage.setItem(`aksales_v4_${key}`, JSON.stringify(value));
+  localStorage.setItem(`aksales_v5_${key}`, JSON.stringify(value));
 };
 
 export const getEmployees = (): Employee[] => getFromStorage('employees', INITIAL_EMPLOYEES);
@@ -621,10 +621,10 @@ export const getEquipment = (): KitchenEquipment[] => getFromStorage('equipment'
 export const saveEquipment = (equipment: KitchenEquipment[]) => setToStorage('equipment', equipment);
 
 export const resetDb = () => {
-  localStorage.removeItem('aksales_v4_employees');
-  localStorage.removeItem('aksales_v4_inventory');
-  localStorage.removeItem('aksales_v4_issues');
-  localStorage.removeItem('aksales_v4_production');
-  localStorage.removeItem('aksales_v4_equipment');
+  localStorage.removeItem('aksales_v5_employees');
+  localStorage.removeItem('aksales_v5_inventory');
+  localStorage.removeItem('aksales_v5_issues');
+  localStorage.removeItem('aksales_v5_production');
+  localStorage.removeItem('aksales_v5_equipment');
   window.location.reload();
 };
