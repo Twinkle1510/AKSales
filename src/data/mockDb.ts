@@ -222,6 +222,7 @@ const INITIAL_INVENTORY: InventoryItem[] = [
 // REAL High-Definition Steel Fabrication Photography URLs from public folder
 const IMG_SS_SHEET_304 = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
 const IMG_TABLE_FINISHED = '/work_table.png?v=3'; // Commercial kitchen stainless steel table you uploaded
+const IMG_PREP_TABLE_FINISHED = '/prep_table.png?v=4'; // Prep table with splashback you uploaded
 
 const IMG_SS_PLATES_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
 const IMG_PLATES_FINISHED = '/work_table.png?v=3'; // Fallback to work table
@@ -459,7 +460,7 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
     wastageQty: 0.8,
     efficiency: 90,
     materialPhoto: IMG_WELDING_RAW,
-    productPhoto: IMG_TABLE_FINISHED
+    productPhoto: IMG_PREP_TABLE_FINISHED
   },
   { 
     id: 'PROD-008', 
@@ -593,16 +594,16 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
 
 // Helper to initialize and retrieve from localStorage
 const getFromStorage = <T>(key: string, initial: T): T => {
-  const data = localStorage.getItem(`aksales_v7_${key}`);
+  const data = localStorage.getItem(`aksales_v8_${key}`);
   if (!data) {
-    localStorage.setItem(`aksales_v7_${key}`, JSON.stringify(initial));
+    localStorage.setItem(`aksales_v8_${key}`, JSON.stringify(initial));
     return initial;
   }
   return JSON.parse(data);
 };
 
 const setToStorage = <T>(key: string, value: T): void => {
-  localStorage.setItem(`aksales_v7_${key}`, JSON.stringify(value));
+  localStorage.setItem(`aksales_v8_${key}`, JSON.stringify(value));
 };
 
 export const getEmployees = (): Employee[] => getFromStorage('employees', INITIAL_EMPLOYEES);
@@ -621,10 +622,10 @@ export const getEquipment = (): KitchenEquipment[] => getFromStorage('equipment'
 export const saveEquipment = (equipment: KitchenEquipment[]) => setToStorage('equipment', equipment);
 
 export const resetDb = () => {
-  localStorage.removeItem('aksales_v7_employees');
-  localStorage.removeItem('aksales_v7_inventory');
-  localStorage.removeItem('aksales_v7_issues');
-  localStorage.removeItem('aksales_v7_production');
-  localStorage.removeItem('aksales_v7_equipment');
+  localStorage.removeItem('aksales_v8_employees');
+  localStorage.removeItem('aksales_v8_inventory');
+  localStorage.removeItem('aksales_v8_issues');
+  localStorage.removeItem('aksales_v8_production');
+  localStorage.removeItem('aksales_v8_equipment');
   window.location.reload();
 };
