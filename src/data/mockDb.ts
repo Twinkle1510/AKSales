@@ -220,26 +220,26 @@ const INITIAL_INVENTORY: InventoryItem[] = [
 ];
 
 // REAL High-Definition Steel Fabrication Photography URLs from public folder
-const IMG_SS_SHEET_304 = '/single_sheet.png'; // Single diagonal brushed steel sheet you uploaded
-const IMG_TABLE_FINISHED = '/work_table.png'; // Commercial kitchen stainless steel table you uploaded
+const IMG_SS_SHEET_304 = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
+const IMG_TABLE_FINISHED = '/work_table.png?v=3'; // Commercial kitchen stainless steel table you uploaded
 
-const IMG_SS_PLATES_RAW = '/single_sheet.png'; // Single diagonal brushed steel sheet you uploaded
-const IMG_PLATES_FINISHED = '/work_table.png'; // Fallback to work table
+const IMG_SS_PLATES_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
+const IMG_PLATES_FINISHED = '/work_table.png?v=3'; // Fallback to work table
 
-const IMG_PIPES_RAW = '/single_sheet.png'; // Single diagonal brushed steel sheet you uploaded
-const IMG_RACK_FINISHED = '/work_table.png'; // Fallback to work table
+const IMG_PIPES_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
+const IMG_RACK_FINISHED = '/work_table.png?v=3'; // Fallback to work table
 
-const IMG_SINK_RAW = '/single_sheet.png'; // Single diagonal brushed steel sheet you uploaded
-const IMG_SINK_FINISHED = '/work_table.png'; // Fallback to work table
+const IMG_SINK_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
+const IMG_SINK_FINISHED = '/work_table.png?v=3'; // Fallback to work table
 
 const IMG_WELDING_RAW = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&auto=format&fit=crop&q=80'; // Welding rods sparks
-const IMG_HOOD_FINISHED = '/work_table.png'; // Fallback to work table
+const IMG_HOOD_FINISHED = '/work_table.png?v=3'; // Fallback to work table
 
-const IMG_TROLLEY_RAW = '/single_sheet.png'; // Single diagonal brushed steel sheet you uploaded
-const IMG_TROLLEY_FINISHED = '/work_table.png'; // Fallback to work table
+const IMG_TROLLEY_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
+const IMG_TROLLEY_FINISHED = '/work_table.png?v=3'; // Fallback to work table
 
-const IMG_GNPAN_RAW = '/single_sheet.png'; // Single diagonal brushed steel sheet you uploaded
-const IMG_GNPAN_FINISHED = '/work_table.png';
+const IMG_GNPAN_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
+const IMG_GNPAN_FINISHED = '/work_table.png?v=3';
 
 // Initial Kitchen Equipment Data (4 active fabrication machines / shear brakes)
 const INITIAL_EQUIPMENT: KitchenEquipment[] = [
