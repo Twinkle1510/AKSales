@@ -582,35 +582,54 @@ function App() {
                         </span>
                       </div>
                       
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-secondary)' }}>
-                        <div>
-                          <div>{p.productName} ({p.quantityProduced} pcs)</div>
-                          {p.materialConsumedName && (
-                            <div style={{ fontSize: '10px', color: 'var(--color-orange)', marginTop: '2px' }}>
-                              Used: {p.materialConsumedQty} {p.materialConsumedName} 
-                              {/* p.wastageQty !== undefined && ` (Wastage: ${p.wastageQty})` */}
-                            </div>
-                          )}
-                          {p.efficiency !== undefined && (
-                            <div style={{ fontSize: '10px', color: 'var(--primary)', fontWeight: 700 }}>
-                              Yield Efficiency: {p.efficiency}%
-                            </div>
-                          )}
-                        </div>
-                        <span style={{ fontWeight: 700, color: 'var(--color-green)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                        <span style={{ fontSize: '14px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                          {p.productName}
+                        </span>
+                        <span style={{ fontWeight: 800, color: 'var(--color-green)', fontSize: '14px' }}>
                           {p.status === 'Approved' ? (
                             currentWorker.payrollModel === 'Fixed Salary' ? (
-                              'Salary'
+                              'Salary Credit'
                             ) : currentWorker.payrollModel === 'Fixed + Incentive' ? (
-                              `+₹${(p.quantityProduced * (currentWorker.incentiveRate || 10)).toLocaleString()} (Incentive)`
+                              `+₹${(p.quantityProduced * (currentWorker.incentiveRate || 10)).toLocaleString()}`
                             ) : (
                               `+₹${(p.quantityProduced * currentWorker.baseRate).toLocaleString()}`
                             )
                           ) : (
-                            'Pending approval'
+                            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600 }}>Pending Approval</span>
                           )}
                         </span>
                       </div>
+
+                      {/* Structured Input vs Output details card */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '11px', marginBottom: '8px' }}>
+                        <div>
+                          <span style={{ color: 'var(--text-secondary)', display: 'block', fontWeight: 700, marginBottom: '2px', fontSize: '9px' }}>SS SHEETS CONSUMED (INPUT)</span>
+                          <strong style={{ fontSize: '14px', color: 'var(--color-orange)' }}>
+                            {p.materialConsumedQty} kg
+                          </strong>
+                          <div style={{ color: 'var(--text-muted)', fontSize: '9px', marginTop: '2px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                            {p.materialConsumedName}
+                          </div>
+                        </div>
+
+                        <div style={{ borderLeft: '1px dashed var(--border)', paddingLeft: '12px' }}>
+                          <span style={{ color: 'var(--text-secondary)', display: 'block', fontWeight: 700, marginBottom: '2px', fontSize: '9px' }}>FABRICATED YIELD (OUTPUT)</span>
+                          <strong style={{ fontSize: '14px', color: 'var(--color-green)' }}>
+                            {p.quantityProduced} pcs
+                          </strong>
+                          <div style={{ color: 'var(--text-muted)', fontSize: '9px', marginTop: '2px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                            {p.productName}
+                          </div>
+                        </div>
+                      </div>
+
+                      {p.efficiency !== undefined && (
+                        <div style={{ fontSize: '10px', color: 'var(--primary)', fontWeight: 700, marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <span style={{ color: 'var(--text-secondary)' }}>Yield Material Utilization:</span>
+                          <span>{p.efficiency}%</span>
+                        </div>
+                      )}
 
                       {/* Side-by-side Photo thumbnails if present */}
                       {(p.materialPhoto || p.productPhoto) && (
