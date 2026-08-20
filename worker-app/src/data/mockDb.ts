@@ -221,7 +221,7 @@ const INITIAL_INVENTORY: InventoryItem[] = [
 
 // REAL High-Definition Steel Fabrication Photography URLs from Unsplash
 const IMG_SS_SHEET_304 = 'https://images.unsplash.com/photo-1589739900243-4b52cd9b104e?w=800&auto=format&fit=crop&q=80'; // Single diagonal brushed steel sheet
-const IMG_TABLE_FINISHED = 'https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?w=400&auto=format&fit=crop&q=80'; // Stainless tables
+const IMG_TABLE_FINISHED = 'https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?w=800&auto=format&fit=crop&q=80'; // Commercial kitchen stainless steel table
 
 const IMG_SS_PLATES_RAW = 'https://images.unsplash.com/photo-1589739900243-4b52cd9b104e?w=800&auto=format&fit=crop&q=80'; // Single diagonal brushed steel sheet
 const IMG_PLATES_FINISHED = 'https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&auto=format&fit=crop&q=80'; // Steel bowls / kitchenware
