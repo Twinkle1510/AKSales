@@ -602,9 +602,9 @@ function App() {
                       </div>
 
                       {/* Structured Input vs Output details card */}
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '11px', marginBottom: '8px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', padding: '8px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '11px', marginBottom: '8px' }}>
                         <div>
-                          <span style={{ color: 'var(--text-secondary)', display: 'block', fontWeight: 700, marginBottom: '2px', fontSize: '9px' }}>SS SHEETS CONSUMED (INPUT)</span>
+                          <span style={{ color: 'var(--text-secondary)', display: 'block', fontWeight: 700, marginBottom: '2px', fontSize: '9px' }}>INPUT (SS SHEETS)</span>
                           <strong style={{ fontSize: '14px', color: 'var(--color-orange)' }}>
                             {p.materialConsumedQty} kg
                           </strong>
@@ -613,8 +613,8 @@ function App() {
                           </div>
                         </div>
 
-                        <div style={{ borderLeft: '1px dashed var(--border)', paddingLeft: '12px' }}>
-                          <span style={{ color: 'var(--text-secondary)', display: 'block', fontWeight: 700, marginBottom: '2px', fontSize: '9px' }}>FABRICATED YIELD (OUTPUT)</span>
+                        <div style={{ borderLeft: '1px dashed var(--border)', paddingLeft: '8px' }}>
+                          <span style={{ color: 'var(--text-secondary)', display: 'block', fontWeight: 700, marginBottom: '2px', fontSize: '9px' }}>OUTPUT (PRODUCT)</span>
                           <strong style={{ fontSize: '14px', color: 'var(--color-green)' }}>
                             {p.quantityProduced} pcs
                           </strong>
@@ -658,35 +658,37 @@ function App() {
             {activeTab === 'notifications' && (
               <>
                 <h3 style={{ fontSize: '15px', fontWeight: 700, marginBottom: '4px' }}>Inbox Alerts</h3>
-                
-                {workerIssues.length === 0 && workerProduction.length === 0 ? (
-                  <p style={{ fontSize: '13px', color: 'var(--text-secondary)', textAlign: 'center', padding: '32px' }}>
-                    No alerts received.
-                  </p>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    {workerProduction.filter(p => p.status === 'Approved').map(p => (
-                      <div key={p.id} className="mobile-card notify-card success">
-                        <div style={{ fontWeight: 700, fontSize: '13px' }}>Batch Approved!</div>
-                        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                          Batch <strong>{p.batchNumber}</strong> has been approved. Yield: {p.quantityProduced} units (Efficiency: {p.efficiency}%). 
-                          {currentWorker.payrollModel !== 'Fixed Salary' && ` Wage amount credited to your panel.`}
-                        </p>
-                        <div className="notify-time">{p.approvedDate}</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {workerProduction.filter(p => p.status === 'Approved').map(p => (
+                    <div key={p.id} className="mobile-card" style={{ borderLeft: '4px solid var(--color-green)' }}>
+                      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                        <div style={{ backgroundColor: 'rgba(16,185,129,0.1)', color: 'var(--color-green)', padding: '8px', borderRadius: '50%' }}>
+                          <CheckCircle size={18} />
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: '13px' }}>Batch {p.batchNumber} Approved</div>
+                          <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Wages added to your ledger sheet.</div>
+                        </div>
                       </div>
-                    ))}
-
-                    {workerIssues.map(issue => (
-                      <div key={issue.id} className="mobile-card notify-card alert">
-                        <div style={{ fontWeight: 700, fontSize: '13px' }}>Raw Material Assigned</div>
-                        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                          Admin has issued {issue.quantity} {issue.remarks ? `for ${issue.remarks}` : ''} of {issue.materialName} to your assembly line.
-                        </p>
-                        <div className="notify-time">{issue.date}</div>
+                    </div>
+                  ))}
+                  
+                  {workerIssues.map(issue => (
+                    <div key={issue.id} className="mobile-card" style={{ borderLeft: '4px solid var(--color-orange)' }}>
+                      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                        <div style={{ backgroundColor: 'rgba(249,115,22,0.1)', color: 'var(--color-orange)', padding: '8px', borderRadius: '50%' }}>
+                          <ClipboardList size={18} />
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: '13px' }}>New SS Sheets Assigned</div>
+                          <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+                            {issue.quantity} kg of {issue.materialName} allocated.
+                          </div>
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                )}
+                    </div>
+                  ))}
+                </div>
               </>
             )}
           </div>
@@ -743,59 +745,61 @@ function App() {
             </a>
           </div>
 
+          {/* Lightbox Zoom Overlay inside the Phone Screen */}
+          {zoomImage && (
+            <div 
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0,0,0,0.92)',
+                zIndex: 9999,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '16px'
+              }}
+              onClick={() => setZoomImage(null)}
+            >
+              <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }} onClick={(e) => e.stopPropagation()}>
+                <img 
+                  src={zoomImage} 
+                  style={{ width: '100%', maxHeight: '60vh', borderRadius: '12px', border: '3px solid white', boxShadow: '0 4px 20px rgba(0,0,0,0.5)', objectFit: 'contain' }} 
+                  alt="Zoomed view" 
+                />
+                <button 
+                  style={{
+                    position: 'absolute',
+                    top: '-15px',
+                    right: '-15px',
+                    width: '30px',
+                    height: '30px',
+                    borderRadius: '50%',
+                    backgroundColor: '#ef4444',
+                    color: 'white',
+                    border: '2px solid white',
+                    fontWeight: 'bold',
+                    fontSize: '16px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                    lineHeight: 1
+                  }}
+                  onClick={() => setZoomImage(null)}
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
-
-      {/* Lightbox Zoom Panel (Side-by-side next to the Phone Frame) */}
-      {zoomImage && (
-        <div style={{
-          marginLeft: '24px',
-          width: '450px',
-          height: '85vh',
-          maxHeight: '640px',
-          backgroundColor: '#ffffff',
-          borderRadius: '24px',
-          border: '4px solid #1e293b',
-          boxShadow: '0 25px 60px -10px rgba(0, 0, 0, 0.8)',
-          overflow: 'hidden',
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'relative',
-          padding: '12px',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}>
-          <img 
-            src={zoomImage} 
-            style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '16px', backgroundColor: '#0f172a' }} 
-            alt="Zoomed view" 
-          />
-          <button 
-            style={{
-              position: 'absolute',
-              top: '20px',
-              right: '20px',
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              backgroundColor: '#ef4444',
-              color: 'white',
-              border: '2px solid white',
-              fontWeight: 'bold',
-              fontSize: '18px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-              lineHeight: 1
-            }}
-            onClick={() => setZoomImage(null)}
-          >
-            ×
-          </button>
-        </div>
-      )}
     </div>
   );
 }
