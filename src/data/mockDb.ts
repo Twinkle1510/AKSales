@@ -233,7 +233,7 @@ const IMG_SINK_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel s
 const IMG_SINK_FINISHED = '/work_table.png?v=3'; // Fallback to work table
 
 const IMG_WELDING_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
-const IMG_HOOD_FINISHED = '/exhaust_hood.png?v=3'; // Commercial kitchen exhaust hood you uploaded
+const IMG_HOOD_FINISHED = '/exhaust_hood.png?v=4'; // Commercial kitchen exhaust hood you uploaded
 
 const IMG_TROLLEY_RAW = '/single_sheet.png?v=3'; // Single diagonal brushed steel sheet you uploaded
 const IMG_TROLLEY_FINISHED = '/work_table.png?v=3'; // Fallback to work table
@@ -593,16 +593,16 @@ const INITIAL_PRODUCTION: ProductionLog[] = [
 
 // Helper to initialize and retrieve from localStorage
 const getFromStorage = <T>(key: string, initial: T): T => {
-  const data = localStorage.getItem(`aksales_v6_${key}`);
+  const data = localStorage.getItem(`aksales_v7_${key}`);
   if (!data) {
-    localStorage.setItem(`aksales_v6_${key}`, JSON.stringify(initial));
+    localStorage.setItem(`aksales_v7_${key}`, JSON.stringify(initial));
     return initial;
   }
   return JSON.parse(data);
 };
 
 const setToStorage = <T>(key: string, value: T): void => {
-  localStorage.setItem(`aksales_v6_${key}`, JSON.stringify(value));
+  localStorage.setItem(`aksales_v7_${key}`, JSON.stringify(value));
 };
 
 export const getEmployees = (): Employee[] => getFromStorage('employees', INITIAL_EMPLOYEES);
@@ -621,10 +621,10 @@ export const getEquipment = (): KitchenEquipment[] => getFromStorage('equipment'
 export const saveEquipment = (equipment: KitchenEquipment[]) => setToStorage('equipment', equipment);
 
 export const resetDb = () => {
-  localStorage.removeItem('aksales_v6_employees');
-  localStorage.removeItem('aksales_v6_inventory');
-  localStorage.removeItem('aksales_v6_issues');
-  localStorage.removeItem('aksales_v6_production');
-  localStorage.removeItem('aksales_v6_equipment');
+  localStorage.removeItem('aksales_v7_employees');
+  localStorage.removeItem('aksales_v7_inventory');
+  localStorage.removeItem('aksales_v7_issues');
+  localStorage.removeItem('aksales_v7_production');
+  localStorage.removeItem('aksales_v7_equipment');
   window.location.reload();
 };
