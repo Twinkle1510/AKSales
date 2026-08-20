@@ -187,7 +187,7 @@ function App() {
     if (!log || log.status === 'Approved') return;
 
     // 1. Mark approved
-    const updatedProduction = production.map(p => {
+    const updatedProduction = production.map((p: ProductionLog) => {
       if (p.id === id) {
         return {
           ...p,
