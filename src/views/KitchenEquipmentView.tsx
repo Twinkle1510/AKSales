@@ -29,6 +29,10 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
 
   const workers = employees.filter(e => e.role === 'Worker');
 
+  const setStatus = (id: string, newStatus: any) => {
+    setEquipment(equipment.map(eq => eq.id === id ? { ...eq, status: newStatus } : eq));
+  };
+
   const handleAddEquipment = (e: React.FormEvent) => {
     e.preventDefault();
     if (!eqName.trim()) return;
@@ -53,8 +57,9 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
     
     // Clear inputs
     setEqName('');
-    setTempSettings('Pressure: 200 Bar');
-  };
+    setTempSettings('Pressure: 200 Bar'
+  );
+};
 
   const handleAllocateSheets = (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,6 +83,7 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
 
     setEquipment(updated);
     setIsAllocationModalOpen(false);
+  };
 
   const filtered = equipment.filter(eq =>
     eq.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -245,14 +251,19 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
                 <th>Quantity Produced (Pcs)</th>
                 <th>Last Inspected</th>
               </tr>
+            </thead>
+            <tbody>
+              {equipment.map(eq => (
+                <tr key={eq.id}>
                   <td>
-                    {eq.actualOutputQty > 0 ? (
-                      <span className="badge badge-success" style={{ fontSize: '12px', fontWeight: 700 }}>
-                        {eq.actualOutputQty} {eq.outputUnit}
-                      </span>
-                    ) : '-'}
+                    <strong>{eq.name}</strong>
+                    <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{eq.type}</div>
                   </td>
-                  <td>{eq.lastCleanedDate}</td>
+                  <td>{eq.assignedWorkerName || <span className="text-secondary">Unassigned</span>}</td>
+                  <td>{eq.allocatedMaterialName || <span className="text-secondary">-</span>}</td>
+                  <td>
+                    {eq.allocatedQtyKg > 0 ? (
+                      <strong>{eq.allocatedQtyKg} KG</strong>
                     ) : '-'}
                   </td>
                   <td>{eq.actualOutputName || <span className="text-secondary">-</span>}</td>
@@ -263,12 +274,6 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
                       </span>
                     ) : '-'}
                   </td>
-                  <td>
-                    {eq.allocatedQtyKg > 0 && eq.actualOutputQty > 0 ? (
-                      <strong>{(eq.actualOutputQty / eq.allocatedQtyKg).toFixed(2)} items/KG</strong>
-                    ) : '-'}
-                  </td>
-                  <td>{eq.temperatureSettings || 'Standard'}</td>
                   <td>{eq.lastCleanedDate}</td>
                 </tr>
               ))}
@@ -421,3 +426,5 @@ export const KitchenEquipmentView: React.FC<KitchenEquipmentProps> = ({ equipmen
     </div>
   );
 };
+
+export default KitchenEquipmentView;

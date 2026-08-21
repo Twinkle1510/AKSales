@@ -146,7 +146,7 @@ export const DashboardView: React.FC<DashboardProps> = ({
           <Globe size={18} style={{ color: 'var(--color-teal)' }} />
         </div>
 
-        <div className="content-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
+        <div className="content-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
           {/* Left: Contributions List */}
           <div className="contribution-list">
             {workerStats.slice(0, 5).map((w) => (
@@ -168,38 +168,7 @@ export const DashboardView: React.FC<DashboardProps> = ({
             ))}
           </div>
 
-          {/* Right: SVG World Map Representation */}
-          <div className="map-visual-placeholder">
-            <svg viewBox="0 0 1000 480" className="world-map-svg">
-              <path 
-                fill="#e2e8f0" 
-                stroke="#cbd5e1" 
-                strokeWidth="1.5"
-                d="M150,150 Q180,130 220,160 T300,140 T380,180 T400,240 T320,300 T240,320 T150,280 Z" 
-              />
-              <path 
-                fill="#cffafe" 
-                stroke="var(--color-teal)" 
-                strokeWidth="2"
-                d="M480,120 Q540,110 580,130 T640,150 T680,240 T580,320 T480,220 Z" 
-              />
-              <path 
-                fill="#e2e8f0" 
-                stroke="#cbd5e1" 
-                strokeWidth="1.5"
-                d="M720,280 Q780,290 820,320 T860,380 T760,400 Z" 
-              />
-              {/* Highlight Pins */}
-              <circle cx="580" cy="180" r="6" fill="var(--color-purple)" />
-              <circle cx="580" cy="180" r="14" fill="none" stroke="var(--color-purple)" strokeWidth="2" opacity="0.5" />
-              
-              <circle cx="240" cy="200" r="5" fill="var(--color-orange)" />
-              <circle cx="510" cy="150" r="5" fill="var(--color-green)" />
-            </svg>
-            <div style={{ position: 'absolute', bottom: '12px', right: '12px', fontSize: '11px', color: 'var(--text-secondary)' }}>
-              Distribution Coverage Matrix
-            </div>
-          </div>
+
         </div>
       </div>
 
@@ -260,7 +229,7 @@ export const DashboardView: React.FC<DashboardProps> = ({
         </div>
 
         {/* Quick Operations Control & Alerts */}
-        <div className="card">
+        <div className="card dashboard-ops-card">
           <div className="card-title">Operations Control & Stock Thresholds</div>
           <div className="quick-actions" style={{ marginBottom: '16px' }}>
             <button className="quick-action-btn" onClick={() => onOpenQuickAction('add_employee')}>

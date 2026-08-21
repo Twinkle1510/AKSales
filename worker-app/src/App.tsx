@@ -3,7 +3,7 @@ import {
   ClipboardList, 
   TrendingUp, 
   CircleDollarSign, 
-  Bell, 
+  User, 
   Camera, 
   Wifi, 
   Battery, 
@@ -30,7 +30,7 @@ import {
 
 function App() {
   // Navigation & session state
-  const [activeTab, setActiveTab] = useState<'tasks' | 'log_output' | 'earnings' | 'notifications'>('tasks');
+  const [activeTab, setActiveTab] = useState<'tasks' | 'log_output' | 'earnings' | 'profile'>('tasks');
   const [currentWorker, setCurrentWorker] = useState<Employee | null>(null);
   const [zoomImage, setZoomImage] = useState<string | null>(null);
   
@@ -139,21 +139,26 @@ function App() {
     }
   }, [workerIssues, logMaterialIssueId]);
 
+  const formatCurrency = (value: number) => new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(Number.isFinite(value) ? value : 0);
+
   // Calculate worker earnings based on approved production records and pieces produced
   const approvedRuns = workerProduction.filter(p => p.status === 'Approved');
-  const totalApprovedQty = approvedRuns.reduce((sum, p) => sum + p.quantityProduced, 0);
+  const totalApprovedQty = approvedRuns.reduce((sum, p) => sum + (Number(p.quantityProduced) || 0), 0);
+  const approvedQtyLabel = formatCurrency(totalApprovedQty);
   
   let totalEarnings = 0;
   if (currentWorker) {
     const model = currentWorker.payrollModel || 'Per Piece';
+    const baseRate = Number(currentWorker.baseRate) || 0;
+    const fixedAmount = Number(currentWorker.fixedSalaryAmount) || 0;
+    const incentiveRate = Number(currentWorker.incentiveRate) || 0;
+
     if (model === 'Fixed Salary') {
-      totalEarnings = currentWorker.fixedSalaryAmount || 15000;
+      totalEarnings = fixedAmount || 15000;
     } else if (model === 'Fixed + Incentive') {
-      const fixed = currentWorker.fixedSalaryAmount || 12000;
-      const incentive = currentWorker.incentiveRate || 10;
-      totalEarnings = fixed + (totalApprovedQty * incentive);
+      totalEarnings = fixedAmount + (totalApprovedQty * incentiveRate);
     } else { // 'Per Piece' or 'Per KG'
-      totalEarnings = totalApprovedQty * currentWorker.baseRate;
+      totalEarnings = totalApprovedQty * baseRate;
     }
   }
 
@@ -590,21 +595,21 @@ function App() {
                 {/* Piece rate earnings card banner */}
                 <div className="earnings-box">
                   <span className="earnings-label">ACCUMULATED EARNINGS ({currentWorker.payrollModel || 'Piece Rate'})</span>
-                  <div className="earnings-amount">₹{totalEarnings.toLocaleString()}</div>
+                  <div className="earnings-amount">₹{formatCurrency(totalEarnings)}</div>
                   
                   {currentWorker.payrollModel === 'Fixed Salary' && (
                     <span className="earnings-subtext">
-                      Fixed monthly payout: ₹{currentWorker.fixedSalaryAmount?.toLocaleString()}
+                      Fixed monthly payout: ₹{formatCurrency(Number(currentWorker.fixedSalaryAmount) || 0)}
                     </span>
                   )}
                   {currentWorker.payrollModel === 'Fixed + Incentive' && (
                     <span className="earnings-subtext">
-                      Base: ₹{currentWorker.fixedSalaryAmount?.toLocaleString()} + ₹{currentWorker.incentiveRate}/piece ({totalApprovedQty} units approved)
+                      Base: ₹{formatCurrency(Number(currentWorker.fixedSalaryAmount) || 0)} + ₹{Number(currentWorker.incentiveRate) || 0}/piece ({approvedQtyLabel} units approved)
                     </span>
                   )}
                   {(currentWorker.payrollModel === 'Per Piece' || currentWorker.payrollModel === 'Per KG') && (
                     <span className="earnings-subtext">
-                      Calculated at ₹{currentWorker.baseRate} per unit ({totalApprovedQty} total units approved)
+                      Calculated at ₹{Number(currentWorker.baseRate) || 0} per unit ({approvedQtyLabel} units approved)
                     </span>
                   )}
                 </div>
@@ -616,137 +621,127 @@ function App() {
                     No production runs logged yet.
                   </p>
                 ) : (
-                  workerProduction.map(p => (
-                    <div key={p.id} className="mobile-card" style={{ padding: '14px', gap: '8px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ fontWeight: 700, fontSize: '13px' }}>Batch {p.batchNumber}</span>
-                        <span 
-                          className={`badge ${p.status === 'Approved' ? 'badge-success' : 'badge-pending'}`}
-                          style={{ fontSize: '10px', padding: '2px 8px' }}
-                        >
-                          {p.status}
-                        </span>
-                      </div>
-                      
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                        <span style={{ fontSize: '14px', fontWeight: 800, color: 'var(--text-primary)' }}>
-                          {p.productName}
-                        </span>
-                        <span style={{ fontWeight: 800, color: 'var(--color-green)', fontSize: '14px' }}>
-                          {p.status === 'Approved' ? (
-                            currentWorker.payrollModel === 'Fixed Salary' ? (
-                              'Salary Credit'
-                            ) : currentWorker.payrollModel === 'Fixed + Incentive' ? (
-                              `+₹${(p.quantityProduced * (currentWorker.incentiveRate || 10)).toLocaleString()}`
-                            ) : (
-                              `+₹${(p.quantityProduced * currentWorker.baseRate).toLocaleString()}`
-                            )
-                          ) : (
-                            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600 }}>Pending Approval</span>
-                          )}
-                        </span>
-                      </div>
+                  workerProduction.slice(0, 5).map(p => {
+                    const batchEarning =
+                      p.status === 'Approved'
+                        ? currentWorker.payrollModel === 'Fixed Salary'
+                          ? 0
+                          : currentWorker.payrollModel === 'Fixed + Incentive'
+                            ? (Number(p.quantityProduced) || 0) * (Number(currentWorker.incentiveRate) || 0)
+                            : (Number(p.quantityProduced) || 0) * (Number(currentWorker.baseRate) || 0)
+                        : 0;
 
-                      {/* Structured Input vs Output details card */}
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', padding: '8px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '11px', marginBottom: '8px' }}>
-                        <div style={{ minWidth: 0 }}>
-                          <span style={{ color: 'var(--text-secondary)', display: 'block', fontWeight: 700, marginBottom: '2px', fontSize: '9px' }}>INPUT (SS SHEETS)</span>
-                          <strong style={{ fontSize: '14px', color: 'var(--color-orange)' }}>
-                            {p.materialConsumedQty} kg
-                          </strong>
-                          <div style={{ color: 'var(--text-muted)', fontSize: '9px', marginTop: '2px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                            {p.materialConsumedName}
+                    return (
+                      <div key={p.id} className="mini-batch-row">
+                        <div className="mini-batch-main">
+                          <div className="mini-batch-tag">BATCH {p.batchNumber}</div>
+                          <div className="mini-batch-meta">
+                            <span>{p.productName}</span>
+                            <small>{p.date} • {p.quantityProduced} pcs</small>
                           </div>
                         </div>
-
-                        <div style={{ borderLeft: '1px dashed var(--border)', paddingLeft: '8px', minWidth: 0 }}>
-                          <span style={{ color: 'var(--text-secondary)', display: 'block', fontWeight: 700, marginBottom: '2px', fontSize: '9px' }}>OUTPUT (PRODUCT)</span>
-                          <strong style={{ fontSize: '14px', color: 'var(--color-green)' }}>
-                            {p.quantityProduced} pcs
-                          </strong>
-                          <div style={{ color: 'var(--text-muted)', fontSize: '9px', marginTop: '2px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                            {p.productName}
+                        <div className="mini-batch-side">
+                          <div className="mini-batch-amount">
+                            {p.status === 'Approved' ? `₹${formatCurrency(batchEarning)}` : 'Pending'}
                           </div>
+                          <span className={`mini-batch-status ${p.status === 'Approved' ? 'approved' : 'pending'}`}>
+                            {p.status === 'Approved' ? 'Approved' : 'Pending'}
+                          </span>
                         </div>
                       </div>
-
-                      {p.efficiency !== undefined && (
-                        <div style={{ fontSize: '10px', color: 'var(--primary)', fontWeight: 700, marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <span style={{ color: 'var(--text-secondary)' }}>Yield Material Utilization:</span>
-                          <span>{p.efficiency}%</span>
-                        </div>
-                      )}
-
-                      {/* Side-by-side Photo thumbnails if present */}
-                      {(p.materialPhoto || p.productPhoto) && (
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '6px' }}>
-                          {p.materialPhoto && (
-                            <div className="photo-thumbnail-container" style={{ height: '60px', cursor: 'pointer' }} onClick={() => setZoomImage(p.materialPhoto || null)}>
-                              <img src={p.materialPhoto} className="photo-thumbnail-img" alt="Material consumed" />
-                              <span style={{ position: 'absolute', bottom: '2px', left: '4px', fontSize: '8px', color: '#ffffff', backgroundColor: 'rgba(0,0,0,0.5)', padding: '1px 3px', borderRadius: '2px' }}>Material (Click)</span>
-                            </div>
-                          )}
-                          {p.productPhoto && (
-                            <div className="photo-thumbnail-container" style={{ height: '60px', cursor: 'pointer' }} onClick={() => setZoomImage(p.productPhoto || null)}>
-                              <img src={p.productPhoto} className="photo-thumbnail-img" alt="Finished item" />
-                              <span style={{ position: 'absolute', bottom: '2px', left: '4px', fontSize: '8px', color: '#ffffff', backgroundColor: 'rgba(0,0,0,0.5)', padding: '1px 3px', borderRadius: '2px' }}>Product (Click)</span>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                    </div>
-                  ))
+                    );
+                  })
                 )}
               </>
             )}
 
-            {activeTab === 'notifications' && (
+            {activeTab === 'profile' && (
               <>
-                <h3 style={{ fontSize: '15px', fontWeight: 700, marginBottom: '4px' }}>Inbox Alerts</h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {workerProduction.filter(p => p.status === 'Approved').map(p => (
-                    <div key={p.id} className="mobile-card" style={{ borderLeft: '4px solid var(--color-green)' }}>
-                      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                        <div style={{ backgroundColor: 'rgba(16,185,129,0.1)', color: 'var(--color-green)', padding: '8px', borderRadius: '50%' }}>
-                          <CheckCircle size={18} />
-                        </div>
-                        <div>
-                          <div style={{ fontWeight: 700, fontSize: '13px' }}>Batch {p.batchNumber} Approved</div>
-                          <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Wages added to your ledger sheet.</div>
-                        </div>
-                      </div>
+                <div className="mobile-card profile-card">
+                  <div className="profile-top">
+                    <div className="profile-avatar-large">
+                      {currentWorker.name.split(' ').map(n => n[0]).join('')}
                     </div>
-                  ))}
-                  
-                  {workerIssues.map(issue => (
-                    <div key={issue.id} className="mobile-card" style={{ borderLeft: '4px solid var(--color-orange)' }}>
-                      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                        <div style={{ backgroundColor: 'rgba(249,115,22,0.1)', color: 'var(--color-orange)', padding: '8px', borderRadius: '50%' }}>
-                          <ClipboardList size={18} />
-                        </div>
-                        <div>
-                          <div style={{ fontWeight: 700, fontSize: '13px' }}>New SS Sheets Assigned</div>
-                          <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-                            {issue.quantity} kg of {issue.materialName} allocated.
-                          </div>
-                        </div>
-                      </div>
+                    <div className="profile-meta">
+                      <h3>{currentWorker.name}</h3>
+                      <span>{currentWorker.role} • {currentWorker.department}</span>
                     </div>
-                  ))}
+                    <span className={`badge ${currentWorker.status === 'Active' ? 'badge-success' : 'badge-pending'}`}>
+                      {currentWorker.status}
+                    </span>
+                  </div>
+
+                  <div className="profile-detail-grid">
+                    <div className="profile-detail-item">
+                      <span>Employee ID</span>
+                      <strong>{currentWorker.employeeCode}</strong>
+                    </div>
+                    <div className="profile-detail-item">
+                      <span>Joined</span>
+                      <strong>{currentWorker.joinedDate}</strong>
+                    </div>
+                    <div className="profile-detail-item">
+                      <span>Payroll</span>
+                      <strong>{currentWorker.payrollModel}</strong>
+                    </div>
+                    <div className="profile-detail-item">
+                      <span>Rate</span>
+                      <strong>
+                        {currentWorker.payrollModel === 'Fixed Salary'
+                          ? `₹${currentWorker.fixedSalaryAmount?.toLocaleString()}`
+                          : `₹${currentWorker.baseRate}/unit`}
+                      </strong>
+                    </div>
+                  </div>
                 </div>
+
+                <div className="mobile-card">
+                  <div className="profile-section-title">Performance Summary</div>
+                  <div className="profile-detail-grid">
+                    <div className="profile-detail-item profile-highlight">
+                      <span>Approved Runs</span>
+                      <strong>{workerProduction.filter(p => p.status === 'Approved').length}</strong>
+                    </div>
+                    <div className="profile-detail-item profile-highlight">
+                      <span>Output Qty</span>
+                      <strong>{totalApprovedQty}</strong>
+                    </div>
+                    <div className="profile-detail-item profile-highlight">
+                      <span>Current Pay</span>
+                      <strong>₹{formatCurrency(totalEarnings)}</strong>
+                    </div>
+                    <div className="profile-detail-item profile-highlight">
+                      <span>Contact</span>
+                      <strong>{currentWorker.phone}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mobile-card">
+                  <div className="profile-section-title">Profile Details</div>
+                  <div className="profile-detail-list">
+                    <div><span>Email</span><strong>{currentWorker.email}</strong></div>
+                    <div><span>Department</span><strong>{currentWorker.department}</strong></div>
+                    <div><span>Address</span><strong>{currentWorker.address}</strong></div>
+                  </div>
+                </div>
+
+                <button className="mobile-btn mobile-btn-secondary" onClick={() => setCurrentWorker(null)}>
+                  Switch Worker
+                </button>
               </>
             )}
+
           </div>
 
           {/* Camera overlay simulator */}
           {isCameraOpen && (
             <div className="camera-overlay">
-              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#ffffff', alignItems: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-primary)', alignItems: 'center' }}>
                 <span style={{ fontSize: '14px', fontWeight: 600 }}>Floor Camera Simulator</span>
                 <button 
                   onClick={() => { setIsCameraOpen(false); setCameraTarget(null); }}
-                  style={{ background: 'none', border: 'none', color: '#ffffff', cursor: 'pointer' }}
+                  style={{ background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer' }}
                 >
                   <X size={20} />
                 </button>
@@ -754,7 +749,7 @@ function App() {
 
               <div className="camera-viewfinder">
                 <div className="camera-grid-lines"></div>
-                <div style={{ color: '#ffffff', zIndex: 10, textAlign: 'center', padding: '16px' }}>
+                <div style={{ color: 'var(--text-primary)', zIndex: 10, textAlign: 'center', padding: '16px' }}>
                   <AlertCircle size={32} style={{ color: 'var(--accent)', margin: '0 auto 8px auto' }} />
                   <p style={{ fontSize: '12px' }}>Point camera at {cameraTarget === 'material' ? 'assigned materials sheet' : 'finished output batch'}</p>
                 </div>
@@ -782,9 +777,9 @@ function App() {
               <CircleDollarSign />
               <span>Earnings</span>
             </a>
-            <a className={`bottom-nav-item ${activeTab === 'notifications' ? 'active' : ''}`} onClick={() => setActiveTab('notifications')} style={{ position: 'relative' }}>
-              <Bell />
-              <span>Alerts</span>
+            <a className={`bottom-nav-item ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')} style={{ position: 'relative' }}>
+              <User />
+              <span>Profile</span>
               {(workerIssues.length > 0 || workerProduction.filter(p => p.status === 'Approved').length > 0) && (
                 <div className="notification-dot"></div>
               )}
@@ -825,7 +820,7 @@ function App() {
                     height: '30px',
                     borderRadius: '50%',
                     backgroundColor: '#ef4444',
-                    color: 'white',
+                    color: 'var(--text-primary)',
                     border: '2px solid white',
                     fontWeight: 'bold',
                     fontSize: '16px',

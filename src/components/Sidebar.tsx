@@ -3,9 +3,9 @@ import {
   ClipboardList, 
   CheckSquare, 
   CircleDollarSign,
-  History,
-  ChefHat
+  History
 } from 'lucide-react';
+import Swal from 'sweetalert2';
 import { resetDb } from '../data/mockDb';
 
 interface SidebarProps {
@@ -19,7 +19,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setCurrentTab }) =
     { id: 'material_issue', label: 'Material Issuance', icon: ClipboardList, hasSub: false },
     { id: 'production', label: 'Production Log', icon: CheckSquare, hasSub: true },
     { id: 'flow_report', label: 'Material Flow Ledger', icon: History, hasSub: false },
-    { id: 'kitchen_equipment', label: 'Kitchen Stations', icon: ChefHat, hasSub: false },
     { id: 'payroll', label: 'Payroll Desk', icon: CircleDollarSign, hasSub: false },
   ];
 
@@ -88,7 +87,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setCurrentTab }) =
       <div className="sidebar-links-footer">
         <span onClick={() => resetDb()}>Settings</span>
         <span style={{ margin: '0 6px' }}>|</span>
-        <span onClick={() => alert('Logged out successfully.')}>Logout</span>
+        <span onClick={() => Swal.fire('Logged Out', 'Logged out successfully.', 'success')}>Logout</span>
       </div>
 
       {/* Bottom Building Peak Illustration */}

@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+const fs = require('fs');
+
+const fullCode = `import React, { useState } from 'react';
 import { CircleDollarSign, Table, FileSpreadsheet, Printer, X, Eye } from 'lucide-react';
 import type { Employee, ProductionLog } from '../data/mockDb';
 import { exportToCSV, exportToPDF } from '../utils/exports';
@@ -91,7 +93,7 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
       'Status': row.paymentStatus
     }));
 
-    exportToCSV(dataToExport, `AKSales_Payroll_${selectedPeriod.replace(' ', '_')}`);
+    exportToCSV(dataToExport, \`AKSales_Payroll_\${selectedPeriod.replace(' ', '_')}\`);
   };
 
   const handleExportPDF = () => {
@@ -104,18 +106,18 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
       row.name,
       row.role,
       row.payrollModel,
-      row.role === 'Worker' ? `${row.totalQtyProduced} units` : 'N/A',
-      `₹${row.grossPay}`,
-      `₹${row.deductions}`,
-      `₹${row.netPay}`,
+      row.role === 'Worker' ? \`\${row.totalQtyProduced} units\` : 'N/A',
+      \`₹\${row.grossPay}\`,
+      \`₹\${row.deductions}\`,
+      \`₹\${row.netPay}\`,
       row.paymentStatus
     ]);
 
     exportToPDF(
-      `Payroll Statement - ${selectedPeriod}`,
+      \`Payroll Statement - \${selectedPeriod}\`,
       headers,
       rows,
-      `AKSales_Payroll_${selectedPeriod.replace(' ', '_')}`
+      \`AKSales_Payroll_\${selectedPeriod.replace(' ', '_')}\`
     );
   };
 
@@ -207,7 +209,7 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
             display: 'flex', 
             flexDirection: 'column', 
             gap: '16px',
-            borderLeft: `4px solid ${row.paymentStatus === 'Paid' ? 'var(--color-green)' : 'var(--color-orange)'}`
+            borderLeft: \`4px solid \${row.paymentStatus === 'Paid' ? 'var(--color-green)' : 'var(--color-orange)'}\`
           }}>
             {/* Header: Name, Code, Status */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -216,7 +218,7 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
                 <h3 style={{ fontSize: '16px', fontWeight: 700, margin: 0 }}>{row.name}</h3>
                 <div style={{ fontSize: '12px', color: 'var(--primary)', marginTop: '2px' }}>{row.role}</div>
               </div>
-              <span className={`badge ${row.paymentStatus === 'Paid' ? 'badge-success' : 'badge-pending'}`}>
+              <span className={\`badge \${row.paymentStatus === 'Paid' ? 'badge-success' : 'badge-pending'}\`}>
                 {row.paymentStatus}
               </span>
             </div>
@@ -230,10 +232,10 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Rate</span>
                 <span style={{ fontSize: '12px', fontWeight: 600 }}>
-                  {row.payrollModel === 'Per Piece' && `₹${row.baseRate}/piece`}
-                  {row.payrollModel === 'Per KG' && `₹${row.baseRate}/KG`}
-                  {row.payrollModel === 'Fixed Salary' && `₹${row.fixedSalaryAmount?.toLocaleString()}/mo`}
-                  {row.payrollModel === 'Fixed + Incentive' && `₹${row.fixedSalaryAmount?.toLocaleString()}/mo + ₹${row.incentiveRate}/unit`}
+                  {row.payrollModel === 'Per Piece' && \`₹\${row.baseRate}/piece\`}
+                  {row.payrollModel === 'Per KG' && \`₹\${row.baseRate}/KG\`}
+                  {row.payrollModel === 'Fixed Salary' && \`₹\${row.fixedSalaryAmount?.toLocaleString()}/mo\`}
+                  {row.payrollModel === 'Fixed + Incentive' && \`₹\${row.fixedSalaryAmount?.toLocaleString()}/mo + ₹\${row.incentiveRate}/unit\`}
                 </span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -272,7 +274,7 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
                 <Eye size={14} /> View History
               </button>
               <button 
-                className={`btn ${row.paymentStatus === 'Paid' ? 'btn-secondary' : 'btn-primary'}`}
+                className={\`btn \${row.paymentStatus === 'Paid' ? 'btn-secondary' : 'btn-primary'}\`}
                 style={{ flex: 1, padding: '8px', fontSize: '12px' }}
                 onClick={() => togglePaymentStatus(row.employeeId)}
               >
@@ -327,7 +329,7 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
                 <tbody>
                   {Array.from({ length: 30 }, (_, i) => {
                     const day = i + 1;
-                    const dateStr = `2026-${selectedPeriod.includes('August') ? '08' : selectedPeriod.includes('July') ? '07' : '06'}-${String(day).padStart(2, '0')}`;
+                    const dateStr = \`2026-\${selectedPeriod.includes('August') ? '08' : selectedPeriod.includes('July') ? '07' : '06'}-\${String(day).padStart(2, '0')}\`;
                     const emp = employees.find(e => e.id === historyModalEmployee);
                     
                     // Filter production for this day
@@ -351,13 +353,13 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
                         const model = emp.payrollModel || 'Per Piece';
                         if (model === 'Fixed Salary') {
                             earning = Math.round((emp.fixedSalaryAmount || 15000) / 30);
-                            wageText = `Fixed (₹${emp.fixedSalaryAmount}/mo)`;
+                            wageText = \`Fixed (₹\${emp.fixedSalaryAmount}/mo)\`;
                         } else if (model === 'Fixed + Incentive') {
                             earning = Math.round((emp.fixedSalaryAmount || 12000) / 30) + (units * (emp.incentiveRate || 10));
-                            wageText = `₹${emp.fixedSalaryAmount}/mo + ₹${emp.incentiveRate}/unit`;
+                            wageText = \`₹\${emp.fixedSalaryAmount}/mo + ₹\${emp.incentiveRate}/unit\`;
                         } else {
                             earning = units * (emp.baseRate || 30);
-                            wageText = `₹${emp.baseRate} / unit`;
+                            wageText = \`₹\${emp.baseRate} / unit\`;
                         }
                     }
                     if (status === 'Absent' || status === 'Upcoming' || status === 'Weekly Off') earning = 0;
@@ -366,7 +368,7 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
                       <tr key={day}>
                         <td><strong>{day} {selectedPeriod.split(' ')[0]}</strong></td>
                         <td>
-                          <span className={`badge ${status === 'Present' ? 'badge-success' : status === 'Absent' ? 'badge-danger' : status === 'Weekly Off' ? 'badge-pending' : ''}`} style={{ opacity: status === 'Upcoming' ? 0.5 : 1 }}>
+                          <span className={\`badge \${status === 'Present' ? 'badge-success' : status === 'Absent' ? 'badge-danger' : status === 'Weekly Off' ? 'badge-pending' : ''}\`} style={{ opacity: status === 'Upcoming' ? 0.5 : 1 }}>
                             {status}
                           </span>
                         </td>
@@ -390,3 +392,6 @@ export const PayrollView: React.FC<PayrollProps> = ({ employees, production }) =
     </div>
   );
 };
+`;
+fs.writeFileSync('src/views/PayrollView.tsx', fullCode);
+console.log('Complete rewrite of PayrollView.tsx successful.');

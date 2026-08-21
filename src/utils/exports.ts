@@ -1,3 +1,4 @@
+import Swal from 'sweetalert2';
 /**
  * Utility functions for exporting data client-side to CSV (Excel-compatible) and PDF (via Styled Printing).
  */
@@ -35,7 +36,7 @@ export const exportToCSV = (data: any[], filename: string) => {
 export const exportToPDF = (title: string, headers: string[], rows: any[][], filename: string) => {
   const printWindow = window.open('', '_blank');
   if (!printWindow) {
-    alert('Please allow popups to export PDF reports');
+    Swal.fire({ icon: 'warning', title: 'Pop-up Blocked', text: 'Please allow popups to export PDF reports' });
     return;
   }
   try {

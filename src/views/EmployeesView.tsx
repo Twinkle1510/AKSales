@@ -260,7 +260,7 @@ export const EmployeesView: React.FC<EmployeesProps> = ({ employees, setEmployee
                           <button 
                             className="btn btn-primary"
                             style={{ padding: '6px 10px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}
-                            onClick={() => setExpandedWorkers(prev => ({ ...prev, [emp.id]: !prev[emp.id] }))}
+                            onClick={() => setExpandedWorkers((prev: any) => ({ ...prev, [emp.id]: !prev[emp.id] }))}
                           >
                             <ImageIcon size={12} />
                             <span>{expandedWorkers[emp.id] ? 'Hide' : 'Photos'}</span>
